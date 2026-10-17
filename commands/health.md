@@ -1,7 +1,7 @@
 ---
-description: Quick health check
+description: Kiểm tra nhanh sức khỏe kho tri thức
 ---
 
-The four metrics with a one-line verdict on each. No repairs.
+Trình bày bốn chỉ số cốt lõi kèm một dòng nhận xét cho từng chỉ số. Không thực hiện sửa chữa.
 
-Follow the `second-brain-graph` skill.
+Thực hiện theo skill `second-brain-graph`.

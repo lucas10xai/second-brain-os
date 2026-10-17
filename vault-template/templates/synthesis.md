@@ -9,12 +9,12 @@ tags: []
 
 # {{title}}
 
-## The question
+## Câu hỏi trọng tâm
 
-## What the sources say
+## Các nguồn nói gì
 
-## Where they disagree
+## Điểm bất đồng giữa các nguồn
 
-## Current position
+## Quan điểm hiện tại
 
-## What would change it
+## Điều gì sẽ làm thay đổi quan điểm này

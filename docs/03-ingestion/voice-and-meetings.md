@@ -1,36 +1,26 @@
-# Voice notes and meetings
+# Ghi chú giọng nói và cuộc họp
 
-The ideas worth capturing rarely arrive at your desk. Voice is the only capture
-method that works while walking, driving or standing in a queue, and it is the
-one most vaults never wire up.
+Những ý tưởng thực sự đáng giá hiếm khi xuất hiện đúng lúc bạn đang ngồi ngay ngắn trước bàn làm việc. Giọng nói là phương thức thu thập duy nhất hoạt động hiệu quả khi bạn đang đi bộ, lái xe hay đứng xếp hàng — nhưng lại là kênh thông tin mà hầu hết các Vault chưa bao giờ được kết nối tới.
 
-## Capture
+## Thu âm nhanh (Capture)
 
-Any recorder app works, as long as the file ends up somewhere the vault can
-reach. The friction to eliminate is the transfer: if getting audio from phone to
-vault takes more than one action, you will stop.
+Bất kỳ ứng dụng ghi âm nào cũng dùng được, miễn là file âm thanh cuối cùng tự động nằm ở một nơi mà Vault có thể chạm tới. Lực cản lớn nhất cần phải triệt tiêu chính là bước chuyển file: nếu việc đưa một đoạn ghi âm từ điện thoại vào Vault đòi hỏi nhiều hơn một thao tác bấm nút, sớm muộn gì bạn cũng sẽ ngừng sử dụng nó.
 
-Simplest reliable setup: record in the phone's default app, share to a cloud
-folder, and have a scheduled task transcribe anything new into `raw/`.
+Thiết lập đơn giản và tin cậy nhất: ghi âm bằng ứng dụng mặc định trên điện thoại, chia sẻ vào một thư mục đám mây, và thiết lập một tác vụ tự động chạy theo lịch để gỡ băng mọi file âm thanh mới thành văn bản lưu vào `raw/`.
 
-Obsidian's mobile app can record directly into the vault, which removes the
-transfer entirely if you already sync mobile.
+Ứng dụng Obsidian trên di động cũng hỗ trợ ghi âm trực tiếp vào thẳng bên trong Vault, giúp loại bỏ hoàn toàn bước chuyển file trung gian nếu bạn đã thiết lập sẵn đồng bộ trên điện thoại.
 
-## Transcription
+## Chuyển giọng nói thành văn bản (Transcription)
 
-Whisper runs locally and is good enough for a voice note recorded at arm's
-length. Local matters more here than for other sources, because voice notes
-carry half-formed thoughts and meeting audio carries other people's words.
+Mô hình Whisper chạy cục bộ trên máy có chất lượng hoàn toàn đủ tốt cho một đoạn ghi chú giọng nói thu ở khoảng cách cầm tay. Việc xử lý cục bộ ở đây quan trọng hơn nhiều so với các nguồn tài liệu khác, bởi ghi chú giọng nói thường chứa những suy nghĩ cá nhân còn dang dở, và bản ghi âm cuộc họp thì chứa lời nói của nhiều người khác.
 
-Expect names and technical terms to come out wrong. Correct them at ingest, not
-later, while you still remember what you said.
+Hãy lường trước việc các tên riêng và thuật ngữ kỹ thuật sẽ bị nhận diện sai. Hãy sửa lại chúng ngay tại thời điểm Ingest chứ đừng để sang hôm sau, tranh thủ lúc bạn vẫn còn nhớ rõ mình đã nói gì.
 
-## Voice notes are drafts, not sources
+## Ghi chú giọng nói là bản nháp, không phải nguồn tư liệu
 
-A voice note is you thinking out loud, with false starts and abandoned
-sentences. Ingesting it verbatim produces an incoherent source page.
+Một đoạn ghi chú giọng nói là quá trình bạn đang vừa nghĩ vừa nói thành tiếng, lẫn lộn nhiều câu nói vấp và những ý tưởng bỏ dở giữa chừng. Nếu Ingest nguyên văn bản gỡ băng đó, bạn sẽ nhận về một trang nguồn lủng củng và tối nghĩa.
 
-Treat the transcript as raw input to a single idea:
+Thay vào đó, hãy coi bản gỡ băng này là nguyên liệu đầu vào thô cho một ý tưởng duy nhất:
 
 ```
 This is a voice note, my own thinking out loud. Extract the actual idea, drop
@@ -38,10 +28,9 @@ the false starts and repetition, and write it as one short concept page in my
 words. If there are two unrelated ideas, make two pages. Keep the recording date.
 ```
 
-## Meetings
+## Cuộc họp
 
-Meetings produce three things worth keeping and a great deal that is not: the
-decisions, the commitments with owners, and the open questions.
+Các cuộc họp thường tạo ra ba thứ rất đáng lưu giữ và vô số lời bàn tán không cần thiết: các quyết định đã chốt, các cam kết công việc kèm tên người phụ trách, và những câu hỏi còn bỏ ngỏ.
 
 ```
 This is a meeting transcript. Extract decisions made, commitments with who owns
@@ -49,21 +38,14 @@ each one, and open questions. Link every person mentioned to their entity page.
 Skip discussion that did not lead anywhere.
 ```
 
-Route the commitments into the relevant project's `Inputs/` rather than the
-wiki. A commitment is work, not knowledge, and it goes stale in a week. The
-[two layers](../01-concepts/two-layers.md) page covers why that separation
-matters.
+Hãy chuyển các cam kết công việc vào thư mục `Inputs/` của dự án tương ứng thay vì đưa vào tầng `wiki/`. Một lời cam kết giao việc là tác vụ cần làm chứ không phải tri thức lâu dài, và nó sẽ hết hạn chỉ sau một tuần. Bài viết [Cấu trúc hai tầng](../01-concepts/two-layers.md) đã giải thích kỹ vì sao sự tách biệt này lại quan trọng đến vậy.
 
-## Consent and other people
+## Sự đồng thuận và quyền riêng tư của người khác
 
-Recording other people has legal requirements that vary by jurisdiction, and
-they are not a formality. Some places require every participant to consent.
+Việc ghi âm người khác chịu sự điều chỉnh của các quy định pháp lý khác nhau tùy theo từng quốc gia và vùng lãnh thổ — và đây không phải là chuyện thủ tục hình thức. Nhiều nơi quy định bắt buộc phải có sự đồng thuận của tất cả những người tham gia cuộc trò chuyện.
 
-Separately from legality: a meeting transcript contains other people's
-unguarded words. Keep those out of any vault you might share, and think about
-whether the meeting needs to be in the knowledge layer at all, or whether the
-three extracted decisions are enough.
+Tách biệt với khía cạnh pháp lý: bản gỡ băng một cuộc họp chứa đựng những lời nói tự nhiên không phòng bị của người khác. Hãy giữ những nội dung đó tránh xa khỏi bất kỳ Vault nào bạn có ý định chia sẻ, đồng thời cân nhắc kỹ xem liệu toàn bộ nội dung cuộc họp có thực sự cần nằm trong tầng tri thức hay không, hay chỉ cần giữ lại đúng ba quyết định đã được trích xuất là đủ.
 
-## Next
+## Tiếp theo
 
-[Newsletters and email](newsletters-and-email.md)
+[Bản tin (Newsletters) và email](newsletters-and-email.md)

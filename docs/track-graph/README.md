@@ -1,15 +1,15 @@
-# Knowledge graphs
+# Đồ thị tri thức (Knowledge graphs)
 
-Graphs as agent memory: GraphRAG, extraction pipelines, stores — then an evening build of a graph layer over your own vault.
+Đồ thị trong vai trò bộ nhớ của Agent: GraphRAG, quy trình trích xuất, kho lưu trữ đồ thị — cùng bài thực hành một buổi tối xây dựng tầng đồ thị trên chính vault của bạn.
 
-A handbook beside [the main guide](../../README.md) — the full menu for one layer; dip in anywhere.
+Sổ tay chuyên sâu bên cạnh [cẩm nang chính](../../README.md) — toàn bộ danh mục kỹ thuật cho một tầng kiến trúc; tra cứu bất kỳ phần nào bạn cần.
 
-1. [Why Knowledge Graphs](why-graphs.md)
+1. [Tại sao cần Knowledge Graph](why-graphs.md)
 2. [GraphRAG](graphrag.md)
-3. [Building Graphs with LLMs](building-graphs-with-llms.md)
-4. [Graph Stores](graph-stores.md)
-5. [Tools](tools.md)
-6. [Build: Extract the Graph](build-extract.md)
-7. [Build: Query It](build-query.md)
-8. [Build: Put It in the Loop](build-use.md)
-9. [Resources](resources.md)
+3. [Xây dựng đồ thị bằng LLM](building-graphs-with-llms.md)
+4. [Kho lưu trữ đồ thị](graph-stores.md)
+5. [Công cụ](tools.md)
+6. [Thực hành: Trích xuất đồ thị](build-extract.md)
+7. [Thực hành: Truy vấn đồ thị](build-query.md)
+8. [Thực hành: Đưa vào vòng lặp (Loop)](build-use.md)
+9. [Tài nguyên tham khảo](resources.md)

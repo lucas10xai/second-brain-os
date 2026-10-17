@@ -1,17 +1,17 @@
-# Evals Practice
+# Thực hành xây dựng Evals
 
-This page is the minimal build: one afternoon, five steps, one file of cases and one runner, no infrastructure. The [eval engineering handbook](../track-evals/why-evals.md) assembles the full pipeline in three builds; everything you make here carries straight into it.
+Trang này hướng dẫn bản triển khai tối giản nhất: gói gọn trong một buổi chiều, năm bước thực hiện, một tập tin chứa danh sách các ca kiểm thử và một kịch bản chạy kiểm tra (runner), hoàn toàn không cần dựng hạ tầng phức tạp. Cuốn [cẩm nang chuyên sâu về kỹ thuật Evals](../track-evals/why-evals.md) sẽ lắp ghép đường ống đánh giá hoàn chỉnh qua ba bài thực hành lớn; và toàn bộ những gì bạn tạo ra tại đây đều được kế thừa thẳng vào đường ống đó.
 
 
-> The whole build below is also packaged as a skill: install [the course plugin](../../plugins/README.md) and run `/agents-course:evals-bootstrap` on your agent's repo.
+> Toàn bộ quy trình xây dựng dưới đây cũng đã được đóng gói thành một `Skill`: hãy cài đặt [plugin của khóa học](../../plugins/README.md) và chạy lệnh `/agents-course:evals-bootstrap` ngay trên kho mã nguồn `Agent` của bạn.
 
-## Step 1: mine twenty failures into cases
+## Bước 1: Khai thác hai mươi ca lỗi thực tế thành các ca kiểm thử
 
-Pull your agent's recent runs and read until you have twenty real failures — not imagined ones. For each, write one line: what the input was, and the one specific behaviour that should have happened and did not. "Replied without searching the vault." "Refunded without asking approval." "Claimed the note was created; it was not." Twenty failures usually cluster into four to eight behaviours.
+Hãy trích xuất các lần chạy gần đây của `Agent` và đọc duyệt cho đến khi bạn gom đủ hai mươi ca thất bại thực tế — tuyệt đối không dùng các ca lỗi do bạn tự tưởng tượng ra. Với mỗi ca lỗi, hãy viết đúng một dòng mô tả: đầu vào là gì, và một hành vi cụ thể nào lẽ ra phải diễn ra nhưng đã không diễn ra. "Trả lời mà không tìm kiếm trong kho tài liệu." "Hoàn tiền mà không hỏi xin phê duyệt." "Tuyên bố đã tạo ghi chú xong nhưng thực tế chưa tạo." Hai mươi ca lỗi rời rạc thông thường sẽ gom cụm lại thành khoảng bốn đến tám nhóm hành vi cốt lõi.
 
-## Step 2: write one behavioural check per case
+## Bước 2: Viết một phép kiểm tra hành vi cho mỗi ca
 
-Each case becomes a YAML entry: the input, the expected behaviour in words, and machine-checkable assertions over the trace.
+Mỗi ca lỗi giờ đây trở thành một mục trong tập tin YAML: dữ liệu đầu vào (`input`), hành vi kỳ vọng diễn đạt bằng lời (`expect`), và các phép khẳng định có thể kiểm tra tự động bằng máy (`check`) chạy trên vết thực thi (`Traces`).
 
 ```yaml
 - id: refund_1042
@@ -22,11 +22,11 @@ Each case becomes a YAML entry: the input, the expected behaviour in words, and 
     - trace has approval_request before refund
 ```
 
-Save all twenty as `cases.yaml`. The `expect` line is for humans; the `check` lines are the test.
+Hãy lưu toàn bộ hai mươi ca vào tập tin `cases.yaml`. Dòng `expect` dành cho con người đọc hiểu; còn các dòng `check` chính là bài kiểm thử tự động.
 
-## Step 3: run the checks on traces
+## Bước 3: Chạy kiểm tra trực tiếp trên Traces
 
-Store each run's trace as `traces/<id>.json` — a list of events, tool calls included:
+Lưu vết thực thi của mỗi lần chạy thành một tập tin `traces/<id>.json` — cấu trúc là một danh sách các sự kiện, bao gồm cả các lệnh gọi công cụ (`Tool use`):
 
 ```json
 [
@@ -38,7 +38,7 @@ Store each run's trace as `traces/<id>.json` — a list of events, tool calls in
 ]
 ```
 
-Save this runner as `check_traces.py` (needs `pip install pyyaml`):
+Lưu kịch bản chạy kiểm thử dưới đây thành tập tin `check_traces.py` (cần cài đặt thư viện bằng lệnh `pip install pyyaml`):
 
 ```python
 import json
@@ -95,29 +95,29 @@ if __name__ == "__main__":
     main()
 ```
 
-Run `python check_traces.py cases.yaml traces/`. No model calls, so it finishes in well under the five-second budget and exits non-zero for CI. Report per check, exactly as printed — never collapse this into one pass rate.
+Chạy lệnh `python check_traces.py cases.yaml traces/`. Kịch bản này không thực hiện bất kỳ lệnh gọi mô hình nào, nhờ vậy nó hoàn tất gọn nhẹ dưới ngưỡng ngân sách năm giây và trả về mã thoát khác không (non-zero exit code) để tích hợp thẳng vào hệ thống CI. Hãy báo cáo kết quả chi tiết trên từng dòng kiểm tra đúng như những gì in ra màn hình — tuyệt đối không gộp chung chúng lại thành một con số tỷ lệ phần trăm duy nhất.
 
-## Step 4: calibrate one narrow judge
+## Bước 4: Hiệu chuẩn một giám khảo AI chuyên biệt
 
-For the behaviours code cannot see ("the reply is grounded in the retrieved note"), write one judge with one question and a binary verdict. Before trusting it, hand-label ten outputs yourself and measure agreement — the ten-label script in [build the suite](../track-evals/build-suite.md) does this in thirty lines, and [llm as judge](../track-evals/llm-as-judge.md) covers the biases to watch. Below eight in ten agreement, fix the rubric, not the threshold.
+Đối với những hành vi mà code thuần túy không thể kiểm tra được (ví dụ: "câu trả lời phải bám sát nội dung trong ghi chú đã truy xuất"), hãy viết một giám khảo (`LLM-as-judge`) chỉ hỏi đúng một câu hỏi hẹp và trả về phán quyết nhị phân (đạt/không đạt). Trước khi tin tưởng giao việc cho nó, hãy tự tay gán nhãn mười kết quả đầu ra và đo tỷ lệ đồng thuận — kịch bản đối chiếu mười nhãn trong bài [xây dựng bộ kiểm thử (build the suite)](../track-evals/build-suite.md) giải quyết việc này chỉ với ba mươi dòng code, và bài [LLM làm giám khảo](../track-evals/llm-as-judge.md) liệt kê đầy đủ các loại thiên kiến cần cảnh giác. Nếu tỷ lệ đồng thuận dưới mức tám trên mười (80%), hãy sửa lại tiêu chí chấm (rubric), chứ đừng hạ thấp ngưỡng chấp nhận.
 
-## Step 5: schedule weekly hand-grading
+## Bước 5: Lên lịch chấm điểm thủ công hàng tuần
 
-Every week, pull five random real runs and grade them by hand against your own expectations. Disagreements with the suite become new cases; failures the suite never saw become new checks. Fifteen minutes weekly is what stops the set decaying.
+Mỗi tuần, hãy lấy ngẫu nhiên năm lần chạy thực tế và tự tay chấm điểm chúng dựa trên kỳ vọng của chính bạn. Những trường hợp kết quả chấm của bạn khác với bộ `Evals` sẽ trở thành các ca kiểm thử mới; những lỗi mới phát sinh mà bộ `Evals` chưa từng nhìn thấy sẽ trở thành các quy tắc kiểm tra (`check`) mới. Mười lăm phút đều đặn mỗi tuần chính là thứ ngăn không cho bộ dữ liệu chuẩn (`Golden set`) bị thoái hóa theo thời gian.
 
-## Tips
+## Mẹo thực chiến
 
-- Prefer `trace has` assertions over judges everywhere both could work.
-- Keep case ids greppable and stable; you will search for them in six months.
-- When a check flakes, the behaviour is genuinely nondeterministic — that is a finding, not a test bug.
-- Add a happy-path case per behaviour so you notice over-correction.
+- Luôn ưu tiên dùng các phép khẳng định `trace has` thay vì dùng giám khảo AI ở bất cứ nơi nào có thể áp dụng được cả hai.
+- Đặt mã định danh (`id`) của từng ca kiểm thử ngắn gọn, cố định và dễ tìm kiếm bằng lệnh `grep`; sáu tháng nữa bạn chắc chắn sẽ cần tìm lại chúng.
+- Khi một phép kiểm tra lúc đạt lúc trượt (flaky), nghĩa là hành vi của `Agent` thực sự đang bất định (nondeterministic) — đó là một phát hiện quan trọng về lỗi hệ thống, chứ không phải lỗi của bài test.
+- Bổ sung thêm một ca kiểm thử kịch bản thuận lợi (happy-path) cho mỗi nhóm hành vi để bạn kịp thời nhận ra nếu hệ thống bị chỉnh sửa quá tay (over-correction).
 
-## Prove it to yourself
+## Tự mình kiểm chứng
 
-1. Delete the `get_order` event from a trace and confirm the runner fails with the right reason.
-2. Run your judge three times on one output; if verdicts disagree, tighten the rubric until they stop.
-3. Break the refund behaviour deliberately, and confirm the aggregate barely moves while the individual check goes red.
+1. Xóa thử sự kiện `get_order` khỏi một tập tin trace và xác nhận rằng kịch bản `check_traces.py` báo lỗi `FAIL` với lý do giải thích chính xác.
+2. Cho giám khảo AI của bạn chạy ba lần liên tiếp trên cùng một kết quả đầu ra; nếu các phán quyết không đồng nhất, hãy siết chặt lại tiêu chí chấm (rubric) cho đến khi kết quả hoàn toàn ổn định.
+3. Cố tình làm hỏng hành vi hoàn tiền của `Agent`, sau đó xác nhận xem có phải điểm số trung bình tổng thể gần như không nhúc nhích trong khi dòng kiểm tra riêng lẻ chuyển sang màu đỏ hay không.
 
-Next module: [from prototype to production](../course-6-production/from-prototype.md).
+Học phần tiếp theo: [từ bản thử nghiệm đến triển khai thực tế (Production)](../course-6-production/from-prototype.md).
 
-Go deeper → the handbook's three builds, starting from the `cases.yaml` you just wrote: [read your traces](../track-evals/build-traces.md) from the taxonomy pass onwards (collection is done), [build the suite](../track-evals/build-suite.md) for the calibrated judge, and [the CI gate](../track-evals/build-ci.md). Nothing here is thrown away.
+Tìm hiểu sâu hơn → ba bài thực hành lớn trong cẩm nang chuyên sâu, bắt đầu trực tiếp từ tập tin `cases.yaml` bạn vừa viết: [đọc hiểu Traces](../track-evals/build-traces.md) từ bước phân loại lỗi trở đi (vì khâu thu thập đã xong), [xây dựng bộ kiểm thử](../track-evals/build-suite.md) để tích hợp giám khảo đã hiệu chuẩn, và [cổng chặn CI (the CI gate)](../track-evals/build-ci.md). Không có bất kỳ thứ gì bạn làm ở trang này bị bỏ phí.

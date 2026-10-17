@@ -1,59 +1,46 @@
-# Live data connectors
+# Kết nối dữ liệu thời gian thực
 
-Static notes are half a brain. The other half is what is changing: your
-calendar, your inbox, the channels where decisions actually get made.
+Các ghi chú tĩnh mới chỉ là một nửa bộ não. Nửa còn lại nằm ở những thông tin đang biến chuyển liên tục mỗi ngày: lịch làm việc của bạn, hộp thư đến, và các kênh trò chuyện nơi những quyết định thực tế được đưa ra.
 
-MCP connects those the same way it connects Obsidian.
+Giao thức MCP kết nối những nguồn dữ liệu động đó theo đúng cách mà nó kết nối với Obsidian.
 
-## Calendar
+## Kết nối Lịch (Calendar)
 
 ```bash
 claude mcp add google-workspace uvx workspace-mcp --tools calendar
 ```
 
-An OAuth sign-in opens in the browser. Grant read access.
+Một cửa sổ đăng nhập OAuth sẽ mở ra trên trình duyệt. Hãy cấp quyền chỉ đọc (read access).
 
-Then the vault can act on it:
+Sau đó, Vault của bạn đã có thể làm việc trực tiếp với dữ liệu lịch:
 
 ```
 Read my calendar for today, log what I committed to in each meeting into my
 tasks project, and flag anything without a clear next step.
 ```
 
-Email, Slack and Notion connect through their own MCP servers, registered the
-same way.
+Email, Slack và Notion cũng được kết nối thông qua các máy chủ MCP tương ứng của chúng, đăng ký bằng quy trình hoàn toàn tương tự.
 
-## Grant read, not write
+## Chỉ cấp quyền đọc, tuyệt đối không cấp quyền ghi
 
-Give every connector the narrowest scope that does the job, and prefer read-only
-wherever the option exists. The brain should read your data, not delete it or
-send things on your behalf.
+Hãy cấp cho mỗi bộ kết nối (connector) phạm vi quyền hạn hẹp nhất đủ để hoàn thành công việc, và luôn ưu tiên chế độ chỉ đọc (read-only) ở bất kỳ nơi nào có tùy chọn này. Second Brain chỉ nên đọc dữ liệu của bạn để tổng hợp thông tin, chứ không được phép xóa dữ liệu hay tự ý gửi tin nhắn, email thay mặt bạn.
 
-## The rule that matters most
+## Nguyên tắc quan trọng nhất cần khắc cốt ghi tâm
 
-**Keys, not prompts.**
+**Kiểm soát bằng khóa phân quyền (Keys), không phải bằng câu lệnh nhắc (Prompts).**
 
-Telling an agent "do not delete this" is a suggestion. It is not a safety
-setting. If the agent technically can delete a file, empty a folder or send an
-email, then one day, in some context you did not predict, it will.
+Việc dặn một Agent rằng "đừng xóa dữ liệu này nhé" chỉ là một lời gợi ý, hoàn toàn không phải là một thiết lập an toàn. Nếu về mặt kỹ thuật, Agent có đủ quyền hạn để xóa một file, dọn sạch một thư mục hay gửi đi một bức thư điện tử, thì sớm muộn gì vào một ngày đẹp trời nào đó, trong một ngữ cảnh mà bạn không lường trước được, nó sẽ thực sự làm điều đó.
 
-Control what is possible at the permission level: read-only tokens, scoped keys,
-separate credentials per connector. Then the instruction in your `CLAUDE.md` is
-a preference on top of a boundary, rather than the only thing standing between
-your inbox and a bad run.
+Hãy chặn đứng những rủi ro không mong muốn ngay từ tầng cấp quyền hệ thống: sử dụng token chỉ đọc, khóa API giới hạn phạm vi (scoped keys), và tách biệt thông tin xác thực cho từng bộ kết nối. Khi đó, lời dặn trong file `CLAUDE.md` của bạn sẽ đóng vai trò là một chỉ dẫn ưu tiên nằm bên trên một hàng rào kỹ thuật vững chắc, thay vì là chốt chặn mong manh duy nhất ngăn giữa hộp thư của bạn và một lượt chạy lỗi của AI.
 
-This applies to your own vault too. See
-[guardrails](../06-agents/safety-and-guardrails.md).
+Nguyên tắc này cũng áp dụng tương tự cho chính Vault của bạn. Hãy xem bài [Hàng rào bảo vệ (Guardrails)](../06-agents/safety-and-guardrails.md).
 
-## What is worth connecting
+## Những nguồn dữ liệu nào thực sự đáng kết nối
 
-Connect the sources where decisions and commitments live: calendar first, then
-whichever of email or chat you actually use for work.
+Hãy ưu tiên kết nối những nguồn nơi các quyết định và cam kết công việc thực sự diễn ra: đầu tiên là lịch làm việc, tiếp theo là email hoặc ứng dụng trò chuyện mà bạn thực sự dùng chính cho công việc hằng ngày.
 
-Skip the ones that produce volume without signal. A connector that floods the
-vault with notifications makes every future query worse, because the agent has
-to read past all of it.
+Hãy bỏ qua những nguồn sinh ra khối lượng dữ liệu khổng lồ nhưng chứa rất ít tín hiệu giá trị. Một bộ kết nối xả hàng tá thông báo rác vào Vault sẽ làm giảm chất lượng của mọi câu truy vấn trong tương lai, bởi Agent sẽ phải đọc lướt qua toàn bộ đống tạp âm đó.
 
-## Next
+## Tiếp theo
 
-[Plugins worth installing](obsidian-plugins.md)
+[Những plugin đáng cài đặt](obsidian-plugins.md)

@@ -1,18 +1,18 @@
-# Build: a Typed Decision Endpoint
+# Thực hành: Điểm cuối quyết định định kiểu
 
-Jev is waitlisted, so most readers cannot call it yet — access status in [getting started](getting-started.md). What you can build today is the shape it fits into: a function that takes a schema and some state and returns a typed decision with a confidence score. Build that seam now with an ordinary LLM, and the [System One model](system-one-models.md) becomes a drop-in later. This page builds the endpoint; the next wires it into a router.
+Jev hiện vẫn đang trong danh sách chờ, nên hầu hết độc giả chưa thể gọi trực tiếp nó ngay lúc này — xem tình trạng cấp quyền truy cập tại bài [bắt đầu với Jev](getting-started.md). Thứ bạn hoàn toàn có thể xây dựng ngay hôm nay chính là cái khuôn mà nó sẽ lắp vừa khít vào: một hàm nhận đầu vào là lược đồ (schema) cùng trạng thái dữ liệu, rồi trả về một quyết định có định kiểu kèm theo điểm số tự tin (confidence score). Hãy xây dựng đường khớp nối (seam) đó ngay bây giờ bằng một mô hình LLM thông thường, để sau này [mô hình System One](system-one-models.md) có thể lắp thế chỗ (drop-in) một cách nhẹ nhàng. Trang này xây dựng điểm cuối quyết định đó; trang tiếp theo sẽ đấu nối nó vào một bộ định tuyến (Router).
 
-## The contract
+## Bản hợp đồng giao tiếp (Contract)
 
-One function, `decide(schema, question, state)`, returning `{"value": ..., "confidence": ...}` where `value` conforms to the schema and `confidence` is between 0 and 1. That mirrors what Jev's primitives give you — a typed answer plus a probability — without pretending to match how it produces them.
+Một hàm duy nhất, `decide(schema, question, state)`, trả về `{"value": ..., "confidence": ...}`, trong đó `value` tuân thủ đúng lược đồ được truyền vào và `confidence` là một số thực nằm giữa 0 và 1. Cấu trúc này phản chiếu chính xác những gì các kiểu nguyên thủy của Jev mang lại cho bạn — một câu trả lời có định kiểu cộng với một xác suất — mà không cần giả vờ bắt chước cách Jev tính toán ra chúng bên dưới.
 
-## Why self-consistency, not logprobs
+## Tại sao dùng tính nhất quán tự thân (Self-consistency) thay vì logprobs
 
-Two honest routes to a confidence number from an LLM. Token logprobs would be the direct one, but it is closed today: the Claude API does not expose logprobs at all, and on OpenAI's current models developers report the logprobs array coming back empty whenever structured outputs (`json_schema`) are enabled — the one mode this pattern depends on. The route that works is self-consistency: sample the same question several times, take the majority answer, and use the agreement fraction as confidence. Cruder, but it measures something real — how stable the model's judgement is on your input.
+Có hai con đường thực tế để lấy ra một con số đo độ tự tin từ LLM. Dùng xác suất logarit của token (`logprobs`) lẽ ra là con đường trực tiếp nhất, nhưng cánh cửa đó hiện đang đóng: API của Claude hoàn toàn không cung cấp `logprobs`, còn trên các mô hình hiện tại của OpenAI, các nhà phát triển phản ánh rằng mảng `logprobs` trả về luôn trống rỗng mỗi khi bật chế độ đầu ra có cấu trúc (`json_schema`) — mà đây lại là chế độ bắt buộc phải có của mẫu thiết kế này. Con đường thực sự hoạt động được là dựa vào tính nhất quán tự thân (self-consistency): lấy mẫu (sample) cùng một câu hỏi nhiều lần, chọn câu trả lời chiếm đa số, và lấy tỷ lệ đồng thuận làm độ tự tin. Tuy thô sơ hơn, nhưng nó đo lường một đại lượng có thật — mức độ ổn định trong phán đoán của mô hình trước đầu vào của bạn.
 
-## The code
+## Mã nguồn triển khai
 
-Constrained output via the Claude API's structured outputs (`output_config`, generally available, no beta header), five parallel samples on the small fast model. Needs `pip install anthropic` and an `ANTHROPIC_API_KEY`.
+Sử dụng đầu ra có ràng buộc thông qua tính năng structured outputs của Claude API (`output_config`, đã phát hành chính thức, không cần cờ beta), chạy năm mẫu song song trên mô hình nhỏ và nhanh. Cần cài đặt `pip install anthropic` và thiết lập biến môi trường `ANTHROPIC_API_KEY`.
 
 ```python
 # decision.py
@@ -62,6 +62,6 @@ if __name__ == "__main__":
     ))
 ```
 
-## How this differs from a real System One model
+## Cách làm này khác gì so với một mô hình System One thực thụ
 
-Be clear-eyed about the gap. Jev is non-autoregressive and answers a whole battery of questions in one parallel pass; this makes five generation calls per question. Its confidence is a calibrated probability trained with RLCD; ours is a vote count that can only take six values and says nothing about calibration. Latency is a second or two against a claimed 70–500ms, and each decision costs five Haiku calls against $0.042 per million tokens. What survives the swap is the contract — and that is the part your code depends on. Next: [the confidence-gated router](build-router.md).
+Hãy nhìn nhận thật tỉnh táo về khoảng cách giữa hai bên. Jev là mô hình phi tự hồi quy và trả lời cả một loạt câu hỏi chỉ trong một lượt chạy song song duy nhất; trong khi cách làm trên tốn năm lệnh gọi sinh văn bản cho mỗi câu hỏi. Độ tự tin của Jev là xác suất đã được hiệu chuẩn thông qua huấn luyện RLCD; còn của chúng ta là phép đếm phiếu bầu chỉ nhận sáu giá trị rời rạc và không nói lên điều gì về độ hiệu chuẩn. Độ trễ ở đây rơi vào khoảng một đến hai giây so với con số công bố 70–500ms của Jev, và mỗi quyết định tiêu tốn năm lệnh gọi Haiku so với mức giá \$0.042 trên mỗi triệu token. Thứ giữ nguyên không đổi sau khi hoán đổi chính là bản hợp đồng giao tiếp (contract) — và đó mới là phần duy nhất mà mã nguồn ứng dụng của bạn phụ thuộc vào. Tiếp theo: [bộ định tuyến có ngưỡng tự tin](build-router.md).

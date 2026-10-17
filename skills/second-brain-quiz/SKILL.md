@@ -1,54 +1,46 @@
 ---
 name: second-brain-quiz
 description: >-
-  Generate questions from the user's own concept pages so they can find out what
-  they saved but never learned, and compare their answers against what the pages
-  say. Use this skill when the user wants to test themselves, revise, make
-  flashcards from their notes, or asks what they have forgotten. Do NOT use for
-  generic quizzing on a topic the vault does not cover, or for answering a
-  question from the vault.
+  Tạo câu hỏi ôn tập từ chính các trang khái niệm của người dùng để họ phát hiện ra
+  những gì mình đã lưu lại nhưng chưa thực sự học, đồng thời đối chiếu câu trả lời
+  của họ với nội dung ghi trên trang. Sử dụng kỹ năng này khi người dùng muốn tự
+  kiểm tra kiến thức, ôn tập, tạo thẻ ghi nhớ (flashcards) từ ghi chú, hoặc hỏi xem
+  họ đã quên những gì. KHÔNG dùng để đố vui kiến thức chung về một chủ đề mà vault
+  không đề cập, hoặc để trả lời câu hỏi tra cứu từ vault.
 ---
 
-# Quiz from your own pages
+# Tự kiểm tra kiến thức từ trang của bạn (Quiz from your own pages)
 
-Reading something is not learning it. A vault of well-written pages nobody
-revisits is a library, and libraries do not make anyone knowledgeable.
+Đọc một điều gì đó không đồng nghĩa với việc đã học được nó. Một chiếc vault chứa đầy những trang viết rất hay nhưng không bao giờ được đọc lại thì chỉ là một cái thư viện, và việc sở hữu thư viện không tự khắc biến ai thành người hiểu biết cả.
 
-## Core rule
+## Quy tắc cốt lõi
 
-Questions come from the user's pages, at the depth those pages record. Never
-from general knowledge about the topic.
+Câu hỏi phải xuất phát từ chính các trang của người dùng, ở đúng độ sâu mà những trang đó ghi nhận. Không bao giờ lấy từ kiến thức phổ thông bên ngoài về chủ đề đó.
 
-## Workflow
+## Quy trình thực hiện
 
-1. **Pick the scope:** a topic, a cluster, or pages updated recently.
-2. **Write questions of two kinds:** recall of what the page states, and
-   application of the idea to a new case.
-3. **Withhold answers** until the user has attempted them.
-4. **Grade against the page, not against what is true.** If they answered
-   correctly but the page says otherwise, that is a page problem worth
-   surfacing.
-5. **Report the gaps:** which pages they could not answer from. Those are things
-   saved and never learned.
+1. **Chọn phạm vi ôn tập:** một chủ đề, một cụm liên kết, hoặc các trang vừa được cập nhật gần đây.
+2. **Đặt hai loại câu hỏi:** câu hỏi gợi nhớ (recall) về những gì trang đó trình bày, và câu hỏi vận dụng (application) áp dụng ý tưởng đó vào một tình huống mới.
+3. **Giấu đáp án** cho đến khi người dùng tự mình trả lời xong.
+4. **Chấm điểm dựa trên nội dung trang wiki, chứ không dựa trên sự thật chung bên ngoài.** Nếu người dùng trả lời đúng về mặt thực tế nhưng trang wiki lại ghi khác, đó là một lỗi của trang wiki rất đáng được chỉ ra để cập nhật.
+5. **Báo cáo các lỗ hổng kiến thức:** những trang nào người dùng không thể trả lời được. Đó chính là những thứ đã được lưu lại nhưng chưa bao giờ thực sự đi vào đầu.
 
-## Output format
+## Định dạng đầu ra
 
 ```
-<n> questions from <n> pages
+<n> câu hỏi từ <n> trang
 
-1. <question>
+1. <câu hỏi>
 ...
 
-[after answers]
-Solid: <topics>
-Shaky: <topics, with the pages to reread>
-Page problems found: <pages that are unclear or wrong>
+[sau khi người dùng trả lời]
+Solid: <các chủ đề đã nắm vững>
+Shaky: <các chủ đề còn mơ hồ, kèm theo tên trang cần đọc lại>
+Page problems found: <các trang viết chưa rõ ràng hoặc bị sai>
 ```
 
-## Calibration
+## Hiệu chuẩn (Calibration)
 
-Keep it to a handful of pages that matter. Quizzing everything ever saved is a
-job, not a habit.
+Chỉ giới hạn ở một vài trang thực sự quan trọng trong mỗi lượt. Việc kiểm tra toàn bộ mọi thứ từng lưu trong đời là một gánh nặng khổ sai chứ không phải một thói quen học tập.
 
-A page that cannot generate a good application question is usually a page that
-records the source's wording rather than an understanding of it. Say so.
+Một trang không thể dùng để đặt ra nổi một câu hỏi vận dụng hay thường là trang chỉ chép lại lời lẽ của tài liệu nguồn chứ chưa thực sự tiêu hóa thành sự hiểu biết. Hãy chỉ rõ điều đó cho người dùng.

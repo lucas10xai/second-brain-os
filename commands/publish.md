@@ -1,7 +1,7 @@
 ---
-description: Check what is safe to publish
+description: Kiểm tra những nội dung an toàn để xuất bản
 ---
 
-Audit the opt-in set. Links to unpublished pages, flagged content, frontmatter to strip. Report only; do not build.
+Kiểm toán tập hợp các trang được chọn xuất bản (opt-in). Rà soát các liên kết trỏ tới trang chưa xuất bản, nội dung nhạy cảm bị gắn cờ, và các trường frontmatter cần lược bỏ. Chỉ báo cáo kết quả, không chạy lệnh đóng gói (build).
 
-Follow the `second-brain-publish` skill.
+Thực hiện theo skill `second-brain-publish`.

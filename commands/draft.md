@@ -1,7 +1,7 @@
 ---
-description: Draft from the vault
+description: Viết bản nháp từ kho tri thức
 ---
 
-Draft $ARGUMENTS from vault pages. First pass only, to be rewritten in the user's voice. Never introduce a number with no source page behind it.
+Viết bản nháp về $ARGUMENTS từ các trang trong kho tri thức. Đây chỉ là bản nháp đầu tiên để người dùng viết lại theo giọng văn của mình. Tuyệt đối không đưa vào bất kỳ con số nào mà không có trang nguồn đứng sau.
 
-Follow the `second-brain-write` skill.
+Thực hiện theo skill `second-brain-write`.

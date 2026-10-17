@@ -1,7 +1,7 @@
 ---
-description: Ingest your own finished work
+description: Nạp tác phẩm đã hoàn thành của chính bạn
 ---
 
-Ingest $ARGUMENTS as a source authored by the user: their positions, stated clearly, at a date. This is what makes the next piece in a domain faster.
+Nạp $ARGUMENTS như một nguồn tài liệu do chính người dùng viết: các quan điểm của họ, được phát biểu rõ ràng tại một mốc thời gian cụ thể. Điều này giúp việc viết bài tiếp theo trong cùng lĩnh vực nhanh hơn rất nhiều.
 
-Follow the `second-brain-ingest` skill.
+Thực hiện theo skill `second-brain-ingest`.

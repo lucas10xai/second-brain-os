@@ -1,79 +1,56 @@
-# Guardrails
+# Guardrails (Rào chắn an toàn)
 
-The rule this whole section rests on:
+Quy tắc nền tảng mà toàn bộ chương này dựa vào:
 
-**Keys, not prompts.**
+**Kiểm soát bằng quyền hạn (Keys), không phải bằng lời dặn trong prompt.**
 
-Telling an agent not to do something is a preference. It is not a boundary. If
-the agent technically can delete a file, empty a folder or send an email, then
-one day, in a context you did not anticipate, it will.
+Việc dặn một `Agent` đừng làm điều gì đó chỉ là bày tỏ một nguyện vọng (preference). Đó không phải là một ranh giới an toàn (boundary). Nếu về mặt kỹ thuật, `Agent` có đủ quyền để xóa một file, làm rỗng một thư mục hoặc gửi đi một bức email, thì một ngày nào đó, trong một ngữ cảnh mà bạn không lường trước được, nó chắc chắn sẽ làm thế.
 
-Control what is possible at the permission level. Then the instruction in
-`CLAUDE.md` is a preference sitting on top of a boundary, rather than the only
-thing between your notes and a bad run.
+Hãy kiểm soát những gì có thể xảy ra ngay ở tầng phân quyền hệ thống (permission level). Khi đó, chỉ dẫn trong `CLAUDE.md` sẽ đóng vai trò là định hướng hành vi nằm bên trên một ranh giới cứng, thay vì là thứ mỏng manh duy nhất chắn giữa kho ghi chú của bạn và một lượt chạy thảm họa.
 
-## Scope write access
+## Giới hạn phạm vi quyền ghi (Scope write access)
 
-The agent needs write access to the vault. It does not need write access to your
-home directory, and a scheduled task running with broad filesystem permissions is
-a large blast radius for a small convenience.
+`Agent` cần quyền ghi vào bên trong `Vault`. Nó hoàn toàn không cần quyền ghi vào thư mục gốc của người dùng (home directory), và một tác vụ chạy tự động theo lịch được cấp quyền truy cập hệ thống tệp tin quá rộng sẽ tạo ra một bán kính sát thương (blast radius) khổng lồ chỉ để đổi lấy một chút tiện lợi nhỏ nhoi.
 
-Same principle for connectors: read-only wherever the option exists. A calendar
-connector that can only read cannot cancel a meeting, no matter what a
-misinterpreted instruction says.
+Nguyên tắc tương tự cũng áp dụng cho các bộ kết nối (connectors): hãy luôn chọn chế độ chỉ đọc (read-only) ở bất cứ nơi nào có tùy chọn đó. Một bộ kết nối lịch làm việc chỉ có quyền đọc thì không bao giờ có thể tự ý hủy một cuộc họp của bạn, bất kể nó có hiểu lầm câu chỉ dẫn trong prompt đến mức nào đi chăng nữa.
 
-## Never delete without a record
+## Không bao giờ xóa mà không lưu vết
 
-Deletion is the one operation you cannot recover from by reading a diff, because
-the content is gone and only the absence remains.
+Xóa là thao tác duy nhất bạn không thể phục hồi thông tin chỉ bằng cách đọc lướt qua bản diff, bởi vì toàn bộ nội dung đã biến mất và thứ duy nhất còn sót lại chỉ là sự vắng mặt của nó.
 
-Rule: no page is deleted without a line in `log.md` naming it and why. Merges
-count as deletions. Applied consistently, a page that vanishes is always
-traceable, and "where did that page go" stops being an unanswerable question.
+Quy tắc bắt buộc: không có bất kỳ trang nào được phép xóa đi mà không có một dòng ghi nhận trong `log.md` nêu rõ tên trang và lý do xóa. Việc gộp trang (merge) cũng được tính là một thao tác xóa. Khi được áp dụng nhất quán, bất kỳ trang nào biến mất cũng đều có thể truy vết được hoàn toàn, và câu hỏi *"trang đó biến đâu mất rồi?"* sẽ không bao giờ còn là một bí ẩn không lời giải.
 
-## Git is the real safety net
+## Git mới là tấm lưới an toàn thực sự
 
-Every guardrail above is preventive. Git is what saves you when one fails.
+Mọi rào chắn (`Guardrails`) nêu trên đều mang tính phòng ngừa. Còn `Git` chính là thứ cứu mạng bạn khi một trong các rào chắn đó bị thủng.
 
-Commit before any run that writes at scale. Scheduled runs commit their own work.
-Then a bad ingest is `git checkout .`, and a bad merge is one revert.
+Hãy luôn tạo commit trước bất kỳ lượt chạy nào có thực hiện ghi dữ liệu ở quy mô lớn. Các lượt chạy tự động theo lịch phải tự commit phần việc của chính mình. Nhờ vậy, nếu có một lượt `Ingest` tệ hại, bạn chỉ cần gõ `git checkout .`, và nếu có một cú gộp trang sai lầm, bạn chỉ cần đúng một lệnh revert.
 
-Read the diffs from scheduled runs occasionally, especially in the first weeks.
-That is how you learn what your agent actually does at 7am, which is reliably
-different from what you assumed.
+Thỉnh thoảng hãy mở xem lại các bản diff từ những lượt chạy tự động theo lịch, đặc biệt là trong những tuần đầu tiên mới vận hành. Đó là cách duy nhất giúp bạn thực sự hiểu `Agent` của mình đang làm những gì vào lúc 7 giờ sáng — thứ thường rất khác so với những gì bạn vẫn đinh ninh trong đầu.
 
-## Dry runs
+## Chạy thử nghiệm (Dry runs)
 
-For anything that touches many files, run it once in report-only mode.
+Đối với bất kỳ thao tác nào chạm tới nhiều file cùng lúc, hãy chạy nó một lần ở chế độ chỉ báo cáo (report-only mode).
 
 ```
-Do a dry run: list every page you would create, update or delete, and the links
-you would add. Write nothing.
+Hãy chạy thử (dry run): liệt kê mọi trang bạn dự định tạo mới, cập nhật hoặc xóa bỏ, cùng các liên kết
+bạn sẽ thêm vào. Tuyệt đối không ghi bất kỳ thay đổi nào xuống file.
 ```
 
-The output takes a minute to read and catches misread instructions before they
-become four hundred edits.
+Kết quả đầu ra chỉ mất khoảng một phút để đọc lướt qua nhưng sẽ giúp bạn bắt gọn những chỉ dẫn bị hiểu sai trước khi chúng biến thành bốn trăm lượt chỉnh sửa file thực tế.
 
-## Watch for scope creep
+## Cảnh giác với hiện tượng tự ý mở rộng phạm vi (Scope creep)
 
-Agents extend the job. Asked to ingest, an agent may also tidy an unrelated page,
-fix formatting, rename something for consistency. Each is defensible; together
-they mean you cannot tell what a run did without reading everything.
+Các `Agent` rất hay tự ý làm thêm việc ngoài yêu cầu. Khi được yêu cầu `Ingest` tài liệu, một `Agent` có thể tiện tay dọn dẹp lại một trang khác không liên quan, sửa lại định dạng Markdown, hay đổi tên một vài thứ cho đồng bộ. Từng hành động nhỏ đó nhìn riêng thì đều có lý lẽ bảo vệ được; nhưng khi gộp chung lại, chúng khiến bạn không thể nào biết được một lượt chạy thực sự đã làm những gì nếu không đọc lại toàn bộ mọi file.
 
-Instruct explicitly: do the job asked, list anything else you noticed, change
-nothing else.
+Hãy chỉ dẫn thật dứt khoát: chỉ làm đúng công việc được yêu cầu, liệt kê bất kỳ vấn đề nào khác mà bạn phát hiện ra vào báo cáo, và tuyệt đối không tự ý thay đổi thêm bất cứ thứ gì khác.
 
-## What not to put in the vault
+## Những gì tuyệt đối không đưa vào Vault
 
-Credentials, API keys, anything you are under obligation to keep confidential,
-other people's private information.
+Thông tin đăng nhập (credentials), API keys, bất kỳ tài liệu nào bạn có nghĩa vụ bảo mật, hoặc thông tin đời tư cá nhân của người khác.
 
-Not because the agent will leak it, but because the vault is a single file tree
-that gets synced, committed, backed up and occasionally shared. Every copy is
-another place that content exists. See
-[privacy](../09-maintenance/privacy-and-secrets.md).
+Không phải vì sợ `Agent` sẽ tự ý làm rò rỉ chúng, mà bởi vì bản chất `Vault` là một cây thư mục văn bản thuần túy liên tục được đồng bộ hóa (sync), đẩy lên `Git` commit, sao lưu dự phòng (backup) và đôi khi được chia sẻ cho người khác. Mỗi một bản sao như vậy lại là thêm một nơi mà nội dung nhạy cảm đó tồn tại. Xem thêm [Quyền riêng tư và thông tin bí mật](../09-maintenance/privacy-and-secrets.md).
 
-## Next
+## Tiếp theo
 
-[Retrieval](../07-retrieval/README.md), for getting answers out of what all this
-built.
+[Truy xuất thông tin (Retrieval)](../07-retrieval/README.md), để lấy ra các câu trả lời chất lượng từ toàn bộ hệ thống mà bạn đã dày công xây dựng.

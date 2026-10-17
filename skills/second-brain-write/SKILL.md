@@ -1,52 +1,44 @@
 ---
 name: second-brain-write
 description: >-
-  Draft from the vault: outline from concept pages, keep citations to the user's
-  own sources, and surface where their material disagrees. Use this skill when
-  the user wants to write an article, post, essay or newsletter based on what
-  they have collected, or asks what they could write about a topic. Do NOT use
-  for research reports, for writing with no grounding in the vault, or for
-  editing text the user wrote themselves unless asked.
+  Soạn thảo bài viết từ dữ liệu trong vault: lập dàn ý từ các trang khái niệm,
+  giữ nguyên trích dẫn tới các nguồn tài liệu của chính người dùng, và làm nổi bật
+  những điểm mà tư liệu của họ bất đồng với nhau. Sử dụng kỹ năng này khi người dùng
+  muốn viết một bài báo, bài đăng, tiểu luận hoặc bản tin (newsletter) dựa trên những
+  gì họ đã thu thập, hoặc hỏi xem họ có thể viết gì về một chủ đề. KHÔNG dùng cho
+  báo cáo nghiên cứu (second-brain-report), viết bài không dựa trên nền tảng dữ liệu
+  trong vault, hoặc tự ý biên tập văn bản do người dùng tự viết trừ khi được yêu cầu.
 ---
 
-# Write from the vault
+# Viết bài từ tư liệu trong Vault (Write from the vault)
 
-The research is already done, cited and connected. What is left is the argument,
-and that is the part the user should keep.
+Phần nghiên cứu đã được thực hiện xong, đã có trích dẫn và liên kết đầy đủ. Phần còn lại chính là lập luận sắc bén — và đó là phần mà chính người dùng nên giữ quyền làm chủ.
 
-## Core rule
+## Quy tắc cốt lõi
 
-Assemble structure and evidence. Do not hand back finished prose as if it were
-theirs.
+Lắp ghép cấu trúc và bằng chứng. Không trao trả lại một bài văn xuôi đã viết sẵn hoàn chỉnh như thể đó là lời văn của chính họ.
 
-## Workflow
+## Quy trình thực hiện
 
-1. **Find the relevant concept pages** and say what they collectively argue.
-2. **Surface the disagreements.** These are where the user has something to say
-   that is not the consensus view, and they are the most useful part of the
-   outline.
-3. **Build the outline** from pages, each point tied to the page behind it.
-4. **Mark the weak points:** claims resting on one source, self-reported
-   figures, anything the vault flags as unverified.
-5. **Draft only if asked,** and say plainly that the phrasing is a first pass to
-   be rewritten in their voice.
-6. **Offer to ingest the finished piece** back as a source once published.
+1. **Tìm các trang khái niệm (`concept`) liên quan** và nêu rõ tập hợp các trang đó đang cùng nhau lập luận cho điều gì.
+2. **Làm nổi bật những điểm bất đồng.** Đây chính là nơi người dùng có chất liệu để nói lên điều khác biệt so với quan điểm số đông, và cũng là phần giá trị nhất của bản dàn ý.
+3. **Xây dựng dàn ý** từ các trang wiki, mỗi luận điểm đều gắn liền với trang đứng sau nó.
+4. **Đánh dấu những điểm yếu:** những nhận định chỉ dựa trên một nguồn duy nhất, các con số tự công bố chưa kiểm chứng, hoặc bất kỳ điều gì mà vault đang gắn cờ là chưa xác thực.
+5. **Chỉ viết bản nháp thành văn khi được yêu cầu rõ ràng,** và nói thẳng rằng cách diễn đạt đó chỉ là bản nháp đầu tiên để người dùng viết lại bằng giọng văn riêng của họ.
+6. **Đề xuất nạp (ingest) tác phẩm hoàn chỉnh** ngược vào lại vault như một tài liệu nguồn sau khi bài viết được xuất bản.
 
-## Output format
+## Định dạng đầu ra
 
 ```
-Angle: <what this piece argues that the sources do not individually>
+Angle: <góc nhìn/luận điểm mà bài viết này đưa ra nhưng từng nguồn riêng lẻ chưa nói tới>
 Outline:
-  1. <point> - [[page]], [[page]]
-Weak points: <claims with thin support>
-Missing: <what would strengthen it>
+  1. <luận điểm> - [[trang]], [[trang]]
+Weak points: <các nhận định có bằng chứng mỏng>
+Missing: <những gì sẽ giúp củng cố bài viết mạnh hơn>
 ```
 
-## Calibration
+## Hiệu chuẩn (Calibration)
 
-If every point in the outline comes from one page, this is a summary of that
-page, not an article. Say so.
+Nếu mọi luận điểm trong dàn ý đều xuất phát từ một trang duy nhất, thì đây chỉ là bản tóm tắt của trang đó chứ không phải một bài viết mới. Hãy chỉ rõ điều đó.
 
-Never introduce a specific number or quote that has no source page behind it.
-That is the failure mode of writing with a model, and in a cited piece it is
-the one that costs the most.
+Không bao giờ tự đưa vào một con số cụ thể hay một câu trích dẫn mà không có trang nguồn nào trong vault đứng đằng sau. Đó là lỗi kinh điển khi viết bài bằng mô hình AI, và trong một bài viết có trích dẫn nguồn, đó là lỗi đắt giá nhất.

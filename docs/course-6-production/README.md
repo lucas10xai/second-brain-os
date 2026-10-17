@@ -1,9 +1,9 @@
-# 6 · Production
+# 6 · Vận hành thực tế (Production)
 
-From demo to deployed: gateways, tracing, cost, security - and the day-one plan across all five layers.
+Từ bản thử nghiệm đến triển khai thực tế: gateway, truy vết (tracing), chi phí, bảo mật — và kế hoạch ngày đầu tiên xuyên suốt cả năm tầng kiến trúc.
 
-A course module beside [the main guide](../../README.md) — read it on the site or in order below.
+Một học phần thuộc khóa học bên cạnh [cẩm nang chính](../../README.md) — đọc trực tiếp trên trang web hoặc theo thứ tự dưới đây.
 
-1. [From Prototype to Production](from-prototype.md)
-2. [Operating Agents](operating-agents.md)
-3. [The Day-One Plan](day-one-plan.md)
+1. [Từ bản thử nghiệm đến Production](from-prototype.md)
+2. [Vận hành Agent trong thực tế](operating-agents.md)
+3. [Kế hoạch hành động ngày đầu tiên](day-one-plan.md)

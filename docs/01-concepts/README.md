@@ -1,23 +1,20 @@
-# Concepts
+# Các khái niệm cốt lõi (Concepts)
 
-Why an LLM-maintained knowledge base beats the note system you abandoned, and
-what the pattern actually is.
+Vì sao một cơ sở tri thức do LLM duy trì lại vượt trội hơn hẳn những hệ thống ghi chú bạn từng bỏ dở, và bản chất thực sự của mô hình này là gì.
 
-Read this section if you want to understand why the rules in the rest of the
-guide are the way they are. Skip to [Setup](../02-setup/README.md) if you would
-rather have the thing running first and understand it after.
+Hãy đọc chương này nếu bạn muốn hiểu rõ lý do đằng sau các quy tắc được thiết lập trong toàn bộ phần còn lại của cẩm nang. Hoặc bạn có thể chuyển thẳng sang chương [Thiết lập](../02-setup/README.md) nếu muốn dựng hệ thống chạy được ngay rồi mới tìm hiểu nguyên lý sau.
 
-## Pages
+## Danh sách bài viết
 
-- [What a second brain actually is](what-is-a-second-brain.md)
-- [The save-for-later paradox](the-save-for-later-paradox.md)
-- [The LLM wiki pattern](llm-wiki-pattern.md)
-- [The two layers](two-layers.md)
-- [Why markdown and plain text](why-markdown-and-plain-text.md)
-- [Zettelkasten, PARA, evergreen notes](pkm-lineage.md)
-- [Wiki vs RAG](wiki-vs-rag.md)
-- [What good looks like](what-good-looks-like.md)
+- [Second Brain thực chất là gì](what-is-a-second-brain.md)
+- [Nghịch lý "lưu để đọc sau"](the-save-for-later-paradox.md)
+- [Mô hình Wiki vận hành bằng LLM](llm-wiki-pattern.md)
+- [Cấu trúc hai tầng](two-layers.md)
+- [Vì sao chọn Markdown và văn bản thuần túy](why-markdown-and-plain-text.md)
+- [Zettelkasten, PARA và ghi chú xanh mãi](pkm-lineage.md)
+- [Wiki so với RAG](wiki-vs-rag.md)
+- [Thế nào là một hệ thống vận hành tốt](what-good-looks-like.md)
 
 ---
 
-[Back to the full guide](../README.md)
+[Quay lại toàn bộ cẩm nang](../README.md)

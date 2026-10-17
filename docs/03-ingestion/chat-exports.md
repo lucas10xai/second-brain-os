@@ -1,49 +1,36 @@
-# Chat exports
+# Lịch sử trò chuyện AI (Chat exports)
 
-Your chat history is the most underrated source you own and the most sensitive.
-Years of problems you worked through, decisions you reasoned about, and
-explanations tailored to what you did not understand at the time.
+Lịch sử trò chuyện với AI là nguồn tư liệu bị đánh giá thấp nhất mà bạn đang sở hữu, nhưng đồng thời cũng là nguồn nhạy cảm nhất. Nơi đây lưu giữ hàng năm trời những bài toán bạn đã trăn trở giải quyết, những quyết định bạn đã cân nhắc kỹ lưỡng, và những lời giải thích được đo ni đóng giày cho đúng chỗ bạn chưa hiểu vào thời điểm đó.
 
-It is also full of things you would not want in a file you might later share.
-Read the privacy section below before running anything here.
+Nhưng nó cũng chứa đầy những thông tin cá nhân mà bạn sẽ không bao giờ muốn xuất hiện trong một file có khả năng được chia sẻ về sau. Hãy đọc kỹ mục quyền riêng tư ở cuối bài trước khi chạy bất kỳ lệnh nào dưới đây.
 
-## Exporting
+## Xuất dữ liệu lịch sử trò chuyện
 
-Both Claude and ChatGPT export the full history as JSON from account settings.
-The export arrives by email as a download link, usually within minutes.
+Cả Claude và ChatGPT đều cho phép xuất toàn bộ lịch sử trò chuyện dưới dạng file JSON ngay trong phần cài đặt tài khoản. Bản xuất dữ liệu sẽ được gửi về qua email dưới dạng đường dẫn tải xuống, thường chỉ mất vài phút.
 
-## Converting to markdown
+## Chuyển đổi sang định dạng Markdown
 
-One JSON blob is not ingestible. Split it into one file per conversation:
+Một khối file JSON khổng lồ nguyên cục sẽ không thể đưa vào Ingest trực tiếp được. Hãy tách nó ra thành từng file riêng biệt cho mỗi cuộc hội thoại:
 
 ```bash
 python3 scripts/chat_export_to_md.py conversations.json ./raw --min-words 150
 ```
 
-The script is in [`scripts/`](../../scripts/README.md). It handles the common
-export shapes, writes frontmatter with the title and date, and skips
-conversations shorter than the word threshold.
+Script này nằm sẵn trong thư mục [`scripts/`](../../scripts/README.md). Nó xử lý được các cấu trúc file xuất phổ biến, tự động ghi phần Frontmatter chứa tiêu đề cùng ngày tháng, và bỏ qua những cuộc hội thoại ngắn hơn ngưỡng số từ tối thiểu.
 
-Raise `--min-words` if the output is dominated by one-line exchanges. Most
-people's history is roughly ninety percent short throwaway questions, and those
-add nothing but volume.
+Hãy tăng giá trị tham số `--min-words` lên nếu kết quả đầu ra vẫn ngập tràn những đoạn hỏi đáp cụt lủn một dòng. Lịch sử trò chuyện của hầu hết mọi người có tới chín mươi phần trăm là những câu hỏi tra cứu vặt vãnh dùng một lần rồi bỏ — những thứ đó chỉ làm phình dung lượng chứ không mang lại giá trị tri thức nào.
 
-## Filter before ingesting
+## Sàng lọc kỹ trước khi Ingest
 
-Do not ingest the whole export. A thousand conversations produce a thousand
-source pages and a wiki where everything is faintly connected to everything.
+Tuyệt đối đừng Ingest toàn bộ dữ liệu vừa xuất ra. Một nghìn cuộc hội thoại sẽ đẻ ra một nghìn trang nguồn và biến hệ thống wiki thành một mạng lưới rối rắm nơi mọi thứ đều liên kết mờ nhạt với nhau.
 
-Sort into three piles:
+Hãy phân loại chúng thành ba nhóm:
 
-- **Worth ingesting.** Conversations where you worked something out, decided
-  something, or got an explanation that landed. These carry your reasoning, not
-  just facts.
-- **Worth keeping, not ingesting.** Leave them in `raw/` as an archive. The
-  agent can search them on demand without every one having a wiki page.
-- **Delete.** Debugging sessions, one-off lookups, anything you would be
-  annoyed to find in a search result.
+- **Đáng để Ingest.** Những cuộc trò chuyện nơi bạn đã tháo gỡ được một vấn đề khó, đưa ra một quyết định quan trọng, hoặc nhận được một lời giải thích thực sự khai sáng. Những hội thoại này chứa đựng mạch tư duy của chính bạn chứ không chỉ là thông tin thuần túy.
+- **Đáng giữ lại làm lưu trữ, nhưng không Ingest.** Cứ để chúng nằm yên trong thư mục `raw/` như một kho lưu trữ. Agent vẫn có thể tìm kiếm trên đó khi được yêu cầu mà không cần mỗi cuộc hội thoại phải chiếm một trang wiki riêng.
+- **Xóa bỏ hoàn toàn.** Các phiên gỡ lỗi (debugging) vụn vặt, các câu tra cứu nhanh một lần, hoặc bất kỳ nội dung nào mà bạn sẽ thấy phiền phức nếu nó cứ trồi lên trong kết quả tìm kiếm.
 
-Have the agent help with the sort rather than doing it by hand:
+Hãy nhờ Agent hỗ trợ việc phân loại ban đầu thay vì tự ngồi duyệt thủ công từng file:
 
 ```
 Read the titles and first exchange of every file in raw/chats/. Group them into
@@ -51,13 +38,11 @@ worth-ingesting, archive, and delete, with one line of reasoning each. Do not
 move or delete anything, just give me the lists.
 ```
 
-## What makes these sources different
+## Điểm khác biệt cốt lõi của nguồn tư liệu này
 
-A chat log is a record of you thinking, which means the useful extraction is
-often not the answer. It is the question you asked, the thing you had wrong at
-the start, and what changed your mind.
+Nhật ký trò chuyện là bản ghi lại quá trình tư duy của chính bạn, nghĩa là phần thông tin quý giá nhất cần trích xuất thường không nằm ở câu trả lời của máy. Nó nằm ở câu hỏi bạn đã đặt ra, điểm hiểu sai ban đầu của bạn, và lý lẽ nào đã khiến bạn thay đổi suy nghĩ.
 
-Tell the agent so:
+Hãy chỉ dẫn rõ điều đó cho Agent:
 
 ```
 These are my own past conversations. Build pages around what I was trying to
@@ -66,19 +51,14 @@ Note where I changed position, and record the date, because my views may have
 moved since.
 ```
 
-## Privacy
+## Quyền riêng tư
 
-Chat history contains more about you than any other file in the vault: health,
-money, work you cannot discuss, other people's information you happened to
-mention.
+Lịch sử trò chuyện chứa đựng nhiều thông tin sâu kín về bạn hơn bất kỳ file nào khác trong Vault: sức khỏe cá nhân, tài chính, những công việc bảo mật không được phép tiết lộ, hay thông tin của người khác mà bạn vô tình nhắc tới.
 
-Before ingesting, decide what does not belong in the vault at all and delete
-those files from `raw/`. Redaction after the fact is unreliable, because the
-material will already have propagated into concept pages and links.
+Trước khi chạy Ingest, hãy quyết định dứt khoát những nội dung nào hoàn toàn không nên có mặt trong Vault và xóa thẳng các file đó khỏi thư mục `raw/`. Việc cố gắng biên tập ẩn thông tin nhạy cảm (redaction) sau khi đã Ingest là không đáng tin cậy, bởi lúc đó thông tin đã kịp lan sang các trang khái niệm và hệ thống liên kết mất rồi.
 
-If the vault lives in a git repo, keep the remote private. See
-[privacy](../09-maintenance/privacy-and-secrets.md).
+Nếu Vault của bạn được quản lý bằng kho lưu trữ Git, hãy luôn giữ kho lưu trữ từ xa (remote) ở chế độ riêng tư. Xem thêm chi tiết tại bài [Quyền riêng tư và bảo mật thông tin](../09-maintenance/privacy-and-secrets.md).
 
-## Next
+## Tiếp theo
 
-[Voice notes and meetings](voice-and-meetings.md)
+[Ghi chú giọng nói và cuộc họp](voice-and-meetings.md)

@@ -1,27 +1,23 @@
-# Project: <name>
+# Dự án: <tên dự án>
 
-## What this is
+## Đây là gì
 
-One paragraph. What this project produces and for whom.
+Một đoạn văn ngắn. Dự án này tạo ra sản phẩm gì và dành cho ai.
 
-## The one goal
+## Mục tiêu duy nhất
 
-A single measurable outcome with a date. If there are three goals, this is
-three projects.
+Một kết quả đầu ra có thể đo lường được kèm theo mốc thời gian cụ thể. Nếu có tới ba mục tiêu, tức là đây phải là ba dự án khác nhau.
 
-## Your role
+## Vai trò của bạn
 
-What the agent does here specifically: drafts, reviews, analyses, researches.
-Name what it should not do as well, because scope creep inside a project is
-what turns a focused assistant back into a general chat window.
+Những việc cụ thể mà agent đảm nhận tại đây: soạn bản nháp, đánh giá, phân tích, nghiên cứu. Hãy nêu rõ cả những việc agent không được làm, bởi vì sự phình to phạm vi (scope creep) bên trong một dự án chính là nguyên nhân biến một trợ lý chuyên tâm quay trở lại thành một cửa sổ chat chung chung.
 
-## Working rules
+## Quy tắc làm việc
 
-- Where finished work goes
-- What format outputs take
-- What to check before calling something done
+- Sản phẩm hoàn thành sẽ được lưu ở đâu
+- Định dạng của sản phẩm đầu ra là gì
+- Những gì cần kiểm tra trước khi tuyên bố hoàn thành một công việc
 
-## Current state
+## Trạng thái hiện tại
 
-Updated as the project moves. What is done, what is in progress, what is
-blocked.
+Được cập nhật theo tiến độ dự án. Việc gì đã xong, việc gì đang làm, việc gì đang bị tắc nghẽn (blocked).

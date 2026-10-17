@@ -1,7 +1,7 @@
 ---
-description: Record a dated metrics snapshot
+description: Ghi lại bản chụp chỉ số có gắn ngày tháng
 ---
 
-Append this month's numbers to the metrics note and compare against the last entry.
+Nối thêm số liệu của tháng này vào trang ghi chú chỉ số (metrics) và so sánh với bản ghi gần nhất trước đó.
 
-Follow the `second-brain-metrics` skill.
+Thực hiện theo skill `second-brain-metrics`.

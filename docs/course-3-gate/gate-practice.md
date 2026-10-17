@@ -1,19 +1,19 @@
-# Gate Practice
+# Thực hành xây dựng Gate
 
-The discipline in one sentence: before evaluating any vendor, label a few hundred real examples and train a basic classifier. It takes thirty minutes, and it is the baseline every claim must beat on your data before it earns a place in your pipeline.
+Nguyên tắc kỷ luật gói gọn trong một câu: trước khi đánh giá bất kỳ công cụ của nhà cung cấp (vendor) nào, hãy tự gán nhãn vài trăm mẫu dữ liệu thực tế và huấn luyện một bộ phân loại cơ bản. Việc này chỉ mất khoảng ba mươi phút, và đó chính là cột mốc cơ sở (baseline) mà mọi lời quảng cáo phải đánh bại được trên chính dữ liệu của bạn trước khi xứng đáng có một chỗ đứng trong hệ thống.
 
 
-> This audit-and-baseline routine is packaged as a skill: install [the course plugin](../../plugins/README.md) and run `/agents-course:gate-check` on your pipeline.
+> Quy trình kiểm toán và xây dựng cột mốc cơ sở này đã được đóng gói thành một `Skill`: hãy cài đặt [plugin của khóa học](../../plugins/README.md) và chạy lệnh `/agents-course:gate-check` trên đường ống dữ liệu của bạn.
 
-## Label two hundred real examples
+## Gán nhãn hai trăm mẫu dữ liệu thực tế
 
-Pull the last 200 items from the stream your agent actually processes — not synthetic examples, not someone's public dataset. Use three labels:
+Hãy trích xuất 200 mục dữ liệu gần nhất từ chính luồng dữ liệu mà `Agent` của bạn đang xử lý hàng ngày — tuyệt đối không dùng dữ liệu nhân tạo tự chế, cũng không dùng bộ dữ liệu công khai của người khác. Sử dụng ba nhãn sau:
 
-- `file` — pure reference: newsletters, receipts, digests. Goes straight to storage, no model needed.
-- `act` — creates a concrete task: an invoice to pay, a form to sign, a meeting to confirm.
-- `judge` — needs actual judgement: an ambiguous request, a proposal, anything with stakes.
+- `file` — tài liệu tham khảo thuần túy: bản tin định kỳ (newsletters), biên lai, bản tổng hợp tin tức. Đi thẳng vào kho lưu trữ, không cần bất kỳ mô hình nào can thiệp.
+- `act` — tạo ra một tác vụ cụ thể rõ ràng: hóa đơn cần thanh toán, biểu mẫu cần ký duyệt, lịch họp cần xác nhận.
+- `judge` — đòi hỏi khả năng phán đoán thực sự: một yêu cầu mơ hồ, một lời đề nghị hợp tác, bất cứ thứ gì có rủi ro hoặc hệ quả lớn.
 
-Three rules while labelling. Label what the item is, not what you wish your categories were. When torn between two labels, choose `judge` — hesitation in you predicts hesitation in the gate. Do not invent new categories mid-run; note candidates and finish the pass. At five seconds an item this is about fifteen minutes. Save as `labels.csv`:
+Có ba quy tắc cần tuân thủ trong lúc gán nhãn. Hãy gán nhãn theo đúng bản chất thực tế của mục dữ liệu đó, chứ đừng gán theo những danh mục lý tưởng mà bạn ước ao. Khi phân vân giữa hai nhãn, hãy chọn `judge` — sự ngập ngừng của chính bạn dự báo chính xác sự ngập ngừng của `Gate`. Không tự ý đẻ thêm danh mục nhãn mới giữa chừng; hãy ghi chú các ứng viên nhãn mới ra chỗ khác và hoàn thành trọn vẹn lượt gán nhãn hiện tại. Với tốc độ năm giây cho mỗi mục, toàn bộ việc này chỉ mất khoảng mười lăm phút. Lưu kết quả vào tập tin `labels.csv`:
 
 ```csv
 text,label
@@ -22,9 +22,9 @@ text,label
 "Fwd: any thoughts on this partnership proposal?",judge
 ```
 
-## Train the baseline
+## Huấn luyện mô hình cơ sở (Baseline)
 
-Install once with `pip install scikit-learn pandas joblib`, then:
+Cài đặt thư viện một lần duy nhất bằng lệnh `pip install scikit-learn pandas joblib`, sau đó chạy đoạn mã sau:
 
 ```python
 # train_gate.py
@@ -53,11 +53,11 @@ print(classification_report(y_test, gate.predict(X_test), digits=3))
 joblib.dump(gate, "gate.joblib")
 ```
 
-## Measure, then decide
+## Đo lường rồi mới quyết định
 
-Read the per-class precision and recall, not just the headline accuracy. These numbers are your baseline. Only now is the vendor question well-posed: does anything fancier beat this, on this data, by enough to justify a network call, a bill, and a dependency? On the independent evidence so far — see [gates in practice](gates-in-practice.md) — the answer for a fixed, labelled task is usually no.
+Hãy đọc kỹ chỉ số độ chuẩn xác (precision) và độ phủ (recall) của từng lớp nhãn riêng biệt, chứ đừng chỉ nhìn vào con số độ chính xác tổng thể (headline accuracy). Những con số này chính là cột mốc cơ sở của bạn. Chỉ tới lúc này, câu hỏi lựa chọn nhà cung cấp mới được đặt ra một cách chuẩn xác: liệu có công cụ hào nhoáng nào đánh bại được cột mốc này, trên chính tập dữ liệu này, với cách biệt đủ lớn để biện minh cho một lệnh gọi qua mạng, một hóa đơn chi phí và sự phụ thuộc vào bên thứ ba hay không? Dựa trên các bằng chứng độc lập tính đến hiện tại — xem lại bài [Ứng dụng Gate trong thực tế](gates-in-practice.md) — câu trả lời cho một tác vụ cố định đã có nhãn thường là không.
 
-## Wire the winner in
+## Tích hợp bộ phân loại chiến thắng vào hệ thống
 
 ```python
 # gate.py
@@ -77,21 +77,21 @@ def route(text: str) -> tuple[str, float]:
     return label, confidence
 ```
 
-Everything returning `escalate` goes to the main model — fail closed. The full routing scaffold, with logging and the LLM fall-through, is in [the confidence-gated router](../track-jev/build-router.md); this pipeline drops into its fast path unchanged.
+Mọi trường hợp trả về `"escalate"` đều được chuyển thẳng lên cho mô hình chính xử lý — tuân thủ đúng nguyên tắc đóng an toàn (fail closed). Bộ khung điều hướng hoàn chỉnh, bao gồm cả phần ghi log và luồng chuyển tiếp xuống LLM, nằm trong bài [bộ định tuyến kiểm soát bằng độ tự tin](../track-jev/build-router.md); đường ống `gate.py` này có thể lắp thẳng vào nhánh xử lý nhanh của bộ khung đó mà không cần chỉnh sửa gì thêm.
 
-## Tips
+## Mẹo thực chiến
 
-- Log every decision with its confidence, routed or not. The log is your future evaluation set.
-- Retrain weekly. Escalations the main model resolved are free labels — append them to `labels.csv`.
-- Keep `judge` forever. A gate with no escape hatch is a gate that guesses.
-- Start the threshold at 0.85 and move it only after banding accuracy by confidence on held-out data.
+- Ghi log mọi quyết định kèm theo điểm số độ tự tin của nó, bất kể được xử lý ngay hay bị chuyển giao lên trên. Bản ghi log đó chính là bộ dữ liệu đánh giá (`Evals`) trong tương lai của bạn.
+- Huấn luyện lại hàng tuần. Những trường hợp bị chuyển giao (`escalate`) mà mô hình chính đã giải quyết xong chính là nguồn nhãn miễn phí — hãy nối chúng thêm vào tập tin `labels.csv`.
+- Giữ lại nhãn `judge` mãi mãi. Một `Gate` không có cửa thoát hiểm là một `Gate` bị ép phải đoán mò.
+- Hãy bắt đầu với ngưỡng tự tin ở mức 0,85 và chỉ dịch chuyển ngưỡng này sau khi đã phân dải độ chính xác theo độ tự tin trên tập dữ liệu kiểm thử độc lập (held-out data).
 
-## Prove it to yourself
+## Tự mình kiểm chứng
 
-1. Band your held-out predictions by confidence (0–0.5, 0.5–0.85, 0.85–1.0) and report accuracy per band. If the top band is not near-perfect, raise the threshold.
-2. Rerun the report at thresholds 0.7, 0.85, and 0.95, and record escalation rate against fast-path error rate for each. Pick the trade-off deliberately.
-3. Shadow-run for a week: the gate decides but the main model still handles everything. Count the disagreements before trusting the fast path.
+1. Chia các dự đoán trên tập kiểm thử độc lập của bạn thành ba dải độ tự tin (0–0,5, 0,5–0,85, 0,85–1,0) và tính độ chính xác cho từng dải. Nếu dải cao nhất chưa đạt mức gần như tuyệt đối, hãy nâng ngưỡng `THRESHOLD` lên.
+2. Chạy lại báo cáo ở các mức ngưỡng 0,7, 0,85 và 0,95, đồng thời ghi lại tỷ lệ chuyển giao (escalation rate) so với tỷ lệ lỗi trên luồng nhanh (fast-path error rate) ở từng mức. Hãy chủ động lựa chọn điểm cân bằng phù hợp với bài toán của bạn.
+3. Chạy thử nghiệm ngầm (shadow-run) trong một tuần: để `Gate` đưa ra quyết định nhưng mô hình chính vẫn xử lý toàn bộ mọi yêu cầu như cũ. Hãy đếm số lần hai bên bất đồng quan điểm trước khi thực sự trao quyền cho luồng xử lý nhanh.
 
-With the gate sorting the stream, the expensive model finally has room to do its real work — the subject of the next module: [the office](../course-4-harness/the-office.md).
+Khi `Gate` đã đảm nhận việc phân loại luồng dữ liệu đầu vào, mô hình đắt tiền cuối cùng cũng có không gian để làm công việc thực sự của nó — và môi trường làm việc bao quanh nó chính là chủ đề của học phần tiếp theo: [văn phòng làm việc (the office)](../course-4-harness/the-office.md).
 
-Go deeper → the [Jev engineering handbook](../track-jev/system-one-models.md): System One models, what they are good for, and a confidence-gated router build.
+Tìm hiểu sâu hơn → [cẩm nang chuyên sâu về kỹ thuật Jev](../track-jev/system-one-models.md): các mô hình `System One`, thế mạnh thực sự của chúng, và cách xây dựng bộ định tuyến kiểm soát bằng độ tự tin.

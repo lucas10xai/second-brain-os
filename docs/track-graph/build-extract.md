@@ -1,18 +1,18 @@
-# Build: Extract the Graph
+# Thực hành: Trích xuất đồ thị
 
-An evening-sized build in three parts: a queryable graph layer over the vault your agent already maintains. This page gets you from a folder of markdown to two edge files; [Build: Query It](build-query.md) loads them into NetworkX, and [Build: Put It in the Loop](build-use.md) hands the queries to the agent.
+Một bài thực hành gọn trong một buổi tối gồm ba phần: xây dựng tầng đồ thị có thể truy vấn được ngay trên chiếc Vault mà Agent của bạn đang duy trì. Trang này giúp bạn đi từ một thư mục chứa các tệp Markdown đến hai tệp lưu cạnh (edge files); phần [Thực hành: Truy vấn đồ thị](build-query.md) sẽ nạp chúng vào NetworkX, và phần [Thực hành: Đưa vào vòng lặp (Loop)](build-use.md) sẽ trao quyền truy vấn đó cho Agent.
 
-The premise comes from [why graphs](why-graphs.md): a wiki with curated links already is a knowledge graph. What it lacks is types — every edge says "related", none says how. So the plan is mechanical export of the plain link graph, then one typed pass by Claude Code over the pages.
+Tiền đề xuất phát từ bài [tại sao cần Knowledge Graph](why-graphs.md): một hệ thống wiki với các liên kết được biên tập cẩn thận bản thân nó đã là một Knowledge graph. Thứ nó thiếu là định kiểu (types) — mọi cạnh đều chỉ nói chung chung là "có liên quan", không cạnh nào nói rõ liên quan như thế nào. Vì vậy, kế hoạch là xuất tự động đồ thị liên kết thuần túy bằng kịch bản (script), sau đó cho Claude Code chạy một lượt quét qua các trang để gắn kiểu cho liên kết.
 
-## The link graph in one command
+## Xuất đồ thị liên kết bằng một câu lệnh
 
-The repo ships `scripts/graph_export.py`, stdlib only. Run it at the vault root:
+Kho mã nguồn đã có sẵn tệp `scripts/graph_export.py`, chỉ dùng thư viện chuẩn của Python. Hãy chạy lệnh này ngay tại thư mục gốc của Vault:
 
 ```
 python scripts/graph_export.py . edges.csv
 ```
 
-Use `python3` on a Mac; on Windows that name is usually the Store stub. The script walks every page outside hidden, template and script folders, resolves `[[wikilinks]]` case-insensitively against filenames, and writes:
+Dùng lệnh `python3` nếu bạn ở trên máy Mac; còn trên Windows thì tên lệnh đó thường trỏ tới bản stub của Microsoft Store. Kịch bản này sẽ duyệt qua mọi trang nằm ngoài các thư mục ẩn, thư mục mẫu (template) và thư mục chứa script, phân giải các `[[wikilinks]]` không phân biệt hoa thường đối chiếu với tên tệp, rồi ghi ra kết quả:
 
 ```csv
 source,target
@@ -20,15 +20,15 @@ GraphRAG,RAG
 Lost in the Middle,RAG
 ```
 
-Links to pages that do not exist are dropped, which is right for this build: an edge to nowhere is a gap to fix, not a relationship to query. `--format graphml` produces the Gephi version instead — see [tools](tools.md) for what to do with that.
+Các liên kết trỏ tới những trang không tồn tại sẽ bị loại bỏ, điều này hoàn toàn hợp lý cho bài thực hành này: một cạnh trỏ vào hư không là một lỗ hổng cần vá, chứ không phải một mối quan hệ để truy vấn. Tùy chọn `--format graphml` sẽ xuất ra định dạng dùng cho Gephi — xem thêm trang [công cụ](tools.md) để biết cách khai thác tệp này.
 
-## Schema before extraction
+## Định hình lược đồ trước khi trích xuất
 
-[Building graphs with LLMs](building-graphs-with-llms.md) says decide the ontology first, and that holds at vault scale. Six edge types cover a corpus where the pages are people, tools, papers and claims. More types means more wrong choices per link, so resist adding a seventh until the sixth has earned its place.
+Bài [xây dựng đồ thị bằng LLM](building-graphs-with-llms.md) đã nhấn mạnh nguyên tắc phải quyết định bản thể luận (ontology) trước, và nguyên tắc đó vẫn đúng ở quy mô của một Vault. Sáu loại cạnh là đủ bao phủ một kho ngữ liệu mà các trang xoay quanh con người, công cụ, bài báo khoa học và các luận điểm (claims). Càng nhiều loại cạnh thì xác suất chọn sai trên mỗi liên kết càng cao, vì vậy hãy kìm lòng trước việc thêm loại thứ bảy cho đến khi loại thứ sáu thực sự chứng minh được giá trị của nó.
 
-## The extraction prompt
+## Câu lệnh nhắc (Prompt) trích xuất
 
-Run this in Claude Code at the vault root:
+Hãy chạy câu lệnh nhắc này trong Claude Code tại thư mục gốc của Vault:
 
 ```text
 Read every markdown page under wiki/, skipping templates and raw.
@@ -59,9 +59,9 @@ an interruption keeps partial work. When finished, report the row
 count and the five most connected nodes.
 ```
 
-Two lines do most of the work. Restricting endpoints to existing page names keeps the typed edges in the same namespace as the link graph, so both files load into one structure in the next step. And "only record what a page states" is the vault's typed-links rule: an agent inferring relationships produces a graph that quietly encodes its own assumptions.
+Hai dòng quy tắc gánh vác phần lớn chất lượng công việc. Việc giới hạn hai đầu mút vào tên các trang hiện có giúp giữ các cạnh có định kiểu nằm trong cùng không gian tên (namespace) với đồ thị liên kết thuần, nhờ đó cả hai tệp có thể nạp chung vào một cấu trúc duy nhất ở bước tiếp theo. Và quy tắc "chỉ ghi nhận những gì trang viết nêu rõ" (`Only record what a page states`) chính là nguyên tắc liên kết có định kiểu của Vault: một Agent tự suy diễn các mối quan hệ sẽ tạo ra một đồ thị âm thầm mã hóa những định kiến của riêng nó.
 
-## What comes out
+## Kết quả thu được
 
 ```csv
 source,target,type,found_in
@@ -70,8 +70,8 @@ RAG,LlamaIndex,uses,RAG
 Lost in the Middle,Long context replaces RAG,contradicts,Long context replaces RAG
 ```
 
-The `found_in` column is provenance — the answer to "why does the graph believe this". If you want richer provenance, ask for JSONL instead: one object per line, same fields plus a `quote` key holding the sentence the edge came from. CSV is what the next page loads, so keep that as the primary output.
+Cột `found_in` chính là thông tin truy nguyên nguồn gốc (provenance) — câu trả lời cho thắc mắc "tại sao đồ thị lại tin vào điều này". Nếu bạn muốn thông tin truy nguyên phong phú hơn, hãy yêu cầu xuất ra định dạng JSONL: mỗi dòng một đối tượng JSON, giữ nguyên các trường trên cộng thêm khóa `quote` lưu lại nguyên văn câu chữ mà cạnh đó được rút ra. Tệp CSV là định dạng mà trang tiếp theo sẽ nạp, vì vậy hãy giữ nó làm đầu ra chính.
 
-## Read it before you trust it
+## Đọc kiểm tra trước khi tin tưởng
 
-Sample twenty rows against the pages they came from before moving on. Expect a few edges that are technically grounded but useless, and the odd direction flipped. Fix the prompt, not the rows, and re-run — the pass over a few hundred pages costs minutes. Then load the result in [Build: Query It](build-query.md).
+Hãy lấy mẫu hai mươi dòng và đối chiếu với các trang gốc trước khi đi tiếp. Hãy chuẩn bị tinh thần sẽ gặp vài cạnh tuy có căn cứ về mặt câu chữ nhưng vô dụng, hoặc đôi chỗ chiều mũi tên bị ngược. Hãy sửa câu lệnh nhắc (prompt) chứ đừng sửa tay từng dòng dữ liệu, rồi cho chạy lại — một lượt quét qua vài trăm trang chỉ mất vài phút. Sau đó, hãy nạp kết quả vào bước tiếp theo tại [Thực hành: Truy vấn đồ thị](build-query.md).

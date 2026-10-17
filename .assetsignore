@@ -1,0 +1,9 @@
+.venv
+.venv/**
+.git
+.git/**
+__pycache__
+**/__pycache__/**
+.DS_Store
+**/.DS_Store
+site_data.json

@@ -1,18 +1,17 @@
-# Troubleshooting
+# Xử lý sự cố (Troubleshooting)
 
-Concrete failures, with fixes.
+Những lỗi cụ thể thường gặp kèm theo cách khắc phục.
 
-Every one of these is common. If your vault is doing something on this list, it
-is not because you set it up wrong in some unrecoverable way.
+Mọi vấn đề dưới đây đều rất phổ biến. Nếu Vault của bạn đang gặp phải một trong những hiện tượng nằm trong danh sách này, thì đó không phải vì bạn đã thiết lập sai lầm đến mức không thể cứu vãn.
 
-## Pages
+## Các trang trong chương
 
-- [The failures everyone hits](common-failures.md)
-- [The agent writes garbage](agent-writes-garbage.md)
-- [Broken links and orphans](broken-links.md)
-- [The vault got too big](vault-too-big.md)
-- [FAQ](faq.md)
+- [Những lỗi ai cũng gặp phải](common-failures.md)
+- [Agent viết ra nội dung rác](agent-writes-garbage.md)
+- [Liên kết gãy và các trang mồ côi](broken-links.md)
+- [Vault phình ra quá lớn](vault-too-big.md)
+- [Câu hỏi thường gặp (FAQ)](faq.md)
 
 ---
 
-[Back to the full guide](../README.md)
+[Quay lại toàn bộ hướng dẫn](../README.md)

@@ -1,25 +1,25 @@
-# Jev in an Agent Stack
+# Jev trong ngăn xếp Agent
 
-The most credible early use of Jev is not replacing an LLM but sitting next to one. Agent loops are full of small bounded decisions — which model, which tool, is this safe, are we done — and today each one costs a full LLM call. The emerging pattern, a week old and already visible in the [LangChain harness writeup](https://www.langchain.com/blog/building-a-harness-with-jev), is to hand those decisions to a System One model and keep the LLM for the parts that need language. Background in [system one models](system-one-models.md).
+Cách ứng dụng ban đầu đáng tin cậy nhất của Jev không phải là thay thế hoàn toàn một mô hình LLM, mà là đặt cạnh nó. Các vòng lặp (Loop) của Agent chứa đầy những quyết định nhỏ có phạm vi giới hạn — chọn mô hình nào, gọi công cụ nào, thao tác này có an toàn không, chúng ta đã hoàn thành tác vụ chưa — và hiện nay mỗi quyết định như vậy đều tiêu tốn một lệnh gọi LLM trọn vẹn. Mẫu thiết kế đang nổi lên, mới chỉ một tuần tuổi nhưng đã hiện diện rõ nét trong [bài viết về xây dựng Harness cùng Jev của LangChain](https://www.langchain.com/blog/building-a-harness-with-jev), là giao phó những quyết định đó cho một mô hình System One và giữ LLM lại cho những phần thực sự cần đến ngôn ngữ. Xem bối cảnh nền tảng tại bài [các mô hình System One](system-one-models.md).
 
-## Jev in front of the loop
+## Đặt Jev ở phía trước vòng lặp (Loop)
 
-- **Router.** Jev classifies the incoming request and routes it: cheap fast model for simple lookups, expensive reasoning model for hard cases. At 70–500ms claimed latency, the routing step is nearly free relative to the call it saves.
-- **Triage gate.** A `Noul` question ("does this need a human?") in front of the agent keeps junk out of the loop entirely.
+- **Router (Bộ định tuyến).** Jev phân loại yêu cầu đi vào và điều hướng nó: đẩy sang mô hình nhỏ, nhanh, rẻ cho các tra cứu đơn giản; chuyển sang mô hình suy luận đắt tiền cho những ca khó. Với độ trễ công bố từ 70–500ms, bước định tuyến này gần như miễn phí so với lệnh gọi LLM mà nó giúp tiết kiệm.
+- **Triage gate (Cổng phân loại sơ bộ).** Một câu hỏi dạng `Noul` ("yêu cầu này có cần con người can thiệp không?") đặt ngay trước Agent giúp chặn đứng các nội dung rác không cho lọt vào vòng lặp ngay từ đầu.
 
-## Jev inside the loop
+## Đặt Jev ở bên trong vòng lặp (Loop)
 
-- **Tool-call guardrails.** LangChain's `AutoModeMiddleware` uses Jev to check a proposed tool call for risky actions and block it before execution — a typed judgement, not a second LLM opining on the first.
-- **State checks.** "Is the task complete?", "did that tool call succeed?", "is the user frustrated?" — each is a typed question over the transcript, and because Jev answers all questions in one parallel pass, asking ten costs barely more time than asking one.
+- **Guardrails cho lệnh gọi công cụ.** Thành phần `AutoModeMiddleware` của LangChain sử dụng Jev để kiểm tra một lệnh gọi công cụ vừa được đề xuất xem có chứa hành động rủi ro hay không và chặn nó lại trước khi thực thi — đây là một phán đoán có định kiểu rõ ràng, chứ không phải cảnh dùng một LLM thứ hai ngồi bình phẩm về đầu ra của LLM thứ nhất.
+- **Kiểm tra trạng thái (State checks).** "Tác vụ đã hoàn tất chưa?", "lệnh gọi công cụ vừa rồi có thành công không?", "người dùng có đang bực bội không?" — mỗi câu đều là một câu hỏi định kiểu chạy trên biên bản hội thoại (transcript), và bởi vì Jev trả lời tất cả các câu hỏi trong một lượt chạy song song duy nhất, việc hỏi mười câu hầu như không tốn thêm thời gian so với hỏi một câu.
 
-The LangChain integration exposes this as `TypeSafeClassifier`: you pass a `state` and a dict of questions to `.invoke()` and get back typed answers with probabilities, which your code — not a model — then acts on.
+Bản tích hợp của LangChain cung cấp cơ chế này dưới tên gọi `TypeSafeClassifier`: bạn truyền một `state` cùng một từ điển (dict) chứa các câu hỏi vào phương thức `.invoke()` và nhận về các câu trả lời có định kiểu kèm theo xác suất, để rồi chính mã nguồn của bạn — chứ không phải mô hình — ra quyết định hành động dựa trên đó.
 
-## Failure handling with confidence thresholds
+## Xử lý lỗi bằng ngưỡng tự tin (Confidence thresholds)
 
-The probability on every answer is the design's load-bearing part. The pattern early adopters converge on:
+Con số xác suất đi kèm mỗi câu trả lời chính là trụ cột chịu lực của thiết kế này. Mẫu xử lý mà những người áp dụng sớm đều hội tụ về gồm các bước:
 
-- Set a threshold per decision, priced by the cost of being wrong. Auto-approving a refund might need 0.98; picking a support queue might be fine at 0.7.
-- Below threshold, escalate — to an LLM, to a human, or to a safe default. Jev becomes the fast path, not the only path.
-- Log the probabilities. Jev gives no rationale, so the state you sent plus the scores you got back are your entire audit trail. Keep them.
+- Thiết lập một ngưỡng (threshold) riêng cho từng quyết định, định giá dựa trên cái giá phải trả nếu làm sai. Tự động phê duyệt hoàn tiền có thể cần ngưỡng 0.98; còn chọn hàng đợi hỗ trợ kỹ thuật có thể chỉ cần 0.7 là ổn.
+- Nếu thấp hơn ngưỡng, hãy chuyển cấp (escalate) — đẩy lên cho LLM lớn, chuyển cho con người, hoặc lùi về một phương án mặc định an toàn. Khi đó, Jev đóng vai trò là luồng xử lý nhanh (fast path), chứ không phải luồng duy nhất.
+- Ghi nhật ký (log) toàn bộ các con số xác suất. Jev không đưa ra lời giải thích lý do, vì vậy trạng thái `state` bạn gửi đi cộng với bảng điểm bạn nhận về chính là toàn bộ dấu vết kiểm toán (audit trail) của bạn. Hãy lưu giữ chúng cẩn thận.
 
-One honest caution: this whole scheme assumes the probabilities are genuinely calibrated, which is TypeSafe's central claim and is so far unverified on out-of-distribution traffic. Sceptics note that a confident score is not by itself evidence the prediction deserves trust. Start with conservative thresholds and measure against your own labels. Practical setup in [getting started](getting-started.md); task fit in [what Jev is good for](what-jev-is-good-for.md).
+Một lời cảnh báo thẳng thắn: toàn bộ cơ chế này giả định rằng các con số xác suất đã được hiệu chuẩn thực sự chuẩn xác — đây là tuyên bố cốt lõi của TypeSafe nhưng đến nay vẫn chưa được kiểm chứng độc lập trên lưu lượng dữ liệu lệch phân phối (out-of-distribution). Những người hoài nghi lưu ý rằng một điểm số tự tin cao tự thân nó không phải là bằng chứng cho thấy dự đoán đó đáng tin cậy. Hãy bắt đầu với các ngưỡng bảo thủ và đo lường đối chiếu với bộ nhãn thực tế của chính bạn. Hướng dẫn thiết lập thực tế nằm ở bài [bắt đầu với Jev](getting-started.md); cách đánh giá mức độ phù hợp của tác vụ nằm ở bài [Jev phù hợp với việc gì](what-jev-is-good-for.md).

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Check a second-brain vault for broken wikilinks, orphan pages and stubs.
+"""Kiểm tra vault bộ não thứ hai để tìm wikilink bị gãy, trang mồ côi (orphan) và trang sơ khai (stub).
 
-Usage:
+Cách dùng:
     python3 link_check.py /path/to/vault [--json]
 
-No dependencies. Reads only; never modifies the vault.
+Không yêu cầu thư viện phụ thuộc bên ngoài. Chỉ đọc; không bao giờ sửa đổi dữ liệu trong vault.
 """
 import argparse
 import json
@@ -13,9 +13,10 @@ import re
 import sys
 
 LINK = re.compile(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]")
-# Hidden folders (.claude, .obsidian, .git, .trash), the page templates and
-# the scripts folder hold instructions and tooling, not knowledge, so they are
-# never counted as pages. Same for CLAUDE.md and README.md wherever they sit.
+# Các thư mục ẩn (.claude, .obsidian, .git, .trash), thư mục mẫu trang (templates)
+# và thư mục scripts chỉ chứa chỉ dẫn cùng công cụ chứ không phải tri thức, nên
+# không bao giờ được tính là các trang wiki. Tương tự đối với CLAUDE.md và README.md
+# ở bất kỳ vị trí nào.
 SKIP_DIRS = {"node_modules", "raw", "templates", "scripts"}
 SKIP_FILES = {"CLAUDE.md", "README.md"}
 

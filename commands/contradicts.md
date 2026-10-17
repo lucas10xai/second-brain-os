@@ -1,7 +1,7 @@
 ---
-description: Argue against me
+description: Phản biện lại quan điểm của tôi
 ---
 
-Find everything in the vault that argues against $ARGUMENTS. If nothing does, say so plainly rather than manufacturing an objection.
+Tìm mọi thông tin trong kho tri thức phản bác lại $ARGUMENTS. Nếu không có gì phản bác, hãy nói thẳng như vậy thay vì tự bịa ra một lý lẽ phản đối.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

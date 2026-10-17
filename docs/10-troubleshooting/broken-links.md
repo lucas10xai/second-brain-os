@@ -1,61 +1,47 @@
-# Broken links and orphans
+# Liên kết gãy và các trang mồ côi
 
 ```bash
 python3 scripts/link_check.py ~/brain
 ```
 
-## Why renames break links
+## Tại sao việc đổi tên file lại làm gãy liên kết
 
-Obsidian updates links when you rename inside the app. An agent renaming a file
-directly does not, and that is the most common cause of broken links in an
-agent-maintained vault.
+Obsidian tự động cập nhật các liên kết khi bạn đổi tên file ngay bên trong ứng dụng. Nhưng khi một Agent đổi tên file trực tiếp trên hệ thống file thì cơ chế đó không diễn ra, và đây chính là nguyên nhân phổ biến nhất gây ra liên kết gãy trong một Vault do Agent duy trì.
 
-Prevent it with a rule in `CLAUDE.md`: renames update every inbound link, add the
-old name as an alias, and get recorded in `log.md`. See [naming and
-aliases](../04-structuring/naming-and-aliases.md).
+Hãy ngăn chặn điều này bằng một quy tắc trong `CLAUDE.md`: mỗi khi đổi tên trang phải cập nhật toàn bộ các liên kết trỏ đến (inbound links), thêm tên cũ vào trường Aliases, và ghi nhận thao tác đó vào `log.md`. Xem thêm [đặt tên và Aliases](../04-structuring/naming-and-aliases.md).
 
-## Fixing in bulk
+## Sửa lỗi hàng loạt
 
-Two categories, handled differently.
+Có hai nhóm liên kết gãy, và mỗi nhóm cần được xử lý theo cách khác nhau.
 
-**Typos and renames** get fixed: point the link at the right page. Safe to
-automate.
+**Lỗi gõ nhầm và đổi tên** thì cần được sửa lại: trỏ liên kết đó về đúng trang đích. Nhóm này hoàn toàn an toàn để tự động hóa.
 
-**Genuine gaps**, where the target never existed, go into `index.md` under Gaps.
-Do not create empty pages to satisfy them; an empty page is worse than a
-recorded gap because it looks like coverage.
+**Khoảng trống kiến thức thực sự (Genuine gaps)** — nơi trang đích chưa từng tồn tại — thì đưa vào `index.md` dưới mục Gaps. Đừng tạo ra các trang rỗng chỉ để làm vừa lòng bộ kiểm tra liên kết; một trang rỗng còn tệ hơn một khoảng trống được ghi nhận rõ ràng, vì nó tạo cảm giác giả tạo rằng chủ đề đó đã được bao phủ.
 
-Always on a clean git state, so a bad bulk fix is one command to undo.
+Hãy luôn thực hiện trên một trạng thái Git sạch (clean git state), để nếu một đợt sửa lỗi hàng loạt đi chệch hướng, bạn chỉ cần một câu lệnh là hoàn tác được ngay.
 
-## Orphans
+## Các trang mồ côi (Orphans)
 
-Pages nothing links to. Three cases.
+Những trang không có bất kỳ trang nào khác liên kết tới. Thường rơi vào ba trường hợp sau.
 
-**Should be linked and is not.** Find the pages that ought to reference it and
-add the links. This is the common case after a bulk import.
+**Lẽ ra phải được liên kết nhưng lại bị bỏ sót.** Hãy tìm những trang đáng lý phải tham chiếu tới nó và bổ sung liên kết vào. Đây là trường hợp phổ biến nhất sau một đợt nhập dữ liệu hàng loạt (bulk import).
 
-**Genuinely standalone.** Rare and usually a sign the material does not belong in
-the wiki. Reference material and checklists belong in a project folder.
+**Thực sự đứng độc lập.** Trường hợp này hiếm gặp và thường là dấu hiệu cho thấy tư liệu đó không thuộc về khu vực `wiki/`. Các tài liệu tra cứu nhanh hay danh sách kiểm tra (checklists) nên nằm trong thư mục dự án riêng.
 
-**Failed ingest.** A stub that never got connected. Re-ingest from the original
-in `raw/`.
+**Ingest thất bại.** Một trang sơ sài (stub) được tạo ra dở dang và chưa bao giờ được kết nối vào mạng lưới. Hãy Ingest lại từ tài liệu gốc trong `raw/`.
 
-## Preventing both at ingest
+## Ngăn chặn cả hai lỗi ngay từ khâu Ingest
 
-The rule that removes most of this work: nothing is ingested until it is linked,
-in both directions, in the same run.
+Quy tắc giúp loại bỏ phần lớn công việc dọn dẹp này: không một tài liệu nào được coi là đã Ingest xong cho đến khi nó được gắn liên kết đầy đủ theo cả hai chiều ngay trong cùng một lượt chạy.
 
-An ingest that ends with unlinked pages is an ingest that did not finish. Enforce
-it in the skill rather than cleaning up weekly.
+Một lượt Ingest kết thúc mà để lại các trang chưa được liên kết là một lượt Ingest chưa hoàn thành. Hãy ép buộc quy tắc này ngay trong Skill thay vì đợi đến cuối tuần mới đi dọn dẹp.
 
-## After a big import
+## Sau một đợt nhập dữ liệu lớn
 
-Always lint. A large backfill reliably produces orphans and near-duplicates,
-because the agent was moving fast through material that overlapped.
+Hãy luôn chạy Lint. Một đợt nạp bù dữ liệu (backfill) quy mô lớn chắc chắn sẽ sinh ra các trang mồ côi và các trang gần như trùng lặp, bởi Agent đã phải xử lý nhanh qua nhiều tài liệu có nội dung giao thoa nhau.
 
-Budget for it: a thousand-source import is followed by a lint pass and a merge
-review, and skipping that step is what leaves a vault permanently messy.
+Hãy dự trù sẵn thời gian cho bước này: sau khi nhập một nghìn tài liệu nguồn, bắt buộc phải có một lượt chạy Lint và một lượt rà soát gộp trang — bỏ qua bước đó chính là lý do khiến một Vault trở nên lộn xộn vĩnh viễn.
 
-## Next
+## Tiếp theo
 
-[The vault got too big](vault-too-big.md)
+[Vault phình ra quá lớn](vault-too-big.md)

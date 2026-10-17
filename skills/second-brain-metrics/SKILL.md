@@ -1,50 +1,45 @@
 ---
 name: second-brain-metrics
 description: >-
-  Record a dated snapshot of the vault's health numbers and compare against
-  previous snapshots so trends are visible. Use this skill for a monthly or
-  quarterly check, when the user asks whether the vault is improving, or asks to
-  track its numbers over time. Do NOT use for a one-off graph analysis, which is
-  second-brain-graph, or for structural repairs.
+  Ghi lại bản chụp (snapshot) có gắn ngày tháng về các chỉ số sức khỏe của vault
+  và so sánh với các bản chụp trước đó để thấy rõ xu hướng biến động. Sử dụng kỹ
+  năng này cho các đợt kiểm tra hàng tháng hoặc hàng quý, khi người dùng hỏi liệu
+  vault có đang tốt lên không, hoặc yêu cầu theo dõi các chỉ số theo thời gian.
+  KHÔNG dùng để phân tích đồ thị một lần đơn lẻ — việc đó thuộc về second-brain-graph —
+  hoặc để sửa chữa cấu trúc.
 ---
 
-# Record metrics
+# Ghi nhận các chỉ số sức khỏe (Record metrics)
 
-A single reading tells you almost nothing. Direction over months is the
-information, and nobody remembers what last quarter's orphan rate was.
+Một lần đo đơn lẻ hầu như chẳng cho bạn biết điều gì cả. Chiều hướng dịch chuyển qua nhiều tháng mới là thông tin có giá trị, và không ai có thể nhớ nổi tỷ lệ trang mồ côi của quý trước là bao nhiêu nếu không ghi lại.
 
-## Core rule
+## Quy tắc cốt lõi
 
-Four numbers, appended to a dated log, compared against the last entry. Never
-page count or word count.
+Bốn con số, được ghi nối tiếp vào một bản nhật ký có gắn ngày tháng, và đối chiếu với lần ghi liền trước. Không bao giờ lấy tổng số trang hay tổng số từ làm thước đo sức khỏe.
 
-## Workflow
+## Quy trình thực hiện
 
-1. **Run** `scripts/vault_stats.py` and `scripts/link_check.py`.
-2. **Record:** orphan rate, average degree, component count, stale-concept rate,
-   with the date and total pages for context.
-3. **Append** to the metrics note. Never overwrite previous entries.
-4. **Compare** against the last snapshot and name what moved.
-5. **Interpret only what changed.** A stable number needs no commentary.
+1. **Chạy** `scripts/vault_stats.py` và `scripts/link_check.py`.
+2. **Ghi nhận:** tỷ lệ trang mồ côi (`orphan rate`), bậc liên kết trung bình (`average degree`), số thành phần liên thông (`component count`), tỷ lệ khái niệm cũ bị bỏ quên (`stale-concept rate`), kèm theo ngày tháng và tổng số trang để làm ngữ cảnh tham chiếu.
+3. **Ghi nối tiếp (append)** vào trang theo dõi chỉ số (metrics note). Không bao giờ ghi đè lên các lần ghi trước.
+4. **So sánh** với bản chụp liền trước và chỉ rõ chỉ số nào đã dịch chuyển.
+5. **Chỉ diễn giải những gì đã thay đổi.** Một con số giữ nguyên sự ổn định thì không cần bình luận thêm.
 
-## Output format
+## Định dạng đầu ra
 
 ```
-<date> | pages <n>
-orphan rate    <n>%   (<+/-n> since <date>)
+<ngày> | pages <n>
+orphan rate    <n>%   (<+/-n> từ <ngày trước>)
 avg degree     <n>    (<+/-n>)
 components     <n>    (main <n>%)
 stale concepts <n>%   (<+/-n>)
 
-Moved: <what changed and the likely cause>
-Watch: <the one number to fix, or none>
+Moved: <chỉ số nào đã thay đổi và nguyên nhân khả dĩ>
+Watch: <một chỉ số duy nhất cần chú ý khắc phục, hoặc none>
 ```
 
-## Calibration
+## Hiệu chuẩn (Calibration)
 
-A rising orphan rate with a rising page count means ingestion has stopped
-linking. That is the single most important pattern in this report and it should
-be called out explicitly, not left in the numbers.
+Tỷ lệ trang mồ côi tăng lên cùng lúc với tổng số trang tăng lên đồng nghĩa với việc quá trình nạp tài liệu (ingestion) đã ngừng tạo liên kết. Đó là khuôn mẫu quan trọng nhất trong báo cáo này và phải được chỉ đích danh bằng lời, chứ không chỉ để mặc trong các con số.
 
-Do not recommend more than one thing to fix. A metrics report with five action
-items gets ignored.
+Không khuyến nghị quá một việc cần sửa trong mỗi lần báo cáo. Một báo cáo chỉ số đi kèm tới năm đầu việc cần làm sẽ bị bỏ qua hoàn toàn.

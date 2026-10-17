@@ -1,6 +1,5 @@
 # output/
 
-Generated artifacts: research reports, article drafts, exports.
+Các sản phẩm được tạo ra: báo cáo nghiên cứu, bản nháp bài viết, các bản xuất dữ liệu.
 
-Anything here that turns out to be worth keeping should be ingested back into
-the wiki as a source, so your own writing becomes part of what the vault knows.
+Bất kỳ nội dung nào ở đây nếu thực sự đáng giữ lại thì nên được nạp (ingest) ngược vào trong wiki như một tài liệu nguồn (`source`), để chính những gì bạn viết cũng trở thành một phần tri thức mà vault nắm giữ.

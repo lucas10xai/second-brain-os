@@ -1,7 +1,7 @@
 ---
-description: Report the shape of the graph
+description: Báo cáo hình thái của đồ thị tri thức
 ---
 
-Full graph report: the four metrics, hubs, bridges, clusters, and what each means for retrieval.
+Báo cáo toàn diện về đồ thị: bốn chỉ số cốt lõi, các điểm nút trung tâm (hubs), các trang cầu nối (bridges), các cụm chủ đề (clusters), và ý nghĩa của từng yếu tố đối với việc truy xuất tri thức.
 
-Follow the `second-brain-graph` skill.
+Thực hiện theo skill `second-brain-graph`.

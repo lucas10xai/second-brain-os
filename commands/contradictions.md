@@ -1,7 +1,7 @@
 ---
-description: List unresolved contradictions
+description: Liệt kê các mâu thuẫn chưa được giải quyết
 ---
 
-Find every page recording a contradiction that is still open. For each: both positions, both sources with dates, and what would settle it.
+Tìm mọi trang đang ghi nhận một mâu thuẫn vẫn còn bỏ ngỏ. Với mỗi mâu thuẫn, nêu rõ: cả hai quan điểm, cả hai nguồn tài liệu kèm ngày tháng, và điều gì sẽ giúp phân định mâu thuẫn đó.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

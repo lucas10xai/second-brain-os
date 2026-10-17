@@ -1,55 +1,38 @@
-# Graph metrics worth tracking
+# Các chỉ số đồ thị đáng theo dõi
 
-Four numbers, checked monthly. Their direction over time tells you whether the
-system is working, which is not obvious from using it day to day.
+Bốn con số, kiểm tra định kỳ hàng tháng. Xu hướng biến thiên của chúng theo thời gian sẽ cho bạn biết liệu hệ thống có đang vận hành tốt hay không — điều vốn không dễ nhận ra nếu chỉ nhìn vào việc sử dụng hàng ngày.
 
 ```bash
 python3 scripts/vault_stats.py ~/brain
 ```
 
-## Orphan rate
+## Tỷ lệ trang mồ côi (Orphan rate)
 
-Pages with no inbound links, as a share of all pages.
+Số trang không có bất kỳ liên kết trỏ tới nào (inbound links), tính theo tỷ lệ phần trăm trên tổng số trang.
 
-The single most diagnostic number in the vault. A rising orphan rate means
-ingestion is writing pages without connecting them, which is the exact failure
-mode that turns a wiki back into a folder.
+Đây là con số có giá trị chẩn đoán cao nhất trong toàn bộ `Vault`. Tỷ lệ trang mồ côi tăng lên đồng nghĩa với việc quá trình `Ingest` đang viết ra các trang mới mà không kết nối chúng vào mạng lưới — đây chính xác là kiểu lỗi biến một `wiki/` quay trở lại thành một thư mục chứa file đơn thuần.
 
-Under five percent is healthy. Over fifteen and something is broken in the
-ingest instructions, not in your habits.
+Dưới 5% là mức lành mạnh. Vượt quá 15% nghĩa là có thứ gì đó đã bị hỏng trong bộ chỉ dẫn `Ingest`, chứ không phải do thói quen của bạn.
 
-## Average degree
+## Bậc trung bình (Average degree)
 
-Links per page.
+Số lượng liên kết trung bình trên mỗi trang.
 
-Below two, the graph is barely connected and retrieval cannot do better than
-search. Between three and eight is the working range for a personal vault. Much
-above ten, check whether links are being added decoratively, which inflates the
-number while making the graph less useful.
+Dưới 2, đồ thị hầu như chưa được kết nối và việc truy xuất theo đồ thị không thể mang lại kết quả tốt hơn tìm kiếm từ khóa thông thường. Từ 3 đến 8 là khoảng hoạt động hiệu quả cho một `Vault` cá nhân. Nếu vượt xa mức 10, hãy kiểm tra xem liệu các liên kết có đang bị thêm vào một cách máy móc để trang trí hay không — việc đó chỉ làm phình con số thống kê trong khi lại khiến đồ thị kém hữu ích đi.
 
-Watch it alongside page count. Degree that stays flat while the vault doubles is
-fine; degree that falls means new pages are attaching to less than the existing
-ones did.
+Hãy theo dõi chỉ số này song song với tổng số trang. Bậc trung bình giữ nguyên không đổi trong khi kích thước `Vault` tăng gấp đôi là tín hiệu tốt; còn nếu bậc trung bình sụt giảm tức là các trang mới đang được kết nối ít hơn so với các trang cũ trước đây.
 
-## Component count
+## Số thành phần liên thông (Component count)
 
-How many disconnected islands.
+Số lượng các ốc đảo bị ngắt kết nối hoàn toàn với nhau.
 
-Ideally one large component holding most pages, plus a few genuinely separate
-topics. If the main component holds less than about eighty percent of pages, the
-vault is fragmented and answers will be systematically incomplete without
-anything appearing wrong.
+Lý tưởng nhất là một thành phần liên thông lớn chứa hầu hết các trang, cộng thêm một vài chủ đề thực sự tách biệt hẳn. Nếu thành phần chính chứa ít hơn khoảng 80% tổng số trang, `Vault` của bạn đang bị phân mảnh và các câu trả lời nhận được sẽ luôn thiếu sót một cách có hệ thống dù bề ngoài trông chẳng có vẻ gì là đang bị lỗi.
 
-## Stale page rate
+## Tỷ lệ trang cũ kỹ (Stale page rate)
 
-Concept pages whose `updated` date is older than ninety days, as a share of
-concept pages.
+Các trang khái niệm có ngày `updated` đã cũ hơn chín mươi ngày, tính theo tỷ lệ trên tổng số trang khái niệm.
 
-Some staleness is correct: a well-written page on a settled idea does not need
-touching. But a vault where most concept pages have not been touched in months
-while sources keep arriving means new material is landing in new pages instead
-of updating existing ones. That is how you end up with four pages about one
-thing.
+Một mức độ cũ nhất định là hoàn toàn hợp lý: một trang đã được viết tốt về một ý tưởng đã ngã ngũ thì không cần phải động vào nữa. Nhưng một `Vault` mà phần lớn các trang khái niệm không hề được chạm tới trong suốt nhiều tháng trời trong khi tài liệu nguồn mới vẫn liên tục đổ về có nghĩa là thông tin mới đang bị đẩy vào các trang mới toanh thay vì cập nhật bổ sung vào các trang hiện có. Đó chính là con đường khiến bạn kết thúc với bốn trang khác nhau cùng viết về một thứ.
 
 ```dataview
 TABLE updated FROM "wiki/concepts"
@@ -57,18 +40,14 @@ WHERE updated < date(today) - dur(90 days)
 SORT updated ASC
 ```
 
-## What not to track
+## Những chỉ số không cần theo dõi
 
-Page count and word count. Both go up regardless of whether the vault is getting
-better, which makes them satisfying and useless. A vault that doubled its pages
-while doubling its orphan rate got worse.
+Tổng số trang và tổng số từ. Cả hai con số này đều luôn tăng lên bất kể `Vault` của bạn đang tốt lên hay tệ đi — điều khiến chúng mang lại cảm giác thỏa mãn giả tạo nhưng hoàn toàn vô dụng. Một `Vault` tăng gấp đôi số trang trong khi cũng tăng gấp đôi tỷ lệ trang mồ côi thực chất là đang ngày càng tệ đi.
 
-## Recording them
+## Ghi chép lại các chỉ số
 
-Append the four numbers to a note monthly. Trend is the information; a single
-reading tells you almost nothing, and you will not remember what last quarter's
-orphan rate was.
+Hãy ghi nối tiếp (append) bốn con số này vào một trang ghi chú mỗi tháng một lần. Xu hướng biến đổi mới là thông tin có giá trị; một lần đo đơn lẻ hầu như chẳng nói lên điều gì, và bạn sẽ không thể nào nhớ nổi tỷ lệ trang mồ côi của quý trước là bao nhiêu đâu.
 
-## Next
+## Tiếp theo
 
-[Agents](../06-agents/README.md), for running all of this without you.
+[Agents](../06-agents/README.md), để vận hành toàn bộ hệ thống này mà không cần đến tay bạn.

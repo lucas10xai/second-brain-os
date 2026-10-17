@@ -1,7 +1,7 @@
 ---
-description: Undo the last run
+description: Hoàn tác lần chạy gần nhất
 ---
 
-Show what the last run changed, then revert it on confirmation. Record the rollback in `log.md`.
+Hiển thị những gì lần chạy gần nhất đã thay đổi, sau đó hoàn tác lại khi người dùng xác nhận. Ghi nhận thao tác hoàn tác vào `log.md`.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

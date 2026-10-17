@@ -1,7 +1,7 @@
 ---
-description: Ingest newsletters without duplicating
+description: Nạp bản tin (newsletter) không gây trùng lặp
 ---
 
-Group the newsletters in $ARGUMENTS by topic first. One source page per actual item, citing every newsletter that covered it. Never treat repetition across newsletters as confirmation.
+Nhóm các bản tin trong $ARGUMENTS theo chủ đề trước. Tạo một trang nguồn cho mỗi sự việc hoặc nội dung gốc thực sự, trong đó trích dẫn mọi bản tin đã đưa tin về nó. Tuyệt đối không coi việc một thông tin được lặp lại trên nhiều bản tin là bằng chứng xác thực chéo.
 
-Follow the `second-brain-ingest` skill.
+Thực hiện theo skill `second-brain-ingest`.

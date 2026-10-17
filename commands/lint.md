@@ -1,7 +1,7 @@
 ---
-description: Audit structure and repair what is mechanical
+description: Kiểm toán cấu trúc và tự động sửa các lỗi cơ học
 ---
 
-Full structural audit of $ARGUMENTS, or the whole vault. Fix mechanical problems, propose anything needing judgement, log the run.
+Kiểm toán toàn diện cấu trúc của $ARGUMENTS, hoặc toàn bộ kho tri thức. Tự động sửa các lỗi cơ học, đề xuất phương án cho những vấn đề cần con người phán đoán, và ghi nhật ký lần chạy.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

@@ -1,18 +1,14 @@
-# index.md and log.md
+# index.md và log.md
 
-Two files that are not knowledge, but without which the knowledge is hard to
-reach and impossible to audit.
+Hai file này bản thân chúng không phải là tri thức, nhưng nếu thiếu chúng thì tri thức sẽ rất khó tiếp cận và không thể nào kiểm toán (audit) được.
 
 ## index.md
 
-The catalog. Every page, grouped by type, with the gaps listed at the bottom.
+Danh mục tổng (catalog). Mọi trang trong `Vault`, được nhóm theo loại, cùng với các khoảng trống (gaps) được liệt kê ở cuối file.
 
-Its real job is retrieval economy. When the agent gets a question, reading the
-index first tells it what exists and which pages are worth opening. Without it,
-the alternative is a full-text sweep, which is slower, costs more context, and
-misses pages whose wording differs from the question.
+Công việc thực sự của nó là tiết kiệm chi phí truy xuất (retrieval economy). Khi `Agent` nhận được một câu hỏi, việc đọc `index.md` đầu tiên sẽ cho nó biết những gì đang tồn tại và những trang nào đáng để mở ra. Nếu không có file này, giải pháp thay thế duy nhất là quét toàn văn (full-text sweep) — vừa chậm hơn, tốn nhiều `Context window` hơn, lại vừa bỏ sót những trang có cách dùng từ khác với câu hỏi.
 
-Keep it navigable rather than exhaustive-looking:
+Hãy giữ cho nó dễ điều hướng thay vì cố làm cho nó trông có vẻ vét cạn chi tiết:
 
 ```markdown
 ## Concepts
@@ -25,20 +21,17 @@ Keep it navigable rather than exhaustive-looking:
 - [[Agent harness]] - the loop around a model
 ```
 
-One line of description per entry. That line is what lets the agent decide
-whether to open the page, and it is worth the tokens.
+Một dòng mô tả cho mỗi mục. Dòng mô tả đó chính là thứ giúp `Agent` quyết định có nên mở trang đó ra hay không, và nó hoàn toàn xứng đáng với số token bỏ ra.
 
-## Gaps
+## Các khoảng trống (Gaps)
 
-At the bottom of the index, the pages that are linked and do not exist.
+Ở dưới cùng của file chỉ mục là danh sách những trang đã được liên kết tới nhưng chưa hề tồn tại.
 
-This section is the most actionable thing in the vault. It is a list of what
-your own material keeps referring to and you have never written down, which is
-usually a precise map of what to read next.
+Phần này là thứ mang tính định hướng hành động cao nhất trong toàn bộ `Vault`. Nó là danh sách những chủ đề mà tài liệu của chính bạn cứ nhắc đi nhắc lại nhưng bạn lại chưa từng viết xuống — và đó thường là một tấm bản đồ chính xác chỉ ra những gì bạn nên đọc tiếp theo.
 
 ## log.md
 
-One line per operation, appended, newest at the bottom.
+Mỗi thao tác một dòng, chỉ ghi nối tiếp vào cuối file (append), mục mới nhất nằm ở dưới cùng.
 
 ```
 2026-09-07 ingest raw/karpathy-gist.md -> 1 source, 2 concepts, 1 entity, 9 links
@@ -46,33 +39,22 @@ One line per operation, appended, newest at the bottom.
 2026-09-08 lint -> 3 broken links fixed, 2 orphans flagged
 ```
 
-The log is what makes an agent-maintained vault auditable. When a page says
-something you do not recognise, the log tells you which run produced it. When
-something disappears, the log is the difference between a traceable merge and a
-mystery.
+File nhật ký (`log.md`) là thứ giúp một `Vault` do `Agent` duy trì có thể kiểm toán được. Khi một trang nói điều gì đó mà bạn không nhận ra, nhật ký sẽ cho bạn biết lượt chạy nào đã tạo ra nó. Khi một thứ gì đó biến mất, nhật ký chính là sự khác biệt giữa một cú gộp trang có thể truy vết và một sự biến mất bí ẩn.
 
-It also gives the [review skill](../../skills/README.md) its raw material: what
-changed this week comes from here, not from guessing at file timestamps.
+Nó cũng cung cấp nguyên liệu đầu vào cho [skill rà soát (review skill)](../../skills/README.md): những gì đã thay đổi trong tuần này được lấy từ đây, chứ không phải từ việc đoán mò qua mốc thời gian sửa đổi file (file timestamps).
 
-## Keeping both from bloating
+## Giữ cho cả hai file không bị phình to
 
-The index grows with the vault, which is fine, but flat lists stop being
-navigable somewhere around two hundred entries. Group by theme, and once a theme
-has more than about thirty entries, give it its own index page and link it from
-the main one.
+Chỉ mục (`index.md`) lớn dần theo `Vault`, điều đó hoàn toàn bình thường, nhưng các danh sách phẳng sẽ không còn dễ điều hướng nữa khi chạm mốc khoảng hai trăm mục. Hãy nhóm theo chủ đề, và một khi chủ đề nào vượt quá khoảng ba mươi mục, hãy tách cho nó một trang chỉ mục riêng và liên kết tới nó từ trang chỉ mục chính.
 
-The log grows forever and nobody reads old entries. Roll entries older than a
-few months into one summary line per month, or archive them into a dated file.
-Keep recent detail, compress history.
+Nhật ký (`log.md`) sẽ dài ra mãi mãi và chẳng ai đọc lại các dòng quá cũ. Hãy gom các mục cũ hơn vài tháng thành một dòng tóm tắt cho mỗi tháng, hoặc lưu trữ (archive) chúng vào một file gắn theo ngày tháng. Giữ lại chi tiết gần đây, nén lịch sử cũ lại.
 
-## The rule that matters
+## Quy tắc sống còn
 
-Both files update in the same run as the work they describe.
+Cả hai file phải được cập nhật ngay trong cùng lượt chạy với phần công việc mà chúng mô tả.
 
-An index that lags is worse than no index, because the agent trusts it and stops
-looking for pages it does not list. A log written later is a reconstruction, not
-a record.
+Một chỉ mục bị trễ nhịp còn tệ hơn là không có chỉ mục, bởi vì `Agent` tin tưởng vào nó và sẽ ngừng tìm kiếm những trang không được liệt kê trong đó. Còn một dòng nhật ký được viết bù sau đó chỉ là sự tái dựng, không phải là một bản ghi thực tế.
 
-## Next
+## Tiếp theo
 
-[Graphs](../05-graphs/README.md), where these structures start paying off.
+[Đồ thị (Graphs)](../05-graphs/README.md), nơi những cấu trúc này bắt đầu sinh lời.

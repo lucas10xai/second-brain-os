@@ -1,9 +1,9 @@
-# 3 · The gate
+# 3 · Cổng phân luồng (The Gate)
 
-Cheap decisions in front of expensive models: classifiers first, System One models where they earn it.
+Những quyết định chi phí thấp đặt trước các mô hình đắt tiền: ưu tiên bộ phân loại trước, chỉ dùng mô hình System One ở nơi thực sự xứng đáng.
 
-A course module beside [the main guide](../../README.md) — read it on the site or in order below.
+Một học phần thuộc khóa học bên cạnh [cẩm nang chính](../../README.md) — đọc trực tiếp trên trang web hoặc theo thứ tự dưới đây.
 
-1. [Cheap Decisions](cheap-decisions.md)
-2. [Gates in Practice](gates-in-practice.md)
-3. [Gate Practice](gate-practice.md)
+1. [Những quyết định chi phí thấp](cheap-decisions.md)
+2. [Ứng dụng Gate trong thực tế](gates-in-practice.md)
+3. [Thực hành xây dựng Gate](gate-practice.md)

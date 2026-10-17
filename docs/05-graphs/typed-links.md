@@ -1,83 +1,69 @@
-# Typed links
+# Liên kết định kiểu (Typed links)
 
-A plain `[[wikilink]]` says two pages are related. It does not say how, and at
-scale that is a real loss.
+Một `[[wikilink]]` thông thường chỉ cho biết hai trang có liên quan đến nhau. Nó không cho biết liên quan *như thế nào*, và khi quy mô lớn dần thì đó là một sự mất mát thông tin thực sự.
 
-You cannot ask an untyped graph what contradicts a claim, what evidence supports
-it, or which pages extend a method. Every edge is the same edge, so every
-question collapses to "what is nearby".
+Bạn không thể hỏi một đồ thị không định kiểu xem điều gì đang mâu thuẫn với một nhận định, bằng chứng nào ủng hộ nó, hay những trang nào mở rộng một phương pháp. Mọi cạnh nối đều giống hệt nhau, nên mọi câu hỏi đều bị thu gọn về mức "những gì đang nằm gần đây".
 
-## A minimal vocabulary
+## Bộ từ vựng tối giản
 
-Small enough to remember, expressive enough to be worth it:
+Đủ nhỏ để nhớ thuộc lòng, đủ sức biểu đạt để xứng đáng với công sức bỏ ra:
 
-- **supports** - this page is evidence for that one
-- **contradicts** - this page argues against it
-- **extends** - builds on it, adds to it
-- **part-of** - a component of a larger thing
-- **applies** - a use of a method in practice
+- **supports** (ủng hộ) - trang này là bằng chứng củng cố cho trang kia
+- **contradicts** (mâu thuẫn) - trang này đưa ra lập luận phản bác lại trang kia
+- **extends** (mở rộng) - xây dựng dựa trên trang kia, bổ sung thêm vào đó
+- **part-of** (thuộc về) - là một thành phần nằm trong một tổng thể lớn hơn
+- **applies** (áp dụng) - ứng dụng một phương pháp vào thực tế
 
-Five is deliberately few. Every additional type is one the agent has to choose
-between correctly on every link, and a vocabulary of twenty produces
-inconsistent tagging, which is worse than none.
+Con số năm loại là sự giới hạn có chủ đích. Mỗi loại thêm vào là thêm một lựa chọn mà `Agent` phải phân định chính xác trên từng liên kết, và một bộ từ vựng gồm hai mươi loại sẽ dẫn đến việc gắn nhãn thiếu nhất quán — điều còn tệ hơn cả việc không định kiểu.
 
-## Two ways to encode it
+## Hai cách để mã hóa kiểu liên kết
 
-**Inline, next to the link:**
+**Nội dòng (Inline), ngay cạnh liên kết:**
 
 ```markdown
-The position sensitivity result (supports:: [[Lost in the Middle]]) suggests
-context length alone does not fix retrieval.
+Kết quả về độ nhạy vị trí (supports:: [[Lost in the Middle]]) cho thấy
+chỉ riêng độ dài ngữ cảnh không giải quyết được bài toán truy xuất.
 ```
 
-Dataview reads inline fields, so this is queryable inside Obsidian without extra
-tooling.
+Dataview đọc được các trường nội dòng (inline fields), nên cú pháp này có thể truy vấn trực tiếp ngay bên trong `Obsidian` mà không cần công cụ phụ trợ nào.
 
-**In frontmatter, per page:**
+**Trong `Frontmatter`, ở cấp độ từng trang:**
 
 ```yaml
 contradicts: ["[[Long context replaces RAG]]"]
 extends: ["[[Retrieval augmented generation]]"]
 ```
 
-Cleaner to query, further from the sentence the link came from. Frontmatter for
-page-level relationships, inline for claim-level ones.
+Cách này giúp truy vấn gọn gàng hơn, nhưng lại tách rời khỏi câu văn cụ thể sinh ra liên kết đó. Hãy dùng `Frontmatter` cho các mối quan hệ ở cấp độ toàn trang, và dùng cú pháp nội dòng cho các mối quan hệ ở cấp độ từng nhận định cụ thể.
 
-## What it buys you
+## Lợi ích mang lại
 
 ```dataview
 LIST FROM "wiki/concepts"
 WHERE contains(contradicts, this.file.link)
 ```
 
-That is "everything in my vault that argues against this page", which is a
-question a plain graph cannot answer at all.
+Truy vấn trên trả về "mọi thứ trong `Vault` của tôi có lập luận phản bác lại trang này" — một câu hỏi mà đồ thị thuần túy hoàn toàn bó tay.
 
-At the agent level it is stronger still. An ingest that records a new source as
-`contradicts` an existing page has done the work of flagging the disagreement
-structurally, rather than burying it in prose that only surfaces if someone
-reads the page.
+Ở cấp độ `Agent`, lợi ích này còn mạnh mẽ hơn nữa. Một lượt chạy `Ingest` khi ghi nhận một tài liệu nguồn mới là `contradicts` (mâu thuẫn) với một trang hiện có tức là đã hoàn thành việc gắn cờ báo hiệu sự bất đồng ngay ở tầng cấu trúc, thay vì chôn vùi nó trong những dòng văn xuôi chỉ lộ diện khi có ai đó tình cờ đọc tới trang đó.
 
-## Do not type everything
+## Đừng định kiểu cho mọi liên kết
 
-Most links are plain mentions and should stay plain. Typing every link makes the
-vocabulary meaningless and makes ingestion slower and more error-prone.
+Hầu hết các liên kết chỉ là những lần nhắc tên thông thường và nên được giữ nguyên ở dạng thuần túy. Việc gán kiểu cho mọi liên kết sẽ làm cho bộ từ vựng trở nên vô nghĩa, đồng thời khiến quá trình `Ingest` chậm hơn và dễ phát sinh lỗi hơn.
 
-Type the links where the relationship is the point: evidence, disagreement,
-extension. Roughly one in five links, in practice.
+Chỉ định kiểu cho những liên kết mà bản thân mối quan hệ chính là trọng tâm: bằng chứng ủng hộ, sự bất đồng, sự mở rộng. Trên thực tế, tỷ lệ này rơi vào khoảng một trên năm liên kết.
 
-## The instruction
+## Chỉ dẫn cho Agent
 
 ```
-When a source supports, contradicts or extends a claim on an existing page,
-record the relationship with a typed link. Plain wikilinks for ordinary
-mentions. Do not type a relationship you are inferring; only type what the
-source states.
+Khi một tài liệu nguồn ủng hộ (supports), mâu thuẫn (contradicts) hoặc mở rộng (extends) một nhận định trên trang hiện có,
+hãy ghi nhận mối quan hệ đó bằng một liên kết định kiểu (typed link). Dùng Wikilink thông thường cho các lần
+nhắc tên bình thường. Không được gán kiểu cho một mối quan hệ do bạn tự suy diễn; chỉ gán kiểu cho những gì
+tài liệu nguồn khẳng định trực tiếp.
 ```
 
-That last sentence matters. An agent guessing at relationships produces a graph
-that looks rigorous and encodes its own assumptions.
+Câu cuối cùng cực kỳ quan trọng. Một `Agent` tự đoán mò các mối quan hệ sẽ tạo ra một đồ thị trông có vẻ chặt chẽ nhưng thực chất lại mã hóa chính những giả định chủ quan của nó vào cấu trúc dữ liệu.
 
-## Next
+## Tiếp theo
 
-[Graph vs embeddings](graph-vs-vectors.md)
+[Đồ thị và Embeddings](graph-vs-vectors.md)

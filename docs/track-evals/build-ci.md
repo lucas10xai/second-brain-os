@@ -1,10 +1,10 @@
-# Build: the Gate
+# Thực hành: Cổng kiểm soát CI (Build: the Gate)
 
-A suite that runs only when someone remembers is a suite that stops running. This page wires `eval_suite.py` from [build the suite](build-suite.md) into GitHub Actions: a subset gates every PR, the full suite runs nightly, and the number lands in a scoreboard committed to the repo. The principles are in the CI section of [agent evals](agent-evals.md).
+Một bộ đánh giá chỉ chạy khi có ai đó sực nhớ ra là một bộ đánh giá sớm muộn sẽ ngừng chạy. Trang này kết nối tệp `eval_suite.py` từ bài [xây dựng bộ đánh giá](build-suite.md) vào GitHub Actions: một tập con làm cổng kiểm soát (`Gate`) cho mọi PR, toàn bộ bộ đánh giá chạy định kỳ hàng đêm (nightly), và con số kết quả sẽ được ghi vào một bảng điểm (scoreboard) commit thẳng vào kho mã nguồn. Các nguyên tắc nền tảng nằm ở phần CI của bài [đánh giá `Agent`](agent-evals.md).
 
-## The workflow
+## Cấu hình Workflow
 
-Save as `.github/workflows/evals.yml`. Add `ANTHROPIC_API_KEY` under repository secrets first.
+Lưu thành tệp `.github/workflows/evals.yml`. Trước tiên hãy thêm biến `ANTHROPIC_API_KEY` vào mục repository secrets trên GitHub.
 
 ```yaml
 name: evals
@@ -60,17 +60,17 @@ jobs:
           git push
 ```
 
-## Choosing the threshold
+## Lựa chọn ngưỡng chặn (Threshold)
 
-Set the threshold below your current pass rate, not at it. Judged cases are stochastic: a suite sitting at 90% will occasionally print 87% with nothing changed, and a gate at 90% turns that noise into red builds nobody trusts. Run the full suite three times, take the worst number, and gate a couple of points under that. Raise the bar only after a real improvement holds for a week of nightlies. And pin your model IDs in the script — a model alias silently moving underneath you is a change, and it should arrive as a PR that faces the gate like any other.
+Hãy đặt ngưỡng thấp hơn một chút so với tỷ lệ đạt hiện tại của bạn, chứ đừng đặt bằng đúng con số đó. Các ca kiểm thử có giám khảo chấm mang tính ngẫu nhiên (stochastic): một bộ đánh giá đang ở mức 90% thỉnh thoảng sẽ in ra 87% dù không có gì thay đổi, và một `Gate` đặt cứng ở mức 90% sẽ biến nhiễu ngẫu nhiên đó thành những bản build đỏ lòm mà không ai còn tin tưởng. Hãy chạy toàn bộ bộ đánh giá ba lần, lấy con số tệ nhất, và đặt ngưỡng `Gate` thấp hơn mức đó một vài điểm phần trăm. Chỉ nâng rào chắn lên sau khi một cải tiến thực sự duy trì được kết quả ổn định qua suốt một tuần chạy nightly. Đồng thời, hãy ghim cố định mã định danh mô hình (model IDs) trong script — một tên gọi tắt (alias) của mô hình âm thầm trỏ sang phiên bản mới bên dưới chân bạn chính là một sự thay đổi, và nó phải đi vào qua một PR đối mặt với `Gate` giống như mọi thay đổi khác.
 
-## Cost control
+## Kiểm soát chi phí
 
-The PR job runs the first twenty cases; keep those the cheapest and most diagnostic ones — code-graded cases from your biggest failure modes, since ordering `golden.jsonl` is free and judge calls are the expensive part. Twenty cases at two calls each is small money per PR; the full suite with every judge case runs once a night regardless of how busy the repo is. `cancel-in-progress` stops force-pushes from stacking duplicate runs. If nightly spend still stings, that is a sign the suite has grown past the afternoon version, and the sample-size guidance in [designing evals](designing-evals.md) tells you which cases are earning their place.
+Job chạy trên PR chỉ thực thi hai mươi ca kiểm thử đầu tiên; hãy giữ cho hai mươi ca đó là những ca rẻ nhất và có tính chẩn đoán cao nhất — tức là các ca chấm bằng code thuộc những kiểu lỗi lớn nhất của bạn, bởi việc sắp xếp thứ tự dòng trong `golden.jsonl` hoàn toàn miễn phí còn lệnh gọi giám khảo LLM mới là phần đắt đỏ. Hai mươi ca với hai lệnh gọi mỗi ca chỉ tốn một khoản tiền rất nhỏ cho mỗi PR; trong khi toàn bộ bộ đánh giá với đầy đủ các ca dùng giám khảo chỉ chạy mỗi đêm một lần bất kể kho mã nguồn bận rộn đến đâu. Cờ `cancel-in-progress` ngăn các thao tác `force-push` xếp chồng nhiều phiên chạy trùng lặp. Nếu chi phí chạy hàng đêm vẫn gây xót ruột, đó là dấu hiệu cho thấy bộ đánh giá đã phát triển vượt qua phiên bản một buổi chiều, và hướng dẫn về kích thước mẫu trong bài [thiết kế bộ đánh giá](designing-evals.md) sẽ chỉ cho bạn biết những ca kiểm thử nào thực sự xứng đáng giữ lại.
 
-## The scoreboard
+## Bảng điểm (The scoreboard)
 
-Seed `scoreboard.md` by hand:
+Hãy tạo tệp mồi `scoreboard.md` bằng tay:
 
 ```markdown
 # Eval scoreboard
@@ -79,4 +79,4 @@ Seed `scoreboard.md` by hand:
 |---|---|---|
 ```
 
-The nightly job appends one row and commits it, even on failing runs — a bad number in the log is a fact, a missing row is a mystery. The point of the scoreboard is not the ceremony; it is that the number becomes visible history in every clone of the repo. When it dips, `git log scoreboard.md` and the nightly logs say exactly which day and which commit. That loop — read traces, encode failures, gate, watch the number — is the flywheel from [why evals](why-evals.md), now running without you.
+Job chạy hàng đêm sẽ nối thêm một dòng và commit thẳng vào nhánh, kể cả trong những lần chạy thất bại — một con số xấu nằm trong lịch sử là một dữ kiện thực tế, còn một dòng bị khuyết lại là một bí ẩn. Mục đích của bảng điểm không phải là nghi thức hình thức; mà là biến con số chất lượng thành lịch sử hữu hình trong mọi bản clone của kho mã nguồn. Khi điểm số sụt giảm, lệnh `git log scoreboard.md` cùng nhật ký chạy hàng đêm sẽ chỉ đích danh ngày nào và bản commit nào đã gây ra điều đó. Vòng lặp ấy — đọc `Traces`, mã hóa các lỗi thành bài kiểm tra, đặt `Gate` chặn và theo dõi con số — chính là chiếc bánh đà trong bài [tại sao cần `Evals`](why-evals.md), nay đã tự động quay mà không cần đến bạn.

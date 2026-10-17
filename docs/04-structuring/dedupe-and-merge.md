@@ -1,61 +1,45 @@
-# Deduplication and merging
+# Khử trùng lặp và gộp trang
 
-Duplicates are inevitable. Two sources use different words for the same idea, an
-alias was missing, a bulk import ran before the vault had the concept. The
-question is not how to prevent them entirely but how to catch them before they
-both accumulate links.
+Sự trùng lặp là điều không thể tránh khỏi. Hai tài liệu nguồn dùng những từ khác nhau cho cùng một ý tưởng, một alias bị thiếu, hoặc một đợt nhập dữ liệu hàng loạt (bulk import) đã chạy trước khi `Vault` định hình được khái niệm đó. Câu hỏi đặt ra không phải là làm sao để ngăn chặn hoàn toàn sự trùng lặp, mà là làm sao để phát hiện ra chúng trước khi cả hai trang đều tích lũy hàng loạt liên kết.
 
-## Finding them
+## Cách tìm ra trang trùng lặp
 
-Signals, in order of reliability:
+Các tín hiệu nhận biết, xếp theo thứ tự độ tin cậy giảm dần:
 
-- **Similar titles.** Cheap to check, catches the plural and acronym cases.
-- **Overlapping aliases.** Two pages claiming the same alias is always a bug.
-- **Shared inbound links.** Two pages that the same five sources both link to
-  are usually one page.
-- **Content similarity.** Expensive, but catches the cases where the names look
-  unrelated.
+- **Tiêu đề tương tự nhau.** Rất nhẹ để kiểm tra, bắt được các trường hợp số nhiều và từ viết tắt.
+- **`Aliases` chồng lấp nhau.** Hai trang cùng nhận chung một alias luôn luôn là một lỗi (bug).
+- **Chia sẻ chung các liên kết trỏ tới (inbound links).** Hai trang mà cùng được năm tài liệu nguồn liên kết tới thường thực chất chỉ là một trang.
+- **Độ tương đồng về nội dung.** Tốn chi phí tính toán hơn, nhưng bắt được các trường hợp mà tên gọi trông chẳng liên quan gì đến nhau.
 
-`second-brain-lint` runs the first three and proposes merges. It does not
-perform them, which is deliberate.
+Skill `second-brain-lint` sẽ chạy ba bước kiểm tra đầu tiên và đề xuất các trang cần gộp. Nó không tự động thực hiện việc gộp trang, và đây là thiết kế có chủ đích.
 
-## Why merging is not automatic
+## Tại sao không tự động gộp trang
 
-A merge is irreversible in the way that matters: once two pages are one, you
-cannot tell which claim came from which, and the agent's judgement about "these
-are the same thing" is exactly the judgement that goes wrong.
+Gộp trang là một thao tác không thể đảo ngược theo một nghĩa rất quan trọng: một khi hai trang đã gộp làm một, bạn không thể phân biệt nhận định nào đến từ trang nào nữa, và phán đoán của `Agent` về việc "hai thứ này là một" lại chính là kiểu phán đoán dễ sai lầm nhất.
 
-Two ideas that look identical from their summaries are often a general case and
-a specific one, and merging them loses the distinction permanently.
+Hai ý tưởng trông giống hệt nhau qua phần tóm tắt thường lại là một trường hợp tổng quát và một trường hợp cụ thể; việc gộp chúng lại sẽ làm mất đi sự phân biệt đó vĩnh viễn.
 
-So: the agent proposes, you decide. Reviewing a merge takes fifteen seconds.
+Vì vậy: `Agent` đề xuất, bạn quyết định. Việc duyệt một đề xuất gộp trang chỉ mất mười lăm giây.
 
-## The procedure
+## Quy trình gộp trang
 
-When you approve one:
+Khi bạn phê duyệt một đề xuất gộp:
 
-1. **Pick the survivor** by canonical name, not by which is longer.
-2. **Merge content,** keeping every distinct claim with its source. Overlapping
-   claims collapse, differing ones both stay.
-3. **Merge aliases,** including the dead page's title as an alias on the
-   survivor.
-4. **Redirect inbound links** to the survivor.
-5. **Leave a stub** at the old path only if it was linked from outside the
-   vault. Otherwise delete it.
-6. **Record it in `log.md`** with both names, so a page that vanishes is
-   traceable.
+1. **Chọn trang giữ lại (survivor)** dựa theo tên chuẩn tắc, không phải dựa theo trang nào dài hơn.
+2. **Gộp nội dung,** giữ lại mọi nhận định riêng biệt kèm theo nguồn của nó. Các nhận định trùng lặp thì gộp lại, các nhận định khác biệt thì giữ lại cả hai.
+3. **Gộp `Aliases`,** bao gồm cả việc đưa tiêu đề của trang bị xóa làm một alias trên trang giữ lại.
+4. **Chuyển hướng các liên kết trỏ tới (inbound links)** sang trang giữ lại.
+5. **Để lại một trang sơ khai (stub)** ở đường dẫn cũ chỉ khi nó từng được liên kết từ bên ngoài `Vault`. Nếu không, hãy xóa hẳn file cũ.
+6. **Ghi lại vào `log.md`** kèm theo cả hai tên trang, để một trang biến mất luôn có thể truy vết được.
 
-Step 6 is the one agents skip and the one you will need. A page that disappears
-without a record is indistinguishable from a page that was deleted by mistake.
+Bước 6 là bước mà các `Agent` thường bỏ qua nhưng lại là bước bạn sẽ cần đến nhất. Một trang biến mất không để lại dấu vết sẽ không thể phân biệt được với một trang bị xóa nhầm.
 
-## Do not dedupe live
+## Đừng khử trùng lặp ngay trong lúc Ingest
 
-Merging during an ingest run means the agent is restructuring the vault while
-adding to it, and a bad merge lands in the middle of otherwise good work.
+Việc gộp trang ngay trong một lượt chạy `Ingest` đồng nghĩa với việc `Agent` vừa cấu trúc lại `Vault` vừa thêm mới vào đó, và một cú gộp sai sẽ nằm lẫn vào giữa những phần việc đang làm tốt khác.
 
-Run dedupe as its own pass, weekly or after a large import, on a clean git
-state. Then a wrong merge is one `git checkout` away from undone.
+Hãy chạy khử trùng lặp như một lượt riêng biệt, hàng tuần hoặc sau một đợt nhập dữ liệu lớn, trên một trạng thái `Git` sạch (clean git state). Khi đó, nếu có một cú gộp sai, bạn chỉ cần một lệnh `git checkout` là khôi phục lại được ngay.
 
-## Next
+## Tiếp theo
 
-[Contradictions and supersession](contradictions-and-supersession.md)
+[Mâu thuẫn và thay thế thông tin](contradictions-and-supersession.md)

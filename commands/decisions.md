@@ -1,7 +1,7 @@
 ---
-description: List decisions made
+description: Liệt kê các quyết định đã đưa ra
 ---
 
-List the decisions recorded for $ARGUMENTS, with dates and what each rests on.
+Liệt kê các quyết định được ghi nhận cho $ARGUMENTS, kèm theo ngày tháng và cơ sở của từng quyết định.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

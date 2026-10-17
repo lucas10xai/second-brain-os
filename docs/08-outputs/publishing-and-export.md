@@ -1,56 +1,37 @@
-# Publishing and export
+# Xuất bản và trích xuất
 
-Some of your vault is worth showing to other people. Most of it is not, and the
-mechanics of that split are worth setting up before you publish anything.
+Một vài phần trong Vault của bạn rất đáng để chia sẻ cho người khác xem. Nhưng phần lớn thì không, và cơ chế phân tách rạch ròi hai phần đó rất đáng để thiết lập trước khi bạn xuất bản bất cứ thứ gì.
 
-## Deciding what is public
+## Quyết định nội dung nào được công khai
 
-The simplest reliable approach is an explicit opt-in: a `publish: true` field in
-frontmatter, and nothing without it ever leaves.
+Cách tiếp cận đơn giản và đáng tin cậy nhất là cơ chế chủ động chọn (explicit opt-in): thêm một trường `publish: true` vào Frontmatter, và bất kỳ trang nào không có trường này sẽ không bao giờ lọt ra ngoài.
 
-Opt-out is the alternative and it is a mistake. Under opt-out, one forgotten flag
-publishes something private, and the failure is silent and permanent because it
-is already indexed.
+Cơ chế loại trừ (opt-out) là hướng ngược lại và đó là một sai lầm. Với cơ chế loại trừ, chỉ cần quên gắn cờ một lần là nội dung riêng tư sẽ bị công khai ngay lập tức, và hậu quả này diễn ra âm thầm nhưng vĩnh viễn vì các công cụ tìm kiếm đã kịp lập chỉ mục trang đó rồi.
 
-## Static site options
+## Các lựa chọn tạo trang web tĩnh (Static site)
 
-Obsidian Publish is the official route and the least work. Quartz and Obsidian
-Digital Garden are the common open-source ones, both build a static site from a
-vault and both understand wikilinks and backlinks, which matters because a
-published wiki with broken links is worse than a blog.
+Obsidian Publish là giải pháp chính thức và tốn ít công sức nhất. Quartz và Obsidian Digital Garden là hai lựa chọn mã nguồn mở phổ biến; cả hai đều dựng trang web tĩnh từ một Vault và đều hiểu được Wikilink lẫn Backlinks — điều này cực kỳ quan trọng vì một trang wiki được xuất bản mà đầy liên kết gãy thì còn tệ hơn cả một trang blog thông thường.
 
-Whatever you use, check what happens to a link pointing at an unpublished page.
-It should degrade to plain text rather than to a 404.
+Dù bạn chọn công cụ nào, hãy kiểm tra xem điều gì sẽ xảy ra với một liên kết trỏ tới trang chưa được xuất bản. Nó nên tự động chuyển về dạng văn bản thuần túy thay vì dẫn người đọc tới một trang lỗi 404.
 
-## Publishing a subset safely
+## Xuất bản một phần Vault một cách an toàn
 
-The pattern that works: a build step copies only `publish: true` pages into a
-separate folder, rewrites links to unpublished pages as plain text, and builds
-from that copy.
+Mô hình hoạt động hiệu quả: thiết lập một bước dựng (build step) chỉ sao chép những trang có `publish: true` sang một thư mục riêng, viết lại các liên kết trỏ tới những trang chưa xuất bản thành văn bản thuần túy, rồi mới dựng trang web từ bản sao đó.
 
-Never point a publishing tool at your live vault directly. One misconfigured
-include pattern publishes everything, and there is no way to unpublish something
-that was crawled.
+Đừng bao giờ trỏ thẳng công cụ xuất bản vào Vault đang hoạt động của bạn. Chỉ một mẫu cấu hình (include pattern) bị sai lệch cũng đủ làm lộ toàn bộ dữ liệu, và một khi nội dung đã bị các trình thu thập dữ liệu (crawler) quét qua thì không còn cách nào thu hồi lại được nữa.
 
-## What publishing does to your writing
+## Việc xuất bản ảnh hưởng thế nào đến cách bạn viết
 
-A public wiki changes how you write pages, and not entirely for the better. You
-start writing for an audience: hedging more, explaining more, keeping tentative
-thoughts out.
+Một trang wiki công khai sẽ làm thay đổi cách bạn viết ghi chú, và không hẳn theo chiều hướng tốt lên. Bạn bắt đầu viết cho khán giả đọc: rào đón nhiều hơn, giải thích dài dòng hơn, và giữ lại không dám viết ra những suy nghĩ còn đang phôi thai.
 
-Tentative thoughts are exactly what a personal vault is for. If you publish,
-consider keeping the private vault primary and publishing a deliberately selected
-subset, rather than making the whole thing public and unconsciously sanitising
-it.
+Mà những suy nghĩ đang phôi thai lại chính là lý do tồn tại của một Vault cá nhân. Nếu bạn muốn xuất bản, hãy cân nhắc giữ Vault riêng tư làm nơi làm việc chính và chỉ xuất bản một tập hợp con được chọn lọc có chủ đích, thay vì công khai toàn bộ rồi vô thức tự kiểm duyệt và làm trơn tru hóa mọi ghi chú của mình.
 
-## Other exports
+## Các định dạng trích xuất khác
 
-PDF and HTML for a single report, straight from markdown with pandoc. Fine for
-sharing one document.
+Trích xuất ra PDF và HTML cho một báo cáo đơn lẻ, chuyển trực tiếp từ markdown bằng `pandoc`. Cách này hoàn toàn ổn khi cần chia sẻ một tài liệu riêng biệt.
 
-Do not export the vault as a whole to any format you cannot regenerate. The
-markdown is the artifact.
+Đừng trích xuất toàn bộ Vault sang bất kỳ định dạng nào mà bạn không thể tái tạo lại được. Các file markdown mới chính là tài sản cốt lõi.
 
-## Next
+## Tiếp theo
 
-[Learning from your own vault](teaching-yourself.md)
+[Tự học từ chính Vault của bạn](teaching-yourself.md)

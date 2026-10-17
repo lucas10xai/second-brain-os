@@ -1,7 +1,7 @@
 ---
-description: Find missing aliases
+description: Tìm các tên gọi thay thế (aliases) còn thiếu
 ---
 
-Find pages whose acronyms, alternate spellings or common names are not in `aliases`. Missing aliases are the main reason a vault grows two pages for one thing.
+Tìm các trang mà từ viết tắt, cách viết khác hoặc tên gọi phổ biến của chúng chưa có trong trường `aliases`. Thiếu tên gọi thay thế là nguyên nhân chính khiến kho tri thức sinh ra hai trang cho cùng một khái niệm.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

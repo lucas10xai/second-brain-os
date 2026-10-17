@@ -1,21 +1,19 @@
-# Setup
+# Thiết lập hệ thống (Setup)
 
-From zero to a vault your agent maintains, in one evening. Follow the pages in
-order the first time. Nine steps, roughly twenty minutes of typing and however
-long the interview in step four takes you.
+Đi từ con số không đến một Vault được Agent tự động duy trì, chỉ trong một buổi tối. Hãy làm theo các trang hướng dẫn theo đúng thứ tự trong lần đầu tiên thiết lập. Gồm chín bước, mất khoảng hai mươi phút gõ phím cộng với thời gian bạn trả lời phỏng vấn ở bước thứ tư.
 
-## Pages
+## Danh sách bài viết
 
-- [Obsidian and your first vault](obsidian-install-and-vault.md)
-- [Claude Code in the vault](claude-code-setup.md)
-- [MCP for Obsidian](mcp-obsidian.md)
-- [Writing your CLAUDE.md](claude-md.md)
-- [Vault structure](vault-structure.md)
-- [Project scoping](project-scoping.md)
-- [Live data connectors](live-data.md)
-- [Plugins worth installing](obsidian-plugins.md)
-- [Git, sync and backups](git-and-sync.md)
+- [Obsidian và Vault đầu tiên của bạn](obsidian-install-and-vault.md)
+- [Chạy Claude Code bên trong Vault](claude-code-setup.md)
+- [Giao thức MCP cho Obsidian](mcp-obsidian.md)
+- [Viết file CLAUDE.md của bạn](claude-md.md)
+- [Cấu trúc Vault](vault-structure.md)
+- [Giới hạn phạm vi theo dự án (Project scoping)](project-scoping.md)
+- [Kết nối dữ liệu thời gian thực](live-data.md)
+- [Những plugin đáng cài đặt](obsidian-plugins.md)
+- [Git, đồng bộ hóa và sao lưu](git-and-sync.md)
 
 ---
 
-[Back to the full guide](../README.md)
+[Quay lại toàn bộ cẩm nang](../README.md)

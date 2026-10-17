@@ -1,7 +1,7 @@
 ---
-description: Ingest a voice note
+description: Nạp một ghi chú giọng nói
 ---
 
-Transcribe and clean $ARGUMENTS, then extract the actual idea as a concept page in the user's own words. Drop false starts and repetition, keep the recording date.
+Gỡ băng và làm sạch bản ghi âm tại $ARGUMENTS, sau đó trích xuất ý tưởng thực sự thành một trang khái niệm bằng chính lời văn của người dùng. Loại bỏ các câu nói ngập ngừng và lặp từ, nhưng giữ nguyên ngày ghi âm.
 
-Follow the `second-brain-transcript` skill.
+Thực hiện theo skill `second-brain-transcript`.

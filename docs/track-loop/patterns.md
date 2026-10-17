@@ -1,29 +1,29 @@
-# Patterns
+# Các mẫu thiết kế vòng lặp (Patterns)
 
-Five loop shapes keep reappearing under different names. Each earns its keep on a particular kind of work, and each has failure modes its advocates tend to soft-pedal. They are listed here with both.
+Năm hình thái `Loop` liên tục xuất hiện đi xuất hiện lại dưới nhiều tên gọi khác nhau. Mỗi hình thái đều phát huy giá trị trên một loại công việc cụ thể, và mỗi hình thái đều có những kiểu lỗi (failure modes) mà những người ủng hộ chúng thường nói giảm nói tránh. Dưới đây là danh sách trình bày đầy đủ cả hai mặt.
 
-## Run-in-a-loop (Ralph)
+## Chạy trong vòng lặp (Run-in-a-loop / Ralph)
 
-Geoffrey Huntley's July 2025 original: `while :; do cat PROMPT.md | claude-code ; done`. No orchestration at all — when a session ends, another starts cold, reads the same prompt file and the same repo, and picks up where the last one left off through files on disk. It is the purest demonstration that fresh context plus persistent files beats one long degrading session, and Anthropic now ships it as the `ralph-wiggum` plugin in the Claude Code repo.
+Bản gốc tháng 7 năm 2025 của Geoffrey Huntley: `while :; do cat PROMPT.md | claude-code ; done`. Hoàn toàn không có tầng điều phối (orchestration) nào — khi một phiên kết thúc, một phiên khác khởi động lạnh, đọc cùng tệp prompt và cùng kho mã nguồn đó, rồi tiếp tục công việc từ nơi phiên trước dừng lại thông qua các tệp tin trên ổ đĩa. Đây là minh chứng thuần khiết nhất cho thấy ngữ cảnh mới tinh cộng với tệp tin bền vững đánh bại một phiên làm việc kéo dài ngày càng suy thoái, và Anthropic hiện đã đóng gói nó thành plugin `ralph-wiggum` trong kho mã nguồn `Claude Code`.
 
-Failure modes, admitted by the author himself: placeholder implementations that satisfy the compiler and nothing else; waking up to a tree that does not build; and it suits greenfield work — Huntley's own line is that he would not run Ralph on an existing codebase. Ralph gets you roughly 90% of a first version, with a human stop button as the only brake.
+Các kiểu lỗi được chính tác giả thừa nhận: những đoạn code giữ chỗ (placeholder implementations) chỉ cốt làm hài lòng trình biên dịch chứ không làm được gì khác; thức dậy với một cây mã nguồn không thể build; và nó chỉ hợp với các dự án làm mới từ đầu (greenfield) — chính Huntley cũng nói rằng ông sẽ không chạy Ralph trên một codebase sẵn có. Ralph giúp bạn đi được khoảng 90% chặng đường của phiên bản đầu tiên, với nút dừng bằng cơm của con người là chiếc phanh duy nhất.
 
-## Plan-execute-verify
+## Lập kế hoạch - Thực thi - Xác minh (Plan-execute-verify)
 
-Split the run into phases: one pass produces a plan file, subsequent passes execute steps, a verifier gates each one. Good for multi-step work where a single prompt drifts. Failure mode: plans go stale on contact with reality, and a loop that executes a stale plan faithfully compounds the error — the verifier must run per step, not once at the end.
+Chia phiên chạy thành các pha: một lượt đầu tạo ra tệp kế hoạch, các lượt tiếp theo thực thi từng bước, và một `Verifier` làm cổng kiểm soát (`Gate`) cho mỗi bước. Rất tốt cho công việc đa bước nơi một prompt đơn lẻ dễ bị trượt khỏi quỹ đạo. Kiểu lỗi: kế hoạch nhanh chóng trở nên lỗi thời khi va chạm với thực tế, và một `Loop` thực thi răm rắp một kế hoạch lỗi thời sẽ nhân lên sai lầm theo cấp số nhân — `Verifier` bắt buộc phải chạy ở từng bước, chứ không phải chỉ chạy một lần vào lúc cuối.
 
-## Generator-critic pairs
+## Cặp Sinh - Phản biện (Generator-critic pairs)
 
-One agent makes, a separate pass judges against a narrow rubric, defects feed the next attempt. The maker-checker separation is the point: the implementer cannot grade itself. Failure modes: a vague rubric turns the critic into a noise generator; and when generator and critic share a model and a context, they share blind spots and converge on approving each other. Details in [critics and verification](critics-and-verification.md); wiring in [Build: the critic](build-critic.md).
+Một `Agent` thực hiện, một lượt chạy tách biệt khác phán xét dựa trên bảng tiêu chí (rubric) hẹp, và các khiếm khuyết sẽ được nạp vào lần thử tiếp theo. Sự tách biệt giữa người làm và người kiểm tra (`Maker`-`Checker`) chính là mấu chốt: kẻ thực thi không được phép tự chấm điểm cho mình. Kiểu lỗi: một bảng tiêu chí mơ hồ sẽ biến `Critic` thành cái máy tạo nhiễu; và khi bộ sinh cùng `Critic` dùng chung một mô hình và chung một ngữ cảnh, chúng sẽ chia sẻ cùng những điểm mù rồi hội tụ về việc tự khen lẫn nhau. Chi tiết xem tại [bộ phản biện và xác minh](critics-and-verification.md); cách ghép nối cụ thể xem tại [Thực hành: Bộ phản biện (`Critic`)](build-critic.md).
 
-## Tournament / best-of-n
+## Đấu loại / Chọn tốt nhất trong N (Tournament / best-of-n)
 
-Launch n attempts in parallel — git worktrees make this cheap to isolate — and let a verifier pick the winner. Powerful when attempts are high-variance and verification is cheap. Failure modes: cost multiplies by n whether or not any attempt is good; and without a genuinely strong picker you have paid n times for confident garbage and then chosen the most confident of it. The verifier asymmetry test decides whether this pattern is affordable at all.
+Khởi chạy song song $n$ lần thử — `git worktree` giúp cô lập việc này với chi phí rất rẻ — và để một `Verifier` chọn ra kẻ chiến thắng. Cực kỳ mạnh mẽ khi các lần thử có phương sai lớn và việc xác minh có chi phí rẻ. Kiểu lỗi: chi phí nhân lên $n$ lần bất kể có lần thử nào tốt hay không; và nếu thiếu một bộ chọn thực sự mạnh, bạn sẽ trả tiền gấp $n$ lần cho những đống rác đầy tự tin rồi chọn ra thứ rác tự tin nhất trong số đó. Phép thử bất đối xứng của `Verifier` sẽ quyết định liệu mẫu thiết kế này có đáng tiền hay không.
 
-## Overnight unattended runs with mailbox reports
+## Chạy tự động qua đêm kèm báo cáo hộp thư (Overnight unattended runs with mailbox reports)
 
-Budgeted, ratcheted, branch-isolated runs that work while you sleep and leave a morning report in markdown: what improved, what stopped the loop, what needs a decision. The end state of the discipline, and the pattern with the strictest entry requirements — every brake from [stop conditions](stop-conditions.md), plus rails that make the worst case boring. Failure modes: unattended loops make unattended mistakes, and the debt lands on you as comprehension debt — shipped changes outpacing your understanding of them. Osmani's warning stands: build the loop like someone who intends to stay the engineer, not just the person who presses go.
+Các phiên chạy có ngân sách, có chốt chặn một chiều (ratchet), được cô lập trên nhánh riêng, âm thầm làm việc trong lúc bạn ngủ và để lại một bản báo cáo buổi sáng bằng markdown: thứ gì đã cải thiện, thứ gì đã làm dừng `Loop`, thứ gì cần bạn ra quyết định. Đây là trạng thái đích của kỷ luật này, đồng thời là mẫu thiết kế có yêu cầu đầu vào khắt khe nhất — hội tụ mọi phanh hãm từ bài [điều kiện dừng (`Stop condition`)](stop-conditions.md), cộng thêm các thanh ray an toàn biến kịch bản tệ nhất trở nên nhàm chán. Kiểu lỗi: các `Loop` không người giám sát sẽ tạo ra những sai lầm không người giám sát, và khoản nợ đó đổ lên đầu bạn dưới dạng nợ đọc hiểu (comprehension debt) — tốc độ đẩy các thay đổi lên vượt quá khả năng hiểu của bạn về chúng. Lời cảnh báo của Osmani vẫn còn nguyên giá trị: hãy xây dựng `Loop` với tâm thế của một người định tiếp tục làm kỹ sư, chứ không phải chỉ là người bấm nút chạy.
 
-## Choosing between them
+## Lựa chọn giữa các mẫu thiết kế
 
-Start with the simplest loop that has a real verifier: the plain retry loop in [Build: the goal test](build-goal-test.md). Add a critic when green-but-ugly becomes your common failure. Go parallel or overnight only once the single loop stops legibly every time — the fancier patterns amplify whichever discipline you already have, including its absence.
+Hãy bắt đầu với `Loop` đơn giản nhất có một `Verifier` thực thụ: vòng lặp thử lại thuần túy trong bài [Thực hành: Bài kiểm tra mục tiêu](build-goal-test.md). Thêm một `Critic` khi tình trạng "test xanh nhưng code bẩn" trở thành kiểu lỗi phổ biến của bạn. Chỉ tiến tới chạy song song hoặc chạy qua đêm một khi `Loop` đơn lẻ luôn dừng lại một cách rõ ràng, minh bạch trong mọi lần chạy — những mẫu thiết kế cầu kỳ hơn sẽ khuếch đại bất kỳ tính kỷ luật nào bạn đang có, bao gồm cả sự vô kỷ luật.

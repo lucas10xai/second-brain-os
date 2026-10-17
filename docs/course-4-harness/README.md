@@ -1,9 +1,9 @@
-# 4 · Harness
+# 4 · Khung vận hành (Harness)
 
-The office around the model: containment, guides, sensors, permissions - built from the outside in.
+Không gian làm việc bao quanh mô hình: vùng cô lập, hướng dẫn, cảm biến, quyền hạn — được xây dựng từ ngoài vào trong.
 
-A course module beside [the main guide](../../README.md) — read it on the site or in order below.
+Một học phần thuộc khóa học bên cạnh [cẩm nang chính](../../README.md) — đọc trực tiếp trên trang web hoặc theo thứ tự dưới đây.
 
-1. [The Office](the-office.md)
-2. [The Four Rings](the-four-rings.md)
-3. [Harness Practice](harness-practice.md)
+1. [Văn phòng làm việc (The Office)](the-office.md)
+2. [Bốn vòng đai bảo vệ (The Four Rings)](the-four-rings.md)
+3. [Thực hành xây dựng Harness](harness-practice.md)

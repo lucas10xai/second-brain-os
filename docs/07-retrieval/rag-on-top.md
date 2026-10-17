@@ -1,72 +1,53 @@
-# Adding RAG when you need it
+# Bổ sung RAG khi cần thiết
 
-This guide argues against a vector database for a personal vault. That argument
-has a threshold, and it is worth naming rather than treating as doctrine.
+Hướng dẫn này phản đối việc dùng cơ sở dữ liệu Vector cho một Vault cá nhân. Tuy nhiên, lập luận đó có một ngưỡng giới hạn nhất định, và chúng ta nên chỉ rõ ngưỡng đó thay vì coi nó như một giáo điều bất biến.
 
-## When it starts to pay
+## Khi nào RAG bắt đầu đáng giá
 
-Three conditions, roughly together:
+Khi hội tụ đủ khoảng ba điều kiện sau:
 
-**Scale past a few thousand pages,** where reading the index plus following
-links stops fitting the context budget.
+**Quy mô vượt quá vài nghìn trang,** khi việc đọc trang chỉ mục cộng với lần theo các liên kết không còn vừa vặn với ngân sách ngữ cảnh (Context budget) nữa.
 
-**Questions phrased in wording your pages do not use.** If you regularly fail to
-find things you know are there, that is a recall problem, which is what
-embeddings solve.
+**Câu hỏi được diễn đạt bằng từ ngữ mà các trang của bạn không dùng.** Nếu bạn thường xuyên không tìm thấy những thứ mình biết chắc là có trong Vault, đó là bài toán về độ phủ truy xuất (recall) — và đây chính là thứ mà Embeddings giải quyết.
 
-**A corpus you did not curate.** A vault that absorbed ten thousand documents
-without a human deciding what mattered has no reliable structure to navigate,
-so similarity is what is left.
+**Một kho tài liệu không do chính bạn tuyển chọn.** Một Vault nuốt trọn mười nghìn tài liệu mà không có con người quyết định xem đâu là phần quan trọng sẽ không có cấu trúc đáng tin cậy để điều hướng, nên tìm kiếm theo độ tương đồng (similarity) là lựa chọn duy nhất còn lại.
 
-Most personal vaults never hit all three. Mine has not, and I would not add the
-maintenance for two out of three.
+Hầu hết các Vault cá nhân không bao giờ chạm tới cả ba điều kiện này. Vault của tôi cũng vậy, và tôi sẽ không gánh thêm chi phí bảo trì nếu chỉ mới chạm hai trên ba điều kiện.
 
-## What to embed
+## Nên tạo Embeddings cho thứ gì
 
-Not raw sources. Embed the wiki pages.
+Đừng tạo Embeddings cho các tài liệu nguồn thô trong `raw/`. Hãy tạo Embeddings cho các trang trong `wiki/`.
 
-They are already semantic units, written by something that understood them, one
-idea each. That is what chunking tries to approximate and rarely achieves.
-Re-chunking them into fixed-size windows destroys the structure you paid for.
+Bản thân các trang đó đã là những đơn vị ngữ nghĩa hoàn chỉnh, được viết bởi một chủ thể hiểu rõ nội dung, mỗi trang xoay quanh một ý tưởng. Đó chính là đích đến mà kỹ thuật chia nhỏ văn bản (chunking) cố gắng xấp xỉ nhưng hiếm khi đạt được. Việc cắt nhỏ chúng một lần nữa thành các cửa sổ kích thước cố định sẽ phá hủy cấu trúc mà bạn đã dày công tạo dựng.
 
-Embed the page title, aliases and body together. Titles carry a lot of signal
-in a curated vault, because you chose them.
+Hãy gộp chung tiêu đề trang, Aliases và phần nội dung khi tạo Embeddings. Trong một Vault được biên tập kỹ, tiêu đề mang rất nhiều tín hiệu quan trọng vì chính bạn là người đã chọn chúng.
 
-## Hybrid, not replacement
+## Kết hợp lai (Hybrid), không phải thay thế
 
-The useful arrangement keeps the graph in charge:
+Cách bố trí hiệu quả nhất vẫn giữ Knowledge graph ở vị trí cầm trịch:
 
-1. Embeddings find entry-point pages, including ones whose wording differs.
-2. The graph expands from those entry points through links.
-3. The agent reads the expanded set and answers with citations.
+1. Embeddings tìm ra các trang điểm khởi đầu (entry-point pages), bao gồm cả những trang có cách dùng từ khác với câu hỏi.
+2. Knowledge graph mở rộng từ các điểm khởi đầu đó thông qua hệ thống liên kết.
+3. Agent đọc tập hợp các trang đã mở rộng và trả lời kèm trích dẫn.
 
-Embeddings supply recall, the graph supplies structure and the reason two pages
-are related. Using similarity for the whole pipeline throws away the links,
-which is the part of your vault that took work.
+Embeddings cung cấp độ phủ (recall), còn Knowledge graph cung cấp cấu trúc và lý do vì sao hai trang lại liên quan với nhau. Dùng độ tương đồng cho toàn bộ quy trình sẽ vứt bỏ các liên kết — vốn là phần tốn nhiều công sức nhất trong Vault của bạn.
 
-## Keeping the index fresh
+## Giữ cho chỉ mục luôn mới
 
-This is the maintenance nobody accounts for. Every ingest changes pages, and a
-stale embedding index returns pages whose content has moved on.
+Đây là gánh nặng bảo trì mà chẳng mấy ai tính đến. Mỗi lần Ingest đều làm thay đổi các trang, và một chỉ mục Embeddings cũ kỹ sẽ trả về những trang có nội dung thực tế đã thay đổi từ lâu.
 
-Re-embed changed pages as part of the ingest run, not on a separate schedule. An
-index that lags by a week is quietly wrong in a way that produces plausible bad
-answers.
+Hãy tạo lại Embeddings cho các trang bị thay đổi ngay trong lượt chạy Ingest, chứ đừng tách thành một lịch trình riêng. Một chỉ mục bị trễ một tuần sẽ âm thầm sai lệch theo cách tạo ra những câu trả lời nghe có vẻ hợp lý nhưng thực chất là sai.
 
-If that sounds like more upkeep than it is worth, that is the correct reading for
-most vaults, and it is the honest reason this section is short.
+Nếu việc đó nghe có vẻ tốn công bảo trì hơn giá trị mang lại, thì đó chính là nhận định hoàn toàn chính xác đối với hầu hết các Vault, và cũng là lý do thực tế khiến mục này được viết ngắn gọn như vậy.
 
-## Simpler things to try first
+## Những cách đơn giản hơn nên thử trước
 
-Before adding infrastructure, check whether the problem is actually recall.
+Trước khi lắp thêm hạ tầng, hãy kiểm tra xem vấn đề có thực sự nằm ở độ phủ truy xuất hay không.
 
-Missing aliases are the most common cause of "I cannot find it". So is a bad
-index. So is an ingest that stopped linking properly two months ago and left a
-growing pile of orphans, which no retrieval method can reach.
+Thiếu Aliases là nguyên nhân phổ biến nhất dẫn đến tình trạng "tôi không tìm thấy nó". Một chỉ mục tồi cũng vậy. Hoặc một quy trình Ingest đã ngừng gắn liên kết đúng cách từ hai tháng trước, để lại một đống trang mồ côi ngày càng phình to mà không phương pháp truy xuất nào chạm tới được.
 
-Run `scripts/link_check.py` and read your index before concluding you need
-vectors.
+Hãy chạy `scripts/link_check.py` và đọc lại trang chỉ mục của bạn trước khi kết luận rằng mình cần đến Vector.
 
-## Next
+## Tiếp theo
 
-[Context budget](context-budget.md)
+[Ngân sách ngữ cảnh (Context budget)](context-budget.md)

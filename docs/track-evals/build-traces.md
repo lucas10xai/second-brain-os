@@ -1,12 +1,12 @@
-# Build: Read Your Traces
+# Thực hành: Đọc nhật ký thực thi (Build: Read Your Traces)
 
-First of three build pages: this one gets you from "the bot sometimes messes up" to a golden set file on disk. [Build the suite](build-suite.md) makes it runnable; the gate page wires it into CI. An afternoon covers all three. Background, if you skipped it: [why evals](why-evals.md).
+Trang đầu tiên trong chuỗi ba trang thực hành: bài này sẽ đưa bạn từ cảm giác mơ hồ "con bot thỉnh thoảng lại làm sai" đến việc có một tệp `Golden set` nằm ngay ngắn trên ổ đĩa. Bài [Thực hành: Xây dựng bộ đánh giá](build-suite.md) sẽ biến tệp đó thành chương trình chạy được; và trang cổng kiểm soát sẽ nối nó vào CI. Chỉ cần một buổi chiều là làm xong cả ba. Kiến thức nền tảng, nếu bạn đã lỡ bỏ qua: [tại sao cần `Evals`](why-evals.md).
 
-Arriving from [module 5's practice](../course-5-evals/evals-practice.md)? You already have twenty cases and a runner — skip collection and go straight to the taxonomy pass below; the golden set then grows out of what you have.
+Bạn đi tới đây từ [bài thực hành của học phần 5](../course-5-evals/evals-practice.md)? Khi đó bạn đã có sẵn hai mươi ca kiểm thử và một trình chạy — hãy bỏ qua bước thu thập và đi thẳng tới lượt phân loại lỗi bên dưới; `Golden set` sẽ phát triển tiếp từ những gì bạn đang có.
 
-## Collect 30 traces
+## Thu thập 30 `Traces`
 
-Pull thirty real transcripts from production — logs, a database export, whatever exists. Real inputs beat invented ones every time. No traffic yet? Generate a starter set against your own app: write thirty questions a plausible user would ask into `starter_inputs.txt` (vary persona, phrasing, length; include a couple that should be refused), then run them through your actual entry point:
+Hãy trích xuất ba mươi bản ghi hội thoại thực tế từ môi trường production — từ tệp log, bản xuất cơ sở dữ liệu, hay bất cứ thứ gì hiện có. Đầu vào thực tế luôn đánh bại đầu vào tự bịa mọi lúc. Chưa có người dùng thực tế? Hãy tự sinh một bộ khởi đầu bằng cách chạy qua chính ứng dụng của bạn: viết ba mươi câu hỏi mà một người dùng hợp lý sẽ hỏi vào tệp `starter_inputs.txt` (đa dạng hóa chân dung người dùng, cách diễn đạt, độ dài; đưa vào thêm vài câu cần phải từ chối trả lời), sau đó cho chúng chạy qua điểm vào (entry point) thực tế của ứng dụng:
 
 ```python
 import json
@@ -21,9 +21,9 @@ with open("traces.jsonl", "w", encoding="utf-8") as out:
         out.write(json.dumps({"input": text, "output": answer(text)}) + "\n")
 ```
 
-## The error-analysis pass
+## Lượt phân tích lỗi (The error-analysis pass)
 
-Read every trace in order and write one line per trace in a plain text file. A format that works:
+Đọc lần lượt từng bản ghi `Traces` và viết đúng một dòng cho mỗi bản ghi vào một tệp văn bản thuần túy. Một định dạng hiệu quả trông như sau:
 
 ```
 trace_id | verdict | one-sentence failure note | verbatim quote
@@ -32,11 +32,11 @@ trace_id | verdict | one-sentence failure note | verbatim quote
 016 | fail | apologised and asked a question instead of acting | "could you clarify which invoice"
 ```
 
-Four rules: one sentence per failure; always quote the output; log successes as `ok` so you know the denominator; and fix nothing until all thirty are read. The hour this takes is the highest-leverage hour of the whole build.
+Bốn quy tắc: một câu cho mỗi lỗi; luôn trích dẫn nguyên văn đầu ra; ghi nhận cả các ca thành công là `ok` để bạn biết mẫu số chung; và không sửa bất kỳ thứ gì cho đến khi đọc xong cả ba mươi bản ghi. Một giờ đồng hồ bỏ ra cho việc này là giờ làm việc có tính đòn bẩy cao nhất của toàn bộ quá trình xây dựng.
 
-## Cluster into a taxonomy
+## Gom cụm thành bảng phân loại lỗi (Taxonomy)
 
-At thirty notes you can cluster by hand, but an LLM makes a decent first sorter. Paste your notes into this prompt:
+Với ba mươi ghi chú, bạn hoàn toàn có thể gom nhóm bằng tay, nhưng một mô hình LLM sẽ là người phân loại bước đầu khá tốt. Hãy dán các ghi chú của bạn vào prompt sau:
 
 ```text
 Below are failure notes from an error-analysis pass over one AI product,
@@ -56,11 +56,11 @@ PASTE YOUR NOTES HERE
 </notes>
 ```
 
-Treat the result as a draft: merge modes that are really one thing, rename anything vague, demote anything you disagree with. The model sorts; you own the taxonomy.
+Hãy coi kết quả trả về là một bản nháp: gộp các kiểu lỗi thực chất là một, đặt lại tên cho những mục còn mơ hồ, hạ cấp bất cứ thứ gì bạn không đồng tình. Mô hình làm việc sắp xếp; còn bạn mới là chủ sở hữu của bảng phân loại lỗi.
 
-## Write the golden set
+## Viết `Golden set`
 
-Turn the taxonomy into `golden.jsonl`, one case per line:
+Chuyển hóa bảng phân loại lỗi thành tệp `golden.jsonl`, mỗi dòng một ca kiểm thử:
 
 ```json
 {"id": "hallucinated_id_003", "failure_mode": "hallucinated_order_id", "input": "where is my order?", "checks": {"must_not_contain": ["#"]}, "judge_expectation": null, "source": "trace 014"}
@@ -68,6 +68,6 @@ Turn the taxonomy into `golden.jsonl`, one case per line:
 {"id": "happy_path_002", "failure_mode": "none", "input": "what is your refund window?", "checks": {"must_contain": ["30 days"]}, "judge_expectation": null, "source": "trace 015"}
 ```
 
-Five fields. `id` is stable and greppable. `failure_mode` comes from the taxonomy (`none` for happy-path cases). `input` is what the product receives. Exactly one of `checks` (string assertions code can grade: `must_contain`, `must_not_contain`) or `judge_expectation` (a single sentence the judge verifies) is set — prefer `checks` wherever it can carry the case. `source` points back to the trace, because you will want the original when a case starts failing.
+Có năm trường dữ liệu. `id` cố định và dễ tìm kiếm bằng `grep`. `failure_mode` lấy từ bảng phân loại lỗi (đặt là `none` cho các ca chạy chuẩn happy-path). `input` là nội dung sản phẩm nhận vào. Chỉ đặt giá trị cho đúng một trong hai trường `checks` (các phép kiểm tra chuỗi mà code có thể tự chấm: `must_contain`, `must_not_contain`) hoặc `judge_expectation` (một câu đơn lẻ để giám khảo LLM xác minh) — hãy luôn ưu tiên `checks` bất cứ nơi nào nó có thể gánh vác được ca kiểm thử. Trường `source` trỏ ngược về bản ghi `Traces` gốc, bởi vì bạn sẽ muốn xem lại bản gốc khi ca kiểm thử đó bắt đầu báo lỗi.
 
-Every named failure mode gets a handful of cases, plus boring successes so you do not over-fit to pathology — the reasoning is in [designing evals](designing-evals.md). Commit the file next to your code and move on to the suite.
+Mỗi kiểu lỗi đã đặt tên cần có một vài ca kiểm thử đại diện, cộng thêm những ca thành công nhàm chán để bạn không bị tối ưu lệch (over-fit) vào các ca bệnh lý — lý giải chi tiết nằm ở bài [thiết kế bộ đánh giá](designing-evals.md). Hãy commit tệp này ngay cạnh mã nguồn của bạn và chuyển sang bước xây dựng bộ chạy đánh giá.

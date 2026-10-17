@@ -1,9 +1,9 @@
-# 1 · Context
+# 1 · Ngữ cảnh (Context)
 
-What the model sees: attention, caching, the four places, sessions and memory.
+Những gì mô hình nhìn thấy: cơ chế chú ý (attention), bộ nhớ đệm (caching), bốn vị trí đặt ngữ cảnh, phiên làm việc và bộ nhớ dài hạn.
 
-A course module beside [the main guide](../../README.md) — read it on the site or in order below.
+Một học phần thuộc khóa học bên cạnh [cẩm nang chính](../../README.md) — đọc trực tiếp trên trang web hoặc theo thứ tự dưới đây.
 
-1. [How models read context](how-models-read.md)
-2. [The four places](the-four-places.md)
-3. [Context in practice](context-practice.md)
+1. [Cách mô hình đọc Context](how-models-read.md)
+2. [Bốn vị trí đặt Context](the-four-places.md)
+3. [Thực hành quản trị Context](context-practice.md)

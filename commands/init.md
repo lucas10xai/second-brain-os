@@ -1,7 +1,7 @@
 ---
-description: Scaffold a new vault
+description: Khởi tạo khung thư mục cho kho tri thức mới
 ---
 
-Create the vault structure: raw, wiki with its four page-type folders, projects, output, index.md, log.md, and a CLAUDE.md drafted by interviewing the user.
+Tạo cấu trúc thư mục cho kho tri thức: `raw`, `wiki` cùng bốn thư mục con theo phân loại trang, `projects`, `output`, `index.md`, `log.md`, và một file `CLAUDE.md` được soạn thảo thông qua việc phỏng vấn người dùng.
 
-Follow the `second-brain-project` skill.
+Thực hiện theo skill `second-brain-project`.

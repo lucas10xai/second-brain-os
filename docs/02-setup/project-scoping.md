@@ -1,55 +1,43 @@
-# Project scoping
+# Giới hạn phạm vi theo dự án (Project scoping)
 
-This is the step that most setups skip and then wonder why output quality drops
-as the vault grows.
+Đây là bước mà hầu hết các thiết lập đều bỏ qua, để rồi sau đó người dùng cứ thắc mắc vì sao chất lượng đầu ra của Agent lại ngày càng đi xuống khi Vault phình to.
 
-When the agent is pointed at the whole vault, every task competes with
-everything you have ever saved. It reads a root `CLAUDE.md` covering your entire
-life, plus whatever else it decides is relevant. Answers get broader and
-shallower.
+Khi bạn trỏ Agent vào toàn bộ Vault, mỗi tác vụ nhỏ đều phải cạnh tranh sự chú ý với tất cả những gì bạn từng lưu trữ từ trước đến nay. Agent phải đọc file `CLAUDE.md` ở thư mục gốc bao quát toàn bộ cuộc đời bạn, cộng thêm đủ thứ tài liệu khác mà nó tự cho là có liên quan. Hệ quả là các câu trả lời ngày càng dàn trải và nông cạn.
 
-When it is pointed at one project, it reads that project's `CLAUDE.md`, sees
-that project's files, and does the job in front of it.
+Ngược lại, khi bạn chỉ trỏ Agent vào đúng một dự án cụ thể, nó sẽ chỉ đọc file `CLAUDE.md` của riêng dự án đó, chỉ nhìn thấy các file thuộc dự án đó, và tập trung giải quyết trọn vẹn công việc ngay trước mắt.
 
-## How to scope
+## Cách giới hạn phạm vi hoạt động
 
-In Obsidian, click the vault name in the bottom left, then:
+Trong Obsidian, hãy bấm vào tên Vault ở góc dưới bên trái, sau đó chọn:
 
-**Manage vaults → Open folder as a vault → pick your project folder → Trust**
+**Manage vaults → Open folder as a vault → chọn thư mục dự án của bạn → Trust**
 
-From a terminal, the same thing is just:
+Nếu thao tác từ cửa sổ terminal, công việc tương tự chỉ đơn giản là:
 
 ```bash
 cd ~/brain/projects/youtube-channel
 claude
 ```
 
-The agent now reads only that project's instructions.
+Lúc này, Agent sẽ chỉ đọc duy nhất các chỉ dẫn của dự án đó.
 
-## When to use which
+## Khi nào nên dùng phạm vi nào
 
-**The full vault** for anything that spans domains: planning, review, asking
-what you know about a topic, weekly maintenance, ingestion. The knowledge layer
-is the whole point of a wide view.
+**Toàn bộ Vault (Full vault)** dùng cho bất kỳ công việc nào trải rộng qua nhiều lĩnh vực: lập kế hoạch tổng thể, rà soát định kỳ, hỏi xem bạn đang biết những gì về một chủ đề, bảo trì hàng tuần, hoặc chạy quy trình Ingest. Tầng tri thức sinh ra chính là để phục vụ góc nhìn bao quát này.
 
-**A single project** for producing anything: drafting, building, analysing this
-week's numbers. Narrow context, one goal, no drift.
+**Một dự án đơn lẻ (Single project)** dùng khi bạn cần bắt tay vào sản xuất một thành phẩm cụ thể: viết bản thảo, xây dựng tính năng, hay phân tích số liệu của tuần này. Ngữ cảnh hẹp, một mục tiêu duy nhất, không bị xao nhãng.
 
-The rough rule: the full vault plans, a single project ships.
+Quy tắc ngón tay cái rất dễ nhớ: mở toàn bộ Vault để lập kế hoạch, mở từng dự án lẻ để thực thi ra sản phẩm.
 
-## Passing knowledge into a project
+## Đưa tri thức từ Wiki vào trong dự án
 
-Scoping down cuts the agent off from the wiki, which is usually what you want
-and occasionally not. Two ways to bridge it:
+Việc thu hẹp phạm vi xuống một dự án sẽ ngắt quyền truy cập trực tiếp của Agent khỏi tầng `wiki/` — điều mà phần lớn thời gian là có lợi nhưng đôi khi lại gây bất tiện. Có hai cách để bắc cầu nối tri thức sang dự án:
 
-- Link the relevant concept pages from the project's `CLAUDE.md`, and copy the
-  handful that genuinely matter into the project's `Inputs/`.
-- Or run the research question against the full vault first, save the answer
-  into the project's `Inputs/`, then scope down and work.
+- Đặt liên kết trỏ tới các trang khái niệm liên quan ngay trong file `CLAUDE.md` của dự án, đồng thời sao chép một vài trang thực sự cốt lõi vào thẳng thư mục `Inputs/` của dự án đó.
+- Hoặc chạy câu hỏi nghiên cứu trên phạm vi toàn bộ Vault trước, lưu câu trả lời nhận được vào thư mục `Inputs/` của dự án, rồi sau đó mới thu hẹp phạm vi xuống dự án để bắt đầu làm việc.
 
-The second is better. It keeps the decision about what matters with you, which
-is the part you should not be delegating.
+Cách thứ hai hiệu quả hơn hẳn. Nó giữ quyền quyết định xem thông tin nào thực sự quan trọng nằm trong tay bạn — và đó chính là phần việc bạn không nên ủy thác cho AI.
 
-## Next
+## Tiếp theo
 
-[Live data connectors](live-data.md)
+[Kết nối dữ liệu thời gian thực](live-data.md)

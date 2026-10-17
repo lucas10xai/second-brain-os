@@ -1,55 +1,50 @@
 ---
 name: second-brain-graph
 description: >-
-  Analyse the vault's link graph and report on its shape: orphan rate, average
-  degree, components, hubs, bridges and clusters, with what each number means for
-  retrieval. Use this skill when the user asks about the health or structure of
-  their graph, wants metrics, asks which pages are most connected or most
-  isolated, or asks whether the vault is fragmented. Do NOT use for fixing what
-  it finds, which is second-brain-lint, or for answering a content question.
+  Phân tích đồ thị liên kết của vault và báo cáo về hình thái cấu trúc của nó:
+  tỷ lệ trang mồ côi (orphan rate), bậc liên kết trung bình (average degree),
+  các thành phần liên thông (components), điểm nút trung tâm (hubs), cầu nối
+  (bridges) và cụm chủ đề (clusters), kèm theo ý nghĩa thực tế của từng con số
+  đối với việc truy xuất thông tin. Sử dụng kỹ năng này khi người dùng hỏi về
+  sức khỏe hoặc cấu trúc đồ thị, muốn xem các chỉ số, hỏi trang nào được kết nối
+  nhiều nhất hay bị cô lập nhất, hoặc hỏi liệu vault có đang bị phân mảnh không.
+  KHÔNG dùng để sửa chữa những lỗi phát hiện được — việc đó thuộc về second-brain-lint —
+  hoặc để trả lời câu hỏi về mặt nội dung.
 ---
 
-# Analyse the graph
+# Phân tích đồ thị liên kết (Analyse the graph)
 
-The graph is the search space every answer is drawn from. Its shape decides
-whether retrieval reaches the relevant material in a few hops or reaches nothing.
+Đồ thị liên kết chính là không gian tìm kiếm mà từ đó mọi câu trả lời được rút ra. Hình thái của đồ thị quyết định liệu quá trình truy xuất có chạm tới được tư liệu liên quan chỉ sau vài bước nhảy (hops) hay đi vào ngõ cụt.
 
-## Core rule
+## Quy tắc cốt lõi
 
-Report shape and what it means, never fix anything. This skill is read-only.
+Báo cáo hình thái đồ thị và ý nghĩa của nó, không bao giờ tự ý sửa chữa bất kỳ thứ gì. Kỹ năng này hoàn toàn chỉ đọc (read-only).
 
-## Workflow
+## Quy trình thực hiện
 
-1. **Run the scripts** rather than reading files: `scripts/vault_stats.py` for
-   counts and degree, `scripts/link_check.py` for orphans and breaks,
-   `scripts/graph_export.py` when deeper analysis is wanted.
-2. **Compute the four metrics:** orphan rate, average degree, component count,
-   stale-page rate.
-3. **Identify hubs** (pages that have swallowed the graph) and **bridges**
-   (pages connecting otherwise separate clusters).
-4. **Name the clusters.** These are what the vault is actually about, which is
-   reliably different from what the user would say it is about.
-5. **Say what each number means** for answering questions, not just the value.
+1. **Chạy các script công cụ** thay vì đọc thủ công từng file: chạy `scripts/vault_stats.py` để lấy số lượng và bậc liên kết, `scripts/link_check.py` để tìm trang mồ côi và liên kết gãy, và `scripts/graph_export.py` khi cần phân tích sâu hơn.
+2. **Tính toán bốn chỉ số cốt lõi:** tỷ lệ trang mồ côi (`orphan rate`), bậc liên kết trung bình (`average degree`), số thành phần liên thông (`component count`), và tỷ lệ trang cũ bị bỏ quên (`stale-page rate`).
+3. **Xác định các điểm nút trung tâm (`hubs`)** (những trang phình quá to nuốt chửng cả đồ thị) và **các cầu nối (`bridges`)** (những trang kết nối các cụm chủ đề vốn tách biệt nhau).
+4. **Đặt tên cho các cụm chủ đề (`clusters`).** Đây là những chủ đề mà vault thực sự xoay quanh — thường khác xa so với những gì người dùng tự nghĩ về vault của họ.
+5. **Giải thích ý nghĩa của từng con số** đối với khả năng trả lời câu hỏi, chứ không chỉ liệt kê giá trị số học.
 
-## Output format
+## Định dạng đầu ra
 
 ```
 Pages <n> | links <n> | avg degree <n>
-Orphan rate <n>%      (healthy under 5)
-Components <n>        (main holds <n>%)
-Stale concepts <n>%   (untouched 90+ days)
+Orphan rate <n>%      (khỏe mạnh khi dưới 5%)
+Components <n>        (thành phần chính chiếm <n>%)
+Stale concepts <n>%   (chưa cập nhật trên 90 ngày)
 
-Hubs: <pages with outsized degree, and whether to split them>
-Bridges: <pages connecting clusters, and what breaks if they are wrong>
-Clusters: <what the vault is actually about>
+Hubs: <các trang có bậc liên kết quá lớn, và có nên tách nhỏ chúng ra không>
+Bridges: <các trang nối giữa các cụm, và điều gì sẽ đứt gãy nếu chúng sai>
+Clusters: <những chủ đề thực sự trong vault>
 
-What this means: <two or three sentences>
+Ý nghĩa thực tế: <hai hoặc ba câu nhận định>
 ```
 
-## Calibration
+## Hiệu chuẩn (Calibration)
 
-Never report page count or word count as a health signal. Both rise whether the
-vault is improving or not.
+Không bao giờ báo cáo tổng số trang hay tổng số từ như một tín hiệu về sức khỏe của vault. Cả hai con số đó đều tăng lên bất kể vault đang tốt lên hay tệ đi.
 
-A single reading says little. If the user has recorded previous numbers, compare
-against them; if not, suggest recording these.
+Một lần đo đơn lẻ nói lên rất ít điều. Nếu người dùng đã lưu các con số từ những lần trước, hãy so sánh với chúng; nếu chưa, hãy gợi ý họ ghi nhận lại các con số lần này.

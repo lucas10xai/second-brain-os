@@ -1,7 +1,7 @@
 ---
-description: Find unreachable pages
+description: Tìm các trang mồ côi không thể truy cập
 ---
 
-List pages with no inbound links. For each, either propose where it should be linked from, or flag it as a deletion candidate.
+Liệt kê các trang không có bất kỳ liên kết nào trỏ tới. Với mỗi trang, hãy đề xuất nơi nên đặt liên kết trỏ tới nó, hoặc đánh dấu nó là ứng viên cần xóa.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

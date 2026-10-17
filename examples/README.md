@@ -1,13 +1,12 @@
-# Examples
+# Các ví dụ thực tế (Examples)
 
-Real vaults and real output, so you can see what the system produces before
-committing an evening to it.
+Các Vault thực tế và kết quả đầu ra mẫu, giúp bạn hình dung rõ những gì hệ thống này tạo ra trước khi dành trọn một buổi tối để thiết lập nó.
 
-Planned:
+Dự kiến bổ sung:
 
-- A worked ingest: one article in, the exact pages that came out
-- A vault at 30 days: structure, graph, what it can answer
-- A vault at 6 months: what changed, what broke, what was worth it
-- A research report generated from a vault, with the pages it drew on
+- Một lượt Ingest thực tế hoàn chỉnh: đưa một bài viết đầu vào và xem chính xác những trang wiki nào được sinh ra
+- Một Vault sau 30 ngày vận hành: cấu trúc thư mục, hình dáng đồ thị và những câu hỏi nó có thể trả lời
+- Một Vault sau 6 tháng vận hành: những gì đã thay đổi, những gì từng gặp trục trặc và những giá trị thực sự xứng đáng
+- Một bản báo cáo nghiên cứu được tổng hợp từ Vault, kèm theo các trang wiki mà nó đã trích xuất thông tin
 
-Contributions welcome. Screenshots and anonymised page samples are enough.
+Rất hoan nghênh các đóng góp từ cộng đồng. Chỉ cần ảnh chụp màn hình và các trang mẫu đã ẩn thông tin cá nhân là đủ.

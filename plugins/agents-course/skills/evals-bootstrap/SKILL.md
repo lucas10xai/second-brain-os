@@ -1,62 +1,43 @@
 ---
 name: evals-bootstrap
 description: >-
-  Scaffold a first eval suite for an agent: mine real failures into cases,
-  write behavioural checks over traces, and generate the runner. Use when the
-  user wants evals, regression tests for an agent, a golden set, or asks how
-  to know a prompt/model change did not break things. Do NOT use for a single
-  task's done-check (goal-test) or for auditing context (context-audit).
+  Khởi tạo bộ kiểm thử đánh giá (eval suite) đầu tiên cho một agent: khai thác
+  các lỗi thực tế thành kịch bản kiểm thử (cases), viết các phép kiểm tra hành vi
+  trên vết thực thi (traces), và sinh script chạy kiểm thử. Sử dụng khi người dùng
+  muốn có evals, kiểm thử hồi quy cho agent, tập dữ liệu chuẩn (golden set), hoặc
+  hỏi làm sao để biết một thay đổi về prompt/mô hình không làm hỏng hệ thống.
+  KHÔNG dùng để kiểm tra điều kiện hoàn thành của một tác vụ đơn lẻ (goal-test)
+  hoặc kiểm toán ngữ cảnh (context-audit).
 ---
 
-# Bootstrap the eval suite
+# Khởi tạo bộ kiểm thử đánh giá (Eval Suite)
 
-Theory: [Two kinds of checks](https://secondbrainos.dev/#/read/course-5-evals/two-kinds-of-checks)
-and the full walkthrough in [Evals practice](https://secondbrainos.dev/#/read/course-5-evals/evals-practice).
-An eval suite is the same test after every change. Behavioural checks read
-the steps of a trace; end-to-end checks read only the result. Start
-behavioural: they are deterministic, run in seconds, and diagnose instead of
-just scoring.
+Lý thuyết: [Hai loại phép kiểm tra](https://secondbrainos-vn.pages.dev/#/read/course-5-evals/two-kinds-of-checks)
+và hướng dẫn chi tiết trong [Thực hành Evals](https://secondbrainos-vn.pages.dev/#/read/course-5-evals/evals-practice).
+Một bộ eval là cùng một bài kiểm tra được chạy lại sau mỗi lần thay đổi. Kiểm tra hành vi (behavioural checks) đọc từng bước trong vết thực thi (trace); kiểm tra đầu-cuối (end-to-end checks) chỉ đọc kết quả cuối cùng. Hãy bắt đầu bằng kiểm tra hành vi: chúng có tính tất định, chạy trong vài giây, và giúp chẩn đoán nguyên nhân thay vì chỉ chấm điểm.
 
-## Workflow
+## Quy trình thực hiện
 
-1. **Find real failures.** Ask where the agent's runs live (logs, transcripts,
-   a traces directory). Read until you have up to twenty real failures — not
-   imagined ones. If there are no logged runs yet, build the trace logging
-   first (step 3) and seed the suite with the three failures the user can
-   recall; a small honest suite beats a large invented one.
-2. **One line per failure.** For each: the input, and the one specific
-   behaviour that should have happened and did not. Failures cluster into
-   four to eight behaviours; name them.
-3. **Ensure traces exist.** Each run must be stored as `traces/<id>.json` —
-   a list of events including tool calls. If the user's harness is Claude
-   Code, the transcript already is the trace; wire up whatever copies or
-   converts it. No trace, no behavioural checks.
-4. **Write `cases.yaml`.** One entry per failure:
+1. **Tìm các lỗi thực tế.** Hỏi xem lịch sử các lượt chạy của agent được lưu ở đâu (logs, transcripts, thư mục traces). Hãy đọc cho đến khi bạn thu thập được tối đa hai mươi lỗi thực tế — không phải các lỗi tự tưởng tượng ra. Nếu chưa có lượt chạy nào được ghi log, hãy xây dựng cơ chế ghi vết thực thi trước (bước 3) và khởi tạo bộ kiểm thử với ba lỗi mà người dùng còn nhớ được; một bộ kiểm thử nhỏ nhưng trung thực luôn tốt hơn một bộ kiểm thử lớn nhưng bịa đặt.
+2. **Mỗi lỗi một dòng.** Với mỗi lỗi: ghi rõ đầu vào, và một hành vi cụ thể lẽ ra phải diễn ra nhưng đã không diễn ra. Các lỗi thường gom cụm lại thành bốn đến tám nhóm hành vi; hãy đặt tên cho chúng.
+3. **Đảm bảo vết thực thi (traces) tồn tại.** Mỗi lượt chạy phải được lưu dưới dạng `traces/<id>.json` — một danh sách các sự kiện bao gồm cả các lệnh gọi công cụ (tool calls). Nếu khung điều phối của người dùng là Claude Code, bản thân file transcript đã là một trace; hãy kết nối script sao chép hoặc chuyển đổi nó. Không có trace thì không thể kiểm tra hành vi.
+4. **Viết file `cases.yaml`.** Mỗi lỗi là một mục:
 
 ```yaml
 - id: refund_1042
   input: "Refund order #1042, customer says it arrived broken"
-  expect: looks up the order before replying; asks approval before refund
+  expect: tra cứu đơn hàng trước khi trả lời; xin phê duyệt trước khi hoàn tiền
   check:
     - trace has get_order before send_reply
     - trace has approval_request before refund
 ```
 
-   The `expect` line is for humans; the `check` lines are the test. Keep the
-   rule language tiny: `trace has X`, `trace has X before Y`, `trace lacks X`.
-5. **Generate `check_traces.py`.** A small runner: load `cases.yaml`, parse
-   each rule with a regex, walk the tool-call list, print one line per case,
-   exit non-zero on any failure. Keep it dependency-light (pyyaml only) and
-   fast — the whole suite should run in seconds, with no model calls.
-6. **Run it and hand over the flywheel.** Show the pass/fail lines. Then
-   leave the loop in writing at the end of your report: read fresh traces
-   weekly, add every new failure as a case, fix the biggest cluster, re-run.
+   Dòng `expect` dành cho con người đọc; các dòng `check` là bài kiểm thử máy chạy. Hãy giữ cho ngôn ngữ quy tắc thật tối giản: `trace has X`, `trace has X before Y`, `trace lacks X`.
+5. **Sinh file `check_traces.py`.** Một trình chạy nhỏ gọn: đọc `cases.yaml`, phân tích từng quy tắc bằng biểu thức chính quy (regex), duyệt qua danh sách lệnh gọi công cụ, in ra một dòng cho mỗi kịch bản, và thoát với mã khác 0 (non-zero) nếu có bất kỳ kịch bản nào thất bại. Giữ cho nó ít phụ thuộc nhất có thể (chỉ dùng `pyyaml`) và chạy thật nhanh — toàn bộ bộ kiểm thử nên hoàn tất trong vài giây mà không cần gọi mô hình AI.
+6. **Chạy thử và bàn giao bánh đà (flywheel).** Hiển thị các dòng kết quả pass/fail. Sau đó, để lại quy trình vận hành bằng văn bản ở cuối báo cáo: đọc các trace mới hàng tuần, thêm mỗi lỗi mới thành một kịch bản kiểm thử, sửa cụm lỗi lớn nhất, rồi chạy lại.
 
-## Rules
+## Quy tắc
 
-- Every case comes from a real failure; delete a case only when the
-  behaviour it guards is retired, not when it is inconvenient.
-- No LLM-as-judge in the bootstrap. Add a judge later, only for what
-  assertions cannot reach, and calibrate it against human labels first.
-- The suite must be one command (`python check_traces.py`) so it can gate a
-  CI job or a pre-release habit without ceremony.
+- Mọi kịch bản kiểm thử đều phải xuất phát từ một lỗi thực tế; chỉ xóa một kịch bản khi hành vi mà nó bảo vệ đã bị loại bỏ khỏi hệ thống, chứ không phải vì nó gây bất tiện.
+- Không dùng mô hình làm giám khảo (LLM-as-judge) ở bước khởi tạo. Chỉ thêm giám khảo LLM về sau cho những khía cạnh mà các câu lệnh điều kiện (assertions) không thể kiểm tra tới, và phải hiệu chuẩn nó dựa trên nhãn do con người gán trước.
+- Bộ kiểm thử phải chạy được bằng một lệnh duy nhất (`python check_traces.py`) để có thể làm cổng chặn trong CI hoặc thói quen kiểm tra trước khi phát hành mà không cần thủ tục rườm rà.

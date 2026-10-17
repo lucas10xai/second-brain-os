@@ -8,3 +8,4 @@ node_modules/
 *.graphml
 *.csv
 site_data.json
+.wrangler/

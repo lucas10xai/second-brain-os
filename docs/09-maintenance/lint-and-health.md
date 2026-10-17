@@ -1,65 +1,51 @@
-# Linting the vault
+# Kiểm tra sức khỏe Vault bằng Lint
 
-Structural rot is silent. Nothing errors. The vault just slowly stops answering
-well because a third of its pages are unreachable and nobody noticed.
+Sự xuống cấp về mặt cấu trúc diễn ra rất âm thầm. Chẳng có thông báo lỗi nào hiện lên cả. Vault chỉ đơn giản là trả lời ngày một kém đi vì một phần ba số trang của nó đã không còn đường dẫn tới mà không ai nhận ra.
 
-## What a lint checks
+## Một lượt chạy Lint kiểm tra những gì
 
-**Broken links.** Two distinct cases: a typo or rename, which gets fixed, and a
-genuine gap, which goes into `index.md` under Gaps.
+**Các liên kết gãy (Broken links).** Có hai trường hợp riêng biệt: lỗi gõ nhầm hoặc đổi tên trang — trường hợp này sẽ được sửa tự động; và một khoảng trống kiến thức thực sự — trường hợp này sẽ được đưa vào mục Gaps trong `index.md`.
 
-**Orphans.** Pages nothing links to. Either find where they belong and link
-them, or delete them.
+**Các trang mồ côi (Orphans).** Những trang không có bất kỳ trang nào khác liên kết tới. Hoặc tìm đúng vị trí của chúng để gắn liên kết, hoặc xóa chúng đi.
 
-**Stubs.** Pages under about forty words with no links, usually a failed ingest.
-Flag for re-ingest from the original in `raw/`.
+**Các trang sơ sài (Stubs).** Những trang dưới khoảng bốn mươi từ và không có liên kết nào, thường là hậu quả của một lần Ingest thất bại. Hãy gắn cờ để Ingest lại từ tài liệu gốc trong `raw/`.
 
-**Schema violations.** Missing frontmatter, wrong type, tags outside the
-vocabulary.
+**Vi phạm cấu trúc dữ liệu (Schema violations).** Thiếu Frontmatter, sai loại trang (type), hoặc dùng thẻ (tags) nằm ngoài bộ từ vựng quy định.
 
-**Near-duplicates.** Similar titles, overlapping aliases, shared inbound links.
+**Các trang gần như trùng lặp (Near-duplicates).** Tiêu đề tương tự nhau, các Aliases chồng lấn, hoặc dùng chung các liên kết trỏ đến.
 
-**Index drift.** Pages missing from `index.md`, entries pointing nowhere.
+**Độ lệch chỉ mục (Index drift).** Các trang có tồn tại nhưng thiếu mặt trong `index.md`, hoặc các mục trong chỉ mục lại trỏ vào hư không.
 
-## Report before repairing
+## Báo cáo trước khi sửa chữa
 
-Mechanical fixes happen automatically. Anything requiring judgement gets
-proposed and waits for you.
+Các lỗi cơ học sẽ được sửa tự động. Bất kỳ thay đổi nào đòi hỏi sự phán đoán đều sẽ được đề xuất và chờ bạn phê duyệt.
 
-That line matters because a linter that merges pages on its own judgement
-destroys work, and one that only reports produces a list nobody acts on. Broken
-links and schema errors are mechanical. Merges and deletions are not.
+Ranh giới đó rất quan trọng, bởi một công cụ Lint tự ý gộp các trang theo phán đoán riêng sẽ phá hỏng công sức của bạn, còn một công cụ chỉ biết liệt kê báo cáo thì lại tạo ra một danh sách dài dằng dặc mà chẳng ai buồn động tay vào. Liên kết gãy và lỗi cấu trúc Schema là lỗi cơ học. Gộp trang và xóa trang thì không.
 
-## Running it
+## Cách chạy kiểm tra
 
 ```
 /lint
 ```
 
-Weekly, or after any import of more than about twenty sources. Not after every
-ingest, where it costs more than it catches.
+Hãy chạy hàng tuần, hoặc sau bất kỳ đợt nhập dữ liệu nào lớn hơn khoảng hai mươi tài liệu nguồn. Đừng chạy sau mỗi lần Ingest đơn lẻ, vì chi phí bỏ ra sẽ lớn hơn những lỗi mà nó bắt được.
 
-Run it on a clean git state, so a wrong repair is one `git checkout` away.
+Hãy chạy lệnh khi trạng thái Git đang sạch (clean git state), để nếu có một bước sửa lỗi sai thì bạn chỉ cần một lệnh `git checkout` là khôi phục lại được ngay.
 
-Inside Obsidian, [Find orphaned files and broken
-links](https://github.com/Vinzent03/find-unlinked-files) covers the same two
-checks visually.
+Bên trong Obsidian, plugin [Find orphaned files and broken links](https://github.com/Vinzent03/find-unlinked-files) cũng kiểm tra trực quan hai vấn đề tương tự.
 
-For a fast read without invoking the agent:
+Để kiểm tra nhanh mà không cần gọi Agent:
 
 ```bash
 python3 scripts/link_check.py ~/brain
 ```
 
-## Reading the output
+## Cách đọc kết quả đầu ra
 
-The counts matter more than the individual items. Three broken links after a
-week is normal. Forty means something in the ingest instructions changed and is
-producing links to pages it never creates.
+Các con số thống kê tổng quan quan trọng hơn từng mục lỗi riêng lẻ. Ba liên kết gãy sau một tuần là chuyện bình thường. Nhưng bốn mươi liên kết gãy nghĩa là có điều gì đó trong chỉ dẫn Ingest đã thay đổi và đang tạo ra các liên kết trỏ tới những trang mà nó chẳng bao giờ khởi tạo.
 
-Track the rates over time rather than the raw numbers, since both grow with the
-vault. See [metrics](../05-graphs/metrics.md).
+Hãy theo dõi tỷ lệ lỗi theo thời gian thay vì chỉ nhìn vào con số tuyệt đối, vì cả hai đều tăng lên cùng với quy mô của Vault. Xem thêm [các chỉ số đo lường](../05-graphs/metrics.md).
 
-## Next
+## Tiếp theo
 
-[Review cadence](review-cadence.md)
+[Nhịp độ rà soát định kỳ](review-cadence.md)

@@ -1,55 +1,43 @@
 ---
 name: second-brain-query
 description: >-
-  Answer a question from a second-brain vault by reading its own pages, citing
-  the pages used, and saying plainly when the vault does not contain the
-  answer. Use this skill whenever the user asks what they know about a topic,
-  what they have read on something, what connects two ideas, what they have
-  changed their mind about, or asks any question that should be answered from
-  their own notes rather than general knowledge. Do NOT use for ingesting new
-  material, for general questions the vault has nothing to do with, or when the
-  user explicitly wants an answer from the open web.
+  Trả lời câu hỏi từ vault bộ não thứ hai bằng cách đọc chính các trang trong vault,
+  trích dẫn các trang đã sử dụng, và nói rõ ràng khi vault không chứa câu trả lời.
+  Sử dụng kỹ năng này bất cứ khi nào người dùng hỏi họ biết gì về một chủ đề, họ đã
+  đọc được gì về một vấn đề, điều gì kết nối hai ý tưởng với nhau, họ đã thay đổi
+  suy nghĩ về điều gì, hoặc bất kỳ câu hỏi nào cần được trả lời từ chính ghi chú của
+  họ thay vì kiến thức chung bên ngoài. KHÔNG dùng để nạp tư liệu mới, trả lời các
+  câu hỏi kiến thức phổ thông không liên quan gì đến vault, hoặc khi người dùng chủ
+  động yêu cầu tìm câu trả lời từ nguồn web bên ngoài.
 ---
 
-# Query the vault
+# Truy vấn dữ liệu từ Vault (Query the vault)
 
-A query that quietly falls back on general knowledge is the most damaging thing
-this system can do. The owner built the vault so answers would be grounded in
-what they actually read, and an answer that blends the model's priors with
-their notes is worse than no answer, because it cannot be checked.
+Một truy vấn âm thầm quay về dùng kiến thức tổng quát của mô hình là điều gây hại lớn nhất mà hệ thống này có thể làm. Chủ sở hữu xây dựng chiếc vault này là để mọi câu trả lời đều bám rễ vào những gì họ thực sự đã đọc; một câu trả lời pha trộn giữa định kiến sẵn có của mô hình với ghi chú cá nhân của họ còn tệ hơn là không có câu trả lời, bởi vì không thể kiểm chứng được đâu là thật.
 
-## Core rule
+## Quy tắc cốt lõi
 
-Every claim in the answer comes from a page in the vault and names that page.
-Anything you know but the vault does not is labelled as outside knowledge or
-left out.
+Mọi nhận định trong câu trả lời đều phải xuất phát từ một trang trong vault và chỉ rõ tên trang đó. Bất kỳ điều gì bạn biết nhưng không có trong vault thì phải được gắn nhãn rõ ràng là kiến thức bên ngoài hoặc lược bỏ hoàn toàn.
 
-## Workflow
+## Quy trình thực hiện
 
-1. **Start from `index.md`**, not from a full-text sweep. The index is the map;
-   reading it first keeps the context budget for actual pages.
-2. **Follow links outward** from the most relevant pages, one hop at a time.
-   Stop when new pages stop adding anything.
-3. **Answer in plain language**, with `[[page]]` references inline.
-4. **Name the gaps.** If the question has three parts and the vault covers two,
-   say which one it does not.
-5. **Offer the next move** when there is an obvious one: a source worth
-   ingesting, a synthesis page worth writing.
+1. **Bắt đầu từ `index.md`**, chứ không phải quét toàn văn (full-text sweep) toàn bộ kho. Trang chỉ mục chính là tấm bản đồ; đọc nó trước giúp bảo toàn ngân sách ngữ cảnh cho các trang nội dung thực sự.
+2. **Lần theo các liên kết tỏa ra ngoài** từ những trang liên quan nhất, từng bước nhảy (hop) một. Dừng lại khi các trang mới không còn đóng góp thêm thông tin gì mới.
+3. **Trả lời bằng ngôn ngữ giản dị, rõ ràng**, kèm theo tham chiếu `[[tên trang]]` ngay trong dòng văn bản.
+4. **Chỉ rõ những khoảng trống.** Nếu câu hỏi có ba phần mà vault chỉ mới bao phủ được hai phần, hãy nói rõ phần nào chưa có câu trả lời.
+5. **Đề xuất bước đi tiếp theo** khi thấy rõ hướng hành động: một tài liệu nguồn đáng nạp thêm, hoặc một trang tổng hợp (`synthesis`) đáng được viết ra.
 
-## Output format
+## Định dạng đầu ra
 
-Plain prose, then:
+Văn xuôi trực diện, sau đó kết thúc bằng:
 
 ```
-Read: <pages consulted>
-Not covered: <what the vault does not answer>
+Read: <các trang đã tham khảo>
+Not covered: <những phần vault chưa giải đáp được>
 ```
 
-## Calibration
+## Hiệu chuẩn (Calibration)
 
-Reading too little is the common failure: answering from three pages when the
-vault has fifteen relevant ones. Reading everything is the opposite failure and
-burns the budget on pages that add nothing.
+Đọc quá ít là lỗi phổ biến nhất: trả lời chỉ từ ba trang trong khi vault có tới mười lăm trang liên quan. Đọc tất cả mọi thứ là thái cực lỗi ngược lại, làm đốt sạch ngân sách ngữ cảnh vào những trang chẳng mang lại thêm giá trị gì.
 
-If the vault has nothing on the topic, say so in one sentence and stop. Do not
-pad the answer with general knowledge to avoid an empty result.
+Nếu vault hoàn toàn không có thông tin gì về chủ đề được hỏi, hãy nói rõ điều đó trong một câu duy nhất rồi dừng lại. Tuyệt đối không bồi đắp câu trả lời bằng kiến thức phổ thông chỉ để tránh trả về kết quả trống.

@@ -1,7 +1,7 @@
 ---
-description: Bulk import an archive in batches
+description: Nhập hàng loạt kho lưu trữ theo từng đợt
 ---
 
-Backfill $ARGUMENTS. Triage first, oldest first, ten per batch, checkpoint and stop between batches.
+Nhập dữ liệu tồn đọng (backfill) cho $ARGUMENTS. Phân loại trước, ưu tiên tài liệu cũ nhất trước, mỗi đợt mười mục, lưu điểm kiểm tra (checkpoint) và dừng lại giữa các đợt.
 
-Follow the `second-brain-backfill` skill.
+Thực hiện theo skill `second-brain-backfill`.

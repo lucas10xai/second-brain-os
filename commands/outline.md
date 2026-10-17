@@ -1,7 +1,7 @@
 ---
-description: Outline a piece from your concept pages
+description: Lập dàn ý bài viết từ các trang khái niệm của bạn
 ---
 
-Outline $ARGUMENTS from the vault. Every point tied to a page, disagreements surfaced, weak points marked.
+Lập dàn ý cho $ARGUMENTS từ kho tri thức. Mỗi luận điểm đều phải gắn với một trang cụ thể, làm nổi bật các điểm bất đồng, và đánh dấu những chỗ lập luận còn yếu.
 
-Follow the `second-brain-write` skill.
+Thực hiện theo skill `second-brain-write`.

@@ -1,7 +1,7 @@
 ---
-description: Create a project
+description: Tạo một dự án mới
 ---
 
-Set up the project in $ARGUMENTS: four folders, a project CLAUDE.md with one measurable goal, and links to the concept pages it depends on.
+Thiết lập dự án trong $ARGUMENTS: tạo bốn thư mục con, một file CLAUDE.md riêng cho dự án với một mục tiêu đo lường được, cùng các liên kết trỏ tới những trang khái niệm mà dự án phụ thuộc vào.
 
-Follow the `second-brain-project` skill.
+Thực hiện theo skill `second-brain-project`.

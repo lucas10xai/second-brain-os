@@ -1,10 +1,7 @@
 # raw/
 
-Drop source material here: clipped articles, transcripts, PDFs, exported chats,
-voice notes, anything.
+Hãy thả tài liệu nguồn vào đây: bài viết lưu về, bản gỡ băng (transcript), file PDF, lịch sử trò chuyện xuất ra, ghi chú giọng nói, hoặc bất kỳ thứ gì.
 
-Nothing in this folder is edited after it lands. The agent reads from here and
-writes to `wiki/`. If a file is wrong, replace it and re-ingest rather than
-patching it in place, so the source stays a faithful record of what you saved.
+Không có bất kỳ file nào trong thư mục này bị chỉnh sửa sau khi đã đưa vào. Agent sẽ đọc từ đây và ghi sang `wiki/`. Nếu một file bị sai, hãy thay thế nó và nạp (ingest) lại thay vì sửa trực tiếp tại chỗ, để tài liệu nguồn luôn là bản lưu trung thực của những gì bạn đã cất giữ.
 
-`assets/` holds images and attachments referenced by raw files.
+`assets/` chứa hình ảnh và tệp đính kèm được tham chiếu bởi các file trong `raw/`.

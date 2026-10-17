@@ -9,14 +9,14 @@ tags: []
 
 # {{title}}
 
-## In one paragraph
+## Tóm tắt trong một đoạn văn
 
-## Where it came from
+## Nguồn gốc xuất xứ
 
-## What supports it
+## Bằng chứng ủng hộ
 
-## What argues against it
+## Lập luận phản biện
 
-## Open questions
+## Câu hỏi mở
 
-## Related
+## Liên quan

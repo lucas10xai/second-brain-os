@@ -1,10 +1,8 @@
-# Frontmatter schema
+# Lược đồ Frontmatter
 
-Frontmatter is what makes the vault queryable by something other than text
-search. It costs nothing to write and it is what Dataview, scripts and the agent
-itself use to find things by shape.
+`Frontmatter` là thứ giúp `Vault` có thể được truy vấn bằng những cách khác ngoài tìm kiếm văn bản thuần túy. Việc viết nó hầu như không tốn công sức, và đó chính là dữ liệu để Dataview, các script và bản thân `Agent` sử dụng nhằm tìm kiếm thông tin theo cấu trúc.
 
-## The schema
+## Lược đồ chuẩn
 
 ```yaml
 ---
@@ -17,7 +15,7 @@ tags: [two or three]
 ---
 ```
 
-Source pages add:
+Các trang nguồn (source pages) bổ sung thêm:
 
 ```yaml
 url: https://...
@@ -25,51 +23,38 @@ author:
 published: YYYY-MM-DD
 ```
 
-Entity pages add `kind: person | org | product | tool`.
+Các trang thực thể (entity pages) bổ sung thêm `kind: person | org | product | tool`.
 
-## Why each field earns its place
+## Lý do tồn tại của từng trường
 
-`type` drives every structural query and every lint check. Without it you cannot
-ask how many concepts you have, or find sources with no concepts attached.
+`type` điều khiển mọi truy vấn cấu trúc và mọi bước kiểm tra `Lint`. Không có nó, bạn không thể hỏi mình đang có bao nhiêu khái niệm, hay tìm ra những trang nguồn chưa được gắn với bất kỳ khái niệm nào.
 
-`updated` is what makes review possible. Stale concept pages are the main way a
-vault rots, and you cannot find them without a date.
+`updated` là thứ giúp việc rà soát (review) trở nên khả thi. Những trang khái niệm cũ kỹ, lỗi thời là nguyên nhân chính khiến một `Vault` bị mục rữa, và bạn không thể tìm ra chúng nếu không có ngày cập nhật.
 
-`aliases` is what makes wikilinks resolve when the same thing has three names.
-See [naming and aliases](naming-and-aliases.md).
+`aliases` là thứ giúp các `Wikilink` phân giải chính xác khi cùng một thứ có tới ba tên gọi khác nhau. Xem thêm [Đặt tên và Aliases](naming-and-aliases.md).
 
-`url` on a source page is what separates a citation from a claim. A source page
-without it is unverifiable.
+`url` trên một trang nguồn là ranh giới phân biệt giữa một trích dẫn có căn cứ và một lời tuyên bố suông. Một trang nguồn không có `url` là không thể kiểm chứng.
 
-## Tags
+## Thẻ phân loại (Tags)
 
-Two or three per page, from a small controlled vocabulary you actually maintain.
+Hai hoặc ba thẻ mỗi trang, lấy từ một bộ từ vựng kiểm soát nhỏ mà bạn thực sự duy trì.
 
-Tags fail in one specific way: the vocabulary grows until it is meaningless.
-Fifty tags used once each are worse than no tags, because they create the
-impression of a taxonomy while doing none of the work.
+Thẻ phân loại thường thất bại theo một cách rất cụ thể: bộ từ vựng phình to cho đến khi trở nên vô nghĩa. Năm mươi thẻ mà mỗi thẻ chỉ dùng đúng một lần còn tệ hơn là không dùng thẻ nào, bởi chúng tạo ra ảo tưởng về một hệ thống phân loại (taxonomy) nhưng thực tế chẳng giải quyết được việc gì.
 
-Keep the list in `CLAUDE.md` and instruct the agent to use existing tags or
-propose a new one explicitly rather than inventing them silently.
+Hãy giữ danh sách thẻ trong `CLAUDE.md` và chỉ dẫn `Agent` chỉ sử dụng các thẻ hiện có hoặc đề xuất rõ ràng một thẻ mới thay vì âm thầm tự bịa ra thẻ mới.
 
-Folders and links carry the structural load. Tags are for cross-cutting
-qualities that do not fit either: `unverified`, `to-revisit`, `disputed`.
+Thư mục và liên kết đã gánh vác phần tải trọng cấu trúc. Thẻ chỉ dành cho những tính chất cắt ngang (cross-cutting qualities) không thuộc về cả hai thứ kia: `unverified`, `to-revisit`, `disputed`.
 
-## Empty fields
+## Các trường trống
 
-Leave a field out rather than filling it with a guess. An absent `published`
-means unknown, which the agent can say honestly. A guessed date becomes a fact
-in a concept page three weeks later.
+Hãy bỏ qua một trường thay vì điền vào đó bằng sự phỏng đoán. Việc vắng mặt trường `published` có nghĩa là không rõ ngày xuất bản — điều mà `Agent` có thể trả lời một cách trung thực. Một ngày tháng phỏng đoán sẽ biến thành một "sự thật" nằm chễm chệ trong một trang khái niệm ba tuần sau đó.
 
-## Keep it stable
+## Giữ lược đồ ổn định
 
-Adding a field to the schema means either backfilling every page or living with
-a mixed vault where queries miss the older half.
+Thêm một trường mới vào lược đồ đồng nghĩa với việc hoặc phải cập nhật bổ sung (backfill) cho toàn bộ các trang cũ, hoặc phải sống chung với một `Vault` pha tạp mà các truy vấn sẽ bỏ sót mất một nửa số trang cũ.
 
-Decide the schema early, keep it small, and change it rarely. When you do change
-it, run a backfill pass over the whole vault in one go rather than letting the
-change apply only to new pages.
+Hãy quyết định lược đồ từ sớm, giữ nó gọn nhẹ và hiếm khi thay đổi. Khi bạn thực sự cần thay đổi, hãy chạy một lượt backfill trên toàn bộ `Vault` trong một lần duy nhất thay vì để thay đổi đó chỉ áp dụng cho các trang mới.
 
-## Next
+## Tiếp theo
 
-[Naming and aliases](naming-and-aliases.md)
+[Đặt tên và Aliases](naming-and-aliases.md)

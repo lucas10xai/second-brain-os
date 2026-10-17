@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Print health metrics for a second-brain vault.
+"""In các chỉ số sức khỏe của một vault bộ não thứ hai.
 
-Usage:
+Cách dùng:
     python3 vault_stats.py /path/to/vault
 
-Reports page counts by type, link density, orphan rate and the most connected
-pages. Track these over time: a rising orphan rate means ingestion is running
-without linking, which is the usual way a vault stops being useful.
+Báo cáo số lượng trang theo từng loại (type), mật độ liên kết, tỷ lệ trang mồ côi
+(orphan rate) và danh sách các trang được kết nối nhiều nhất. Hãy theo dõi các
+chỉ số này theo thời gian: tỷ lệ trang mồ côi tăng lên đồng nghĩa với việc quá
+trình nạp tài liệu (ingestion) đang chạy mà không tạo liên kết — nguyên nhân phổ
+biến nhất khiến một chiếc vault dần mất đi tính hữu dụng.
 """
 import os
 import re
@@ -15,9 +17,10 @@ from collections import Counter, defaultdict
 
 LINK = re.compile(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]")
 TYPE = re.compile(r"^type:\s*(\S+)", re.M)
-# Hidden folders (.claude, .obsidian, .git, .trash), the page templates and
-# the scripts folder hold instructions and tooling, not knowledge, so they are
-# never counted as pages. Same for CLAUDE.md and README.md wherever they sit.
+# Các thư mục ẩn (.claude, .obsidian, .git, .trash), thư mục mẫu trang (templates)
+# và thư mục scripts chỉ chứa chỉ dẫn cùng công cụ chứ không phải tri thức, nên
+# không bao giờ được tính là các trang wiki. Tương tự đối với CLAUDE.md và README.md
+# ở bất kỳ vị trí nào.
 SKIP_DIRS = {"node_modules", "raw", "templates", "scripts"}
 SKIP_FILES = {"CLAUDE.md", "README.md"}
 

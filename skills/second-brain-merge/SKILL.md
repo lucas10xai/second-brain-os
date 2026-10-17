@@ -1,51 +1,43 @@
 ---
 name: second-brain-merge
 description: >-
-  Merge two pages that describe the same thing, preserving every distinct claim,
-  redirecting inbound links, and recording the merge. Use this skill when the
-  user approves a duplicate merge, says "these are the same page", "merge X into
-  Y", or asks to clean up near-duplicates that a lint run proposed. Do NOT use
-  to merge pages on your own judgement, to delete a page outright, or to split
-  one page into several.
+  Gộp hai trang cùng mô tả về một đối tượng duy nhất: bảo toàn mọi luận điểm
+  riêng biệt, chuyển hướng các liên kết đến (inbound links), và ghi nhật ký thao tác
+  gộp. Sử dụng kỹ năng này khi người dùng phê duyệt việc gộp trang trùng lặp, nói
+  "hai trang này là một", "gộp X vào Y", hoặc yêu cầu dọn dẹp các trang gần trùng lặp
+  mà một lượt chạy lint đã đề xuất. KHÔNG dùng để tự ý gộp trang theo phán đoán cá nhân,
+  xóa thẳng một trang, hoặc tách một trang thành nhiều trang.
 ---
 
-# Merge duplicate pages
+# Gộp các trang trùng lặp (Merge duplicate pages)
 
-A merge is irreversible in the way that matters: afterwards you cannot tell
-which claim came from which page. Two ideas that look identical from their
-summaries are often a general case and a specific one.
+Gộp trang là một thao tác không thể đảo ngược ở khía cạnh quan trọng nhất: sau khi gộp xong, bạn không thể phân biệt được nhận định nào từng thuộc về trang nào. Hai ý tưởng thoạt nhìn có vẻ giống hệt nhau qua bản tóm tắt lại thường là một trường hợp tổng quát và một trường hợp cụ thể.
 
-## Core rule
+## Quy tắc cốt lõi
 
-Never merge unprompted. Propose, wait for approval, then follow the procedure
-exactly.
+Không bao giờ tự ý gộp trang khi chưa được yêu cầu. Hãy đề xuất, chờ phê duyệt, sau đó mới thực hiện chính xác theo quy trình.
 
-## Workflow
+## Quy trình thực hiện
 
-1. **Pick the survivor** by canonical name, not by which page is longer.
-2. **Merge content.** Every distinct claim survives with its source. Overlapping
-   claims collapse; differing ones both stay, following the contradiction rules.
-3. **Merge aliases,** including the dead page's title as an alias on the
-   survivor. This is what keeps old links and the user's memory working.
-4. **Redirect inbound links** to the survivor. Check every backlink.
-5. **Delete the old page,** or leave a stub only if it was linked from outside
-   the vault.
-6. **Record in `log.md`:** both names, the date, and why.
+1. **Chọn trang giữ lại (survivor)** dựa theo tên chuẩn tắc (canonical name), chứ không phải dựa vào việc trang nào dài hơn.
+2. **Gộp nội dung.** Mọi luận điểm riêng biệt đều phải được giữ lại cùng với nguồn trích dẫn của nó. Các luận điểm trùng khớp thì gộp làm một; các luận điểm khác biệt thì giữ lại cả hai, tuân thủ đúng quy tắc xử lý mâu thuẫn.
+3. **Gộp danh sách tên gọi khác (`aliases`),** bao gồm việc đưa tiêu đề của trang bị xóa vào trường `aliases` của trang được giữ lại. Đây là bước giúp các liên kết cũ và trí nhớ của người dùng tiếp tục hoạt động trơn tru.
+4. **Chuyển hướng các liên kết đến (inbound links)** về trang được giữ lại. Kiểm tra toàn bộ các liên kết ngược (backlinks).
+5. **Xóa trang cũ,** hoặc chỉ để lại một trang chuyển hướng ngắn (stub) nếu trang đó từng được liên kết từ bên ngoài vault.
+6. **Ghi nhận vào `log.md`:** tên hai trang, ngày thực hiện, và lý do gộp.
 
-## Output format
+## Định dạng đầu ra
 
 ```
-Merged: [[old]] -> [[survivor]]
+Merged: [[trang cũ]] -> [[trang giữ lại]]
 Claims kept from old page: <n>
-Aliases added: <list>
+Aliases added: <danh sách>
 Inbound links redirected: <n>
-Conflicts recorded: <none | description>
+Conflicts recorded: <none | mô tả>
 ```
 
-## Calibration
+## Hiệu chuẩn (Calibration)
 
-If the two pages disagree about anything factual, that is a signal they may not
-be duplicates. Surface the disagreement and ask before proceeding.
+Nếu hai trang bất đồng với nhau về bất kỳ dữ kiện thực tế nào, đó là tín hiệu cho thấy có thể chúng không phải là hai trang trùng lặp. Hãy nêu bật điểm bất đồng đó ra và hỏi lại người dùng trước khi tiếp tục.
 
-Never merge a page marked `maintained_by: human` into another without explicit
-confirmation naming that page.
+Không bao giờ gộp một trang được đánh dấu `maintained_by: human` vào trang khác mà không có xác nhận rõ ràng chỉ đích danh tên trang đó.

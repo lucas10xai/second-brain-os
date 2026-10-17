@@ -1,7 +1,7 @@
 ---
-description: Audit what an agent did
+description: Kiểm toán những gì agent đã thực hiện
 ---
 
-Read `log.md` and the git history for the period in $ARGUMENTS. Report what ran, what it changed, and anything that changed without a log entry.
+Đọc `log.md` và lịch sử git trong khoảng thời gian ở $ARGUMENTS. Báo cáo những tác vụ đã chạy, những gì đã thay đổi, và bất kỳ thay đổi nào không được ghi nhận trong nhật ký.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

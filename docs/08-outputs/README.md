@@ -1,19 +1,16 @@
-# Outputs
+# Đầu ra (Outputs)
 
-The vault earns its keep when things come out of it.
+Vault thực sự phát huy giá trị khi có những thành phẩm được tạo ra từ nó.
 
-A knowledge base that only answers questions is a reference book you built
-yourself. The point at which it starts paying for the effort is when articles,
-reports, decisions and understanding come out the other side, and when your own
-finished work goes back in.
+Một kho tri thức chỉ biết trả lời câu hỏi thì chẳng khác nào cuốn sách tham khảo do bạn tự đóng lấy. Thời điểm nó bắt đầu bù đắp xứng đáng cho công sức bạn bỏ ra là khi các bài viết, báo cáo, quyết định và sự thấu hiểu được đúc kết ra ở đầu bên kia, và khi chính những tác phẩm hoàn chỉnh của bạn lại được đưa ngược trở vào trong Vault.
 
-## Pages
+## Các trang trong chương
 
-- [Writing from the vault](writing-from-the-vault.md)
-- [Research reports](research-reports.md)
-- [Publishing and export](publishing-and-export.md)
-- [Learning from your own vault](teaching-yourself.md)
+- [Viết bài từ Vault](writing-from-the-vault.md)
+- [Báo cáo nghiên cứu](research-reports.md)
+- [Xuất bản và trích xuất](publishing-and-export.md)
+- [Tự học từ chính Vault của bạn](teaching-yourself.md)
 
 ---
 
-[Back to the full guide](../README.md)
+[Quay lại toàn bộ hướng dẫn](../README.md)

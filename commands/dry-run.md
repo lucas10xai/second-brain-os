@@ -1,7 +1,7 @@
 ---
-description: Preview a run without writing
+description: Xem trước kết quả chạy thử mà không ghi vào file
 ---
 
-Do $ARGUMENTS as a dry run: list every page you would create, update or delete, and every link you would add. Write nothing.
+Thực hiện $ARGUMENTS ở chế độ chạy thử (dry run): liệt kê mọi trang bạn dự định tạo, cập nhật hoặc xóa, và mọi liên kết bạn dự định thêm vào. Không ghi bất kỳ thay đổi nào.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

@@ -1,9 +1,9 @@
-# 2 · Loop
+# 2 · Vòng lặp (Loop)
 
-Who decides the next step: goal, checker, stop rule, budget - and the hybrid that survives production.
+Ai quyết định bước tiếp theo: mục tiêu, bộ kiểm tra (checker), quy tắc dừng, ngân sách — và mô hình lai (hybrid) sống sót trong môi trường thực tế.
 
-A course module beside [the main guide](../../README.md) — read it on the site or in order below.
+Một học phần thuộc khóa học bên cạnh [cẩm nang chính](../../README.md) — đọc trực tiếp trên trang web hoặc theo thứ tự dưới đây.
 
-1. [Loops versus workflows](loops-vs-workflows.md)
-2. [The four parts of a loop](the-four-parts.md)
-3. [Loop practice: filter, loop, fall back](loop-practice.md)
+1. [Loop so với Workflow](loops-vs-workflows.md)
+2. [Bốn thành phần của một Loop](the-four-parts.md)
+3. [Thực hành Loop: lọc trước, lặp ngắn, dự phòng](loop-practice.md)

@@ -1,49 +1,44 @@
 ---
 name: second-brain-publish
 description: >-
-  Prepare a subset of the vault for publishing: check opt-in flags, find private
-  material, and report what would leak through links before anything is exported.
-  Use this skill when the user wants to publish notes as a site or digital
-  garden, asks what is safe to make public, or is setting up an export. Do NOT
-  use for exporting a single document, or for running the publishing tool itself.
+  Chuẩn bị một tập con của vault để xuất bản công khai: kiểm tra cờ cho phép xuất
+  bản (opt-in flags), tìm tư liệu riêng tư, và báo cáo những thông tin có nguy cơ
+  rò rỉ qua các liên kết trước khi xuất bất kỳ dữ liệu nào ra ngoài. Sử dụng kỹ năng
+  này khi người dùng muốn xuất bản ghi chú thành trang web hoặc khu vườn số (digital
+  garden), hỏi những trang nào an toàn để công khai, hoặc đang thiết lập quy trình
+  xuất dữ liệu. KHÔNG dùng để xuất một tài liệu đơn lẻ, hoặc để trực tiếp chạy công cụ
+  build trang web xuất bản.
 ---
 
-# Prepare to publish
+# Chuẩn bị xuất bản (Prepare to publish)
 
-Once something is crawled, it is out. Every check here is cheap; the failure it
-prevents is permanent.
+Một khi nội dung đã bị các trình thu thập dữ liệu (crawlers) quét qua, nó đã thuộc về không gian công cộng. Mọi phép kiểm tra ở đây đều rất rẻ; nhưng tai nạn mà nó ngăn chặn được thì mang tính vĩnh viễn.
 
-## Core rule
+## Quy tắc cốt lõi
 
-Explicit opt-in only. A page publishes because it says `publish: true`, never
-because nothing excluded it.
+Chỉ xuất bản khi được bật cờ chủ động (explicit opt-in only). Một trang được xuất bản chỉ vì nó có dòng `publish: true`, tuyệt đối không bao giờ vì "không có quy tắc nào loại trừ nó".
 
-## Workflow
+## Quy trình thực hiện
 
-1. **List the opt-in set.** Every page marked for publication.
-2. **Follow their links.** A published page linking to a private one either
-   leaks the title or produces a dead link. Report both.
-3. **Scan for anything that should never ship:** credentials, other people's
-   private information, confidential work, personal detail in examples.
-4. **Check the frontmatter** for fields not meant to be public, such as
-   confidence labels or private source paths.
-5. **Report, do not export.** The user runs the build.
+1. **Liệt kê tập hợp được phép xuất bản (opt-in set).** Mọi trang được đánh dấu cho phép xuất bản công khai.
+2. **Lần theo các liên kết của chúng.** Một trang công khai liên kết tới một trang riêng tư sẽ hoặc làm lộ tiêu đề nhạy cảm, hoặc tạo ra một liên kết chết. Hãy báo cáo cả hai trường hợp.
+3. **Quét tìm bất kỳ nội dung nào không bao giờ được phép lọt ra ngoài:** thông tin xác thực (credentials), thông tin riêng tư của người khác, tài liệu công việc bảo mật, hoặc chi tiết cá nhân nằm trong các ví dụ minh họa.
+4. **Kiểm tra phần frontmatter** để tìm các trường không dành cho công chúng, chẳng hạn như nhãn mức độ tự tin cá nhân hoặc đường dẫn nguồn nội bộ.
+5. **Chỉ báo cáo, không tự xuất dữ liệu.** Chính người dùng sẽ là người chạy lệnh build cuối cùng.
 
-## Output format
+## Định dạng đầu ra
 
 ```
-Publishable: <n> pages
+Publishable: <n> trang
 Links to unpublished pages: <n>
-  [[public page]] -> [[private page]]
-Flagged content: <list with reasons>
-Frontmatter to strip: <fields>
+  [[trang công khai]] -> [[trang riêng tư]]
+Flagged content: <danh sách kèm lý do>
+Frontmatter to strip: <các trường cần lược bỏ>
 Verdict: <safe to build | fix these first>
 ```
 
-## Calibration
+## Hiệu chuẩn (Calibration)
 
-Err toward flagging. A false positive costs the user ten seconds; a miss is
-permanent.
+Hãy ưu tiên bắt nhầm còn hơn bỏ sót (err toward flagging). Một cảnh báo dư thừa chỉ làm tốn của người dùng mười giây kiểm tra; một lần bỏ sót sẽ để lại hậu quả vĩnh viễn.
 
-If the user asks to publish the whole vault, ask what they intend to do about
-the private material rather than proceeding.
+Nếu người dùng yêu cầu xuất bản toàn bộ chiếc vault, hãy hỏi rõ họ dự định xử lý các tư liệu riêng tư như thế nào trước, thay vì cứ thế thực hiện.

@@ -1,7 +1,7 @@
 ---
-description: Build or update your CLAUDE.md
+description: Xây dựng hoặc cập nhật file CLAUDE.md của bạn
 ---
 
-Interview the user one question at a time, then write CLAUDE.md at the vault root: who they are, goals with dates, how to talk to them, projects, and the vault's own rules.
+Phỏng vấn người dùng từng câu hỏi một, sau đó viết file CLAUDE.md ở thư mục gốc của kho tri thức: họ là ai, các mục tiêu kèm mốc thời gian, phong cách giao tiếp phù hợp, các dự án đang làm, và những quy tắc riêng của kho tri thức.
 
-Follow the `second-brain-project` skill.
+Thực hiện theo skill `second-brain-project`.

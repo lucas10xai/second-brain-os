@@ -1,7 +1,7 @@
 ---
-description: Rename a page and fix every link
+description: Đổi tên trang và cập nhật mọi liên kết
 ---
 
-Rename as specified in $ARGUMENTS. File, frontmatter, alias, every inbound link, log entry, then verify.
+Đổi tên trang theo yêu cầu trong $ARGUMENTS. Cập nhật tên file, frontmatter, trường `aliases`, mọi liên kết trỏ đến, ghi vào nhật ký, sau đó kiểm tra xác nhận lại.
 
-Follow the `second-brain-rename` skill.
+Thực hiện theo skill `second-brain-rename`.

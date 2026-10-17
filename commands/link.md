@@ -1,7 +1,7 @@
 ---
-description: Find and add missing connections
+description: Tìm và bổ sung các liên kết còn thiếu
 ---
 
-Read the pages in $ARGUMENTS, or recently added pages if empty, and add links in both directions where the relationship is real. Create no pages, rewrite no content.
+Đọc các trang trong $ARGUMENTS (hoặc các trang mới được thêm gần đây nếu để trống) và bổ sung liên kết hai chiều ở những nơi có mối quan hệ thực sự. Không tạo trang mới, không viết lại nội dung.
 
-Follow the `second-brain-ingest` skill.
+Thực hiện theo skill `second-brain-ingest`.

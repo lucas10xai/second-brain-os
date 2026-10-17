@@ -1,7 +1,6 @@
-# Search tools
+# Công cụ tìm kiếm
 
-Retrieval in a plain-text vault is mostly grep. That sounds primitive and is
-almost always enough.
+Truy xuất trong một Vault văn bản thuần túy chủ yếu là dùng `grep`. Nghe có vẻ thô sơ nhưng gần như lúc nào cũng là quá đủ.
 
 ## ripgrep
 
@@ -10,21 +9,17 @@ rg -i "graph rag" ~/brain --type md -l
 rg -i "supersed" ~/brain -C 2
 ```
 
-Instant on tens of thousands of files. The agent uses it by default when working
-on the filesystem, and for "where did I mention this" it beats every fancier
-option on both speed and predictability.
+Trả kết quả tức thì trên hàng chục nghìn file. Agent mặc định sử dụng công cụ này khi làm việc trên hệ thống file, và với câu hỏi kiểu "tôi đã nhắc đến thứ này ở đâu", nó đánh bại mọi giải pháp cầu kỳ hơn cả về tốc độ lẫn tính nhất quán.
 
-Its limit is exact wording. It cannot find the page about a concept you
-described differently, which is what the graph and the index are for.
+Giới hạn của nó là phụ thuộc vào từ ngữ chính xác. Nó không thể tìm ra trang viết về một khái niệm nếu bạn diễn đạt bằng từ khác — và đó chính là lúc cần đến Knowledge graph cùng trang chỉ mục.
 
-## Obsidian search
+## Tìm kiếm trong Obsidian
 
-Fine for interactive use. Operators worth knowing: `path:`, `file:`, `tag:` and
-`line:` for terms co-occurring on the same line, which cuts most false positives.
+Đủ tốt cho nhu cầu tương tác trực tiếp. Các toán tử đáng biết gồm: `path:`, `file:`, `tag:` và `line:` cho các từ cùng xuất hiện trên một dòng — giúp loại bỏ phần lớn kết quả dương tính giả.
 
 ## Dataview
 
-Queries over frontmatter, which is where structural questions get answered:
+Truy vấn dựa trên Frontmatter, nơi giải đáp các câu hỏi mang tính cấu trúc:
 
 ````
 ```dataview
@@ -34,32 +29,24 @@ SORT updated ASC
 ```
 ````
 
-Anything phrased as "which pages have property P" is a Dataview query, and
-answering those by asking the agent to read files is slower and less reliable.
+Bất kỳ câu hỏi nào có dạng "những trang nào mang thuộc tính P" đều là một truy vấn Dataview, và việc trả lời chúng bằng cách bắt Agent đọc từng file sẽ vừa chậm hơn vừa kém tin cậy hơn.
 
-## Combining them
+## Kết hợp các công cụ
 
-The pattern that works: Dataview or ripgrep to get a candidate set, the graph to
-expand from it, the agent to read and synthesise.
+Mô hình hoạt động hiệu quả: dùng Dataview hoặc ripgrep để lấy ra tập hợp ứng viên ban đầu, dùng Knowledge graph để mở rộng từ tập hợp đó, và dùng Agent để đọc hiểu rồi tổng hợp.
 
 ```
-Find every page tagged unverified, follow their links, and tell me which claims
-depend on unverified sources.
+Tìm mọi trang được gắn thẻ unverified, lần theo các liên kết của chúng, và cho tôi biết những nhận định nào đang phụ thuộc vào các nguồn chưa được kiểm chứng.
 ```
 
-Mechanical filtering first, judgement second. Asking the agent to do the
-filtering by reading everything wastes context on pages a query would have
-excluded in milliseconds.
+Lọc cơ học trước, phán đoán sau. Yêu cầu Agent thực hiện bước lọc bằng cách đọc toàn bộ mọi thứ sẽ làm lãng phí Context window vào những trang mà một câu truy vấn có thể loại bỏ chỉ trong vài mili-giây.
 
-## When search gets slow
+## Khi việc tìm kiếm trở nên chậm chạp
 
-It will not, at personal scale. Ripgrep over ten thousand markdown files is
-still instant, and if search feels slow the cause is usually the agent reading
-too many files, not the search itself.
+Ở quy mô cá nhân, bản thân công cụ tìm kiếm sẽ không bao giờ chậm. Chạy ripgrep trên mười nghìn file markdown vẫn cho kết quả tức thì; nếu bạn cảm thấy việc tìm kiếm bị chậm, nguyên nhân thường là do Agent đang đọc quá nhiều file, chứ không phải do bản thân lệnh tìm kiếm.
 
-That is a context problem, not a search problem. See [context
-budget](context-budget.md).
+Đó là bài toán về ngữ cảnh, không phải bài toán tìm kiếm. Xem thêm [ngân sách ngữ cảnh (Context budget)](context-budget.md).
 
-## Next
+## Tiếp theo
 
-[Adding RAG when you need it](rag-on-top.md)
+[Bổ sung RAG khi cần thiết](rag-on-top.md)

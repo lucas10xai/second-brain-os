@@ -1,25 +1,20 @@
 # Agents
 
-Turning a one-off setup into a system that maintains itself.
+Biến một thiết lập thủ công một lần thành một hệ thống tự duy trì.
 
-Everything up to here you could do by hand, slowly. This section is where the
-vault stops depending on your discipline, which is the only reason it will still
-be alive in six months.
+Mọi thứ tính đến chương trước bạn đều có thể tự làm bằng tay, một cách chậm rãi. Chương này là nơi `Vault` ngừng phụ thuộc vào tính kỷ luật cá nhân của bạn — và đó là lý do duy nhất giúp nó vẫn còn sống khỏe sau sáu tháng nữa.
 
-It is also where the risk lives. An agent with write access to your notes,
-running on a schedule while you sleep, is exactly as useful and exactly as
-dangerous as it sounds. Read [guardrails](safety-and-guardrails.md) before you
-schedule anything.
+Đây cũng chính là nơi tiềm ẩn rủi ro. Một `Agent` có quyền ghi (write access) vào kho ghi chú của bạn, chạy theo lịch định kỳ trong lúc bạn đang ngủ, hữu ích đúng như những gì nó hứa hẹn và cũng nguy hiểm đúng như những gì bạn hình dung. Hãy đọc kỹ phần [Guardrails (Rào chắn an toàn)](safety-and-guardrails.md) trước khi bạn lên lịch chạy tự động bất cứ tác vụ nào.
 
-## Pages
+## Các trang trong chương
 
-- [Agent roles](agent-roles.md)
-- [Scheduling](scheduled-maintenance.md)
-- [Subagents and parallel work](subagents.md)
+- [Các vai trò của Agent](agent-roles.md)
+- [Lập lịch tự động (Scheduling)](scheduled-maintenance.md)
+- [Subagents và xử lý song song](subagents.md)
 - [Hooks](hooks.md)
-- [Skills and slash commands](skills-and-commands.md)
-- [Guardrails](safety-and-guardrails.md)
+- [Skills và Slash commands](skills-and-commands.md)
+- [Guardrails (Rào chắn an toàn)](safety-and-guardrails.md)
 
 ---
 
-[Back to the full guide](../README.md)
+[Quay lại hướng dẫn đầy đủ](../README.md)

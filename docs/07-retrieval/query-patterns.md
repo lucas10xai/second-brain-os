@@ -1,85 +1,67 @@
-# Query patterns
+# Các mẫu truy vấn
 
-Some questions a vault answers far better than a search engine or a general
-model. These are the ones worth building the habit around.
+Có những câu hỏi mà Vault trả lời tốt hơn hẳn so với công cụ tìm kiếm hay một mô hình thông thường. Đây là những kiểu truy vấn rất đáng để bạn rèn thành thói quen.
 
-## What do I know about X
+## Tôi biết gì về X
 
-The basic one, and the reason most people build a vault.
-
-```
-What do I know about agent harnesses? Read the concept pages and the sources
-behind them. Say where my sources disagree.
-```
-
-The second sentence is what makes it better than reading a page yourself. A
-consolidated view across everything you read, with the disagreements surfaced,
-is not something any single page contains.
-
-## What connects X and Y
-
-The question a search index cannot answer at all.
+Câu hỏi cơ bản nhất, và cũng là lý do hầu hết mọi người xây dựng một Vault.
 
 ```
-What connects retrieval quality and context length in my vault? Show the path
-through pages, not just the endpoints.
+Tôi biết gì về các Agent Harness? Hãy đọc các trang khái niệm và các tài liệu nguồn đứng sau chúng. Chỉ ra những điểm mà các nguồn của tôi bất đồng.
 ```
 
-Asking for the path matters. The intermediate pages are the reasoning, and they
-are checkable in a way a bare conclusion is not.
+Câu thứ hai chính là thứ làm cho truy vấn này giá trị hơn việc bạn tự mở từng trang ra đọc. Một góc nhìn tổng hợp xuyên suốt mọi tài liệu bạn đã đọc, cùng với những điểm mâu thuẫn được làm nổi bật, là thứ không một trang đơn lẻ nào chứa đựng được.
 
-## What have I changed my mind about
+## Điều gì kết nối X và Y
 
-Only possible because of the [supersession
-rules](../04-structuring/contradictions-and-supersession.md).
+Câu hỏi mà một chỉ mục tìm kiếm thông thường hoàn toàn bó tay.
 
 ```
-Find pages where a later source superseded an earlier claim. What did I believe,
-what changed it, and when?
+Điều gì kết nối chất lượng truy xuất và độ dài ngữ cảnh trong Vault của tôi? Hãy chỉ ra đường dẫn đi qua các trang trung gian, chứ không chỉ hai điểm đầu cuối.
 ```
 
-Run this quarterly. It is the closest thing to watching your own thinking from
-outside, and it usually surfaces at least one belief you updated without
-noticing.
+Yêu cầu chỉ rõ đường dẫn là điểm mấu chốt. Các trang trung gian chính là mạch lập luận, và bạn có thể kiểm tra chúng — điều mà một kết luận trơ trọi không thể mang lại.
 
-## What is missing
+## Tôi đã thay đổi suy nghĩ về điều gì
 
-```
-Look at my concept pages on prediction markets. What questions do they raise
-that no source in my vault answers?
-```
-
-This turns the vault into a reading list generated from your own gaps rather
-than from what an algorithm thinks you would click.
-
-## What did I say about this before
-
-Especially useful with [chat exports](../03-ingestion/chat-exports.md) ingested.
+Truy vấn này chỉ khả thi nhờ có [quy tắc thay thế thông tin cũ](../04-structuring/contradictions-and-supersession.md).
 
 ```
-Have I worked on this problem before? What did I conclude and what did I get
-wrong?
+Tìm các trang nơi một nguồn tài liệu mới hơn đã thay thế một nhận định trước đó. Tôi từng tin vào điều gì, điều gì đã làm thay đổi niềm tin đó, và vào lúc nào?
 ```
 
-## What contradicts this
+Hãy chạy truy vấn này mỗi quý một lần. Đây là trải nghiệm gần nhất với việc quan sát chính tư duy của bạn từ bên ngoài, và nó thường làm lộ ra ít nhất một quan điểm mà bạn đã cập nhật lúc nào không hay.
+
+## Điều gì còn đang thiếu
 
 ```
-I am about to argue that X. What in my vault argues against it?
+Hãy xem các trang khái niệm của tôi về thị trường dự đoán (prediction markets). Chúng đặt ra những câu hỏi nào mà chưa có tài liệu nguồn nào trong Vault của tôi giải đáp?
 ```
 
-The most valuable query in the set and the least used, because nobody
-volunteers to be contradicted. A vault that only confirms you is a vault you
-built badly.
+Truy vấn này biến Vault thành một danh sách tài liệu cần đọc được sinh ra từ chính những lỗ hổng kiến thức của bạn, thay vì dựa vào những gì thuật toán nghĩ rằng bạn sẽ bấm vào.
 
-## Questions to ask elsewhere
+## Trước đây tôi đã nói gì về vấn đề này
 
-Anything about the present state of the world. Your vault knows what your
-sources said on the day you saved them, and nothing since.
+Đặc biệt hữu ích khi bạn đã Ingest các [bản xuất lịch sử trò chuyện](../03-ingestion/chat-exports.md).
 
-Anything general the model already knows. Asking your vault to explain a
-well-documented concept from scratch gets you a worse version of what a plain
-answer would give.
+```
+Tôi đã từng làm việc về vấn đề này chưa? Tôi đã rút ra kết luận gì và đã hiểu sai ở đâu?
+```
 
-## Next
+## Điều gì phản bác lại ý này
 
-[Search tools](search-tools.md)
+```
+Tôi sắp lập luận rằng X. Có gì trong Vault của tôi phản bác lại điều đó không?
+```
+
+Đây là truy vấn giá trị nhất trong danh sách nhưng lại ít được dùng nhất, bởi chẳng mấy ai tự nguyện muốn bị phản bác. Một Vault chỉ toàn củng cố ý kiến sẵn có của bạn là một Vault được xây dựng tồi.
+
+## Những câu hỏi nên tìm ở nơi khác
+
+Bất kỳ điều gì về trạng thái hiện tại của thế giới. Vault của bạn chỉ biết những gì tài liệu nguồn nói vào đúng ngày bạn lưu chúng, và hoàn toàn mù tịt về mọi thứ diễn ra sau đó.
+
+Bất kỳ kiến thức phổ thông nào mà mô hình đã nắm rõ. Yêu cầu Vault giải thích lại từ đầu một khái niệm đã quá phổ biến chỉ mang lại cho bạn một phiên bản kém hơn so với câu trả lời trực tiếp từ mô hình.
+
+## Tiếp theo
+
+[Công cụ tìm kiếm](search-tools.md)

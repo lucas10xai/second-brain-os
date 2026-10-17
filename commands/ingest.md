@@ -1,7 +1,7 @@
 ---
-description: Ingest new material from raw/ into the wiki
+description: Nạp tài liệu mới từ raw/ vào wiki
 ---
 
-Process uningested sources in `raw/`. $ARGUMENTS is an optional path; with none, take everything without a source page, oldest first. Stop and report if more than twenty are pending.
+Xử lý các nguồn tài liệu chưa được nạp trong `raw/`. $ARGUMENTS là đường dẫn tùy chọn; nếu để trống, hãy lấy mọi tài liệu chưa có trang nguồn theo thứ tự cũ nhất trước. Dừng lại và báo cáo nếu có nhiều hơn hai mươi tài liệu đang chờ xử lý.
 
-Follow the `second-brain-ingest` skill.
+Thực hiện theo skill `second-brain-ingest`.

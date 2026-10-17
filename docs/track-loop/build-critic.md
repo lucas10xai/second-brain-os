@@ -1,10 +1,10 @@
-# Build: the Critic
+# Thực hành: Bộ phản biện (Build: the Critic)
 
-[Part one](build-goal-test.md) stops on green. This part adds the second judgement: green and clean. A separate critic pass reviews the diff against a narrow rubric, and its defects — not vague advice — feed the next attempt. The theory is in [critics and verification](critics-and-verification.md); this is the forty extra lines.
+[Phần một](build-goal-test.md) dừng lại khi test xanh. Phần này bổ sung tầng phán quyết thứ hai: xanh và sạch. Một lượt chạy `Critic` tách biệt sẽ duyệt qua bản diff dựa trên một bảng tiêu chí (rubric) hẹp, và danh sách khiếm khuyết mà nó chỉ ra — chứ không phải những lời khuyên chung chung — sẽ được nạp vào lần thử tiếp theo. Lý thuyết đã nằm ở bài [bộ phản biện và xác minh](critics-and-verification.md); còn đây là bốn mươi dòng code bổ sung để hiện thực hóa nó.
 
-Two design rules carry the whole thing. The critic is a **separate session**: a fresh `claude -p` call that sees only the diff and the rubric, never the working transcript, so it cannot inherit the maker's rationalisations. And the rubric is **narrow and checkable**: four rules, a demanded verdict format, and an explicit ban on commenting about anything else.
+Hai quy tắc thiết kế gánh vác toàn bộ cơ chế này. Thứ nhất, `Critic` là một **phiên chạy tách biệt**: một lệnh gọi `claude -p` mới tinh chỉ nhìn thấy bản diff và bảng tiêu chí, không bao giờ nhìn thấy lịch sử hội thoại làm việc trước đó, nhờ vậy nó không thể bị lây nhiễm những lời tự biện minh của kẻ tạo tác. Thứ hai, bảng tiêu chí phải **hẹp và kiểm chứng được**: bốn quy tắc rõ ràng, một định dạng phán quyết bắt buộc và lệnh cấm tuyệt đối việc bình luận về bất kỳ điều gì khác.
 
-## The code
+## Mã nguồn thực thi
 
 ```bash
 #!/usr/bin/env bash
@@ -73,10 +73,10 @@ echo "STOP: $MAX_ATTEMPTS attempts spent; handing back to the human"
 exit 1
 ```
 
-## How the pieces fit
+## Cách các mảnh ghép ăn khớp với nhau
 
-The order matters: goal test first, critic second. There is no point paying for a review of code that does not work, so the deterministic critic screens for the LLM critic — cheap judges before expensive ones. The diff is taken against `BASE_REF`, pinned before the loop starts, so the critic always reviews the total change rather than the last increment.
+Thứ tự thực thi ở đây cực kỳ quan trọng: kiểm tra mục tiêu trước, `Critic` sau. Chẳng có lý do gì để trả tiền đánh giá một đoạn code còn chưa chạy được, vì vậy `Critic` tất định sẽ làm màng lọc đầu tiên cho `Critic` dùng LLM — thẩm phán giá rẻ đứng trước thẩm phán đắt tiền. Bản diff được lấy so với mốc `BASE_REF` đã ghim cố định trước khi `Loop` bắt đầu, đảm bảo `Critic` luôn đánh giá tổng thể thay đổi chứ không chỉ nhìn vào phần chênh lệch của bước cuối cùng.
 
-Notice what the critic's output becomes: the next attempt's `feedback`, phrased as "fix exactly these points, nothing else". Actionable defects with locations convert directly into a bounded task. That is why the rubric bans style commentary — a critic that says "consider a more functional approach" sends the next attempt on a refactoring holiday, and your five attempts evaporate into churn.
+Hãy chú ý xem đầu ra của `Critic` biến thành thứ gì: nó trở thành biến `feedback` của lần thử tiếp theo, được đóng khung bằng mệnh lệnh "chỉ sửa chính xác những điểm này, không làm gì khác". Những khiếm khuyết cụ thể kèm vị trí tệp tin được chuyển hóa trực tiếp thành một tác vụ có ranh giới rõ ràng. Đó là lý do bảng tiêu chí cấm bình luận về phong cách code — một `Critic` khuyên "hãy cân nhắc cách tiếp cận hướng hàm (functional) hơn" sẽ đẩy lần thử tiếp theo vào một chuyến du lịch tái cấu trúc (refactoring) lan man, và năm lần thử của bạn sẽ bốc hơi trong những xáo trộn vô ích.
 
-The critic still shares failure modes with any LLM judge — leniency, self-preference when maker and checker share a model. Rule one of the rubric is also enforced by nothing but the critic here; a stricter build would deny the agent write access to `tests/` outright. Both rails, plus running the whole thing unattended, are [part three](build-overnight.md).
+`Critic` này vẫn chia sẻ các kiểu lỗi chung với bất kỳ thẩm phán LLM nào — sự khoan dung quá mức, hay thiên kiến tự ưu ái khi người làm và người chấm dùng chung một mô hình. Quy tắc số một trong bảng tiêu chí ở đây cũng mới chỉ được thực thi bằng lời nhắc cho `Critic`; một bản dựng nghiêm ngặt hơn sẽ chặn thẳng quyền ghi của `Agent` vào thư mục `tests/`. Cả hai thanh ray bảo vệ đó, cộng với việc cho toàn bộ hệ thống chạy tự động không cần người canh, sẽ nằm ở [phần ba](build-overnight.md).

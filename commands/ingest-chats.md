@@ -1,7 +1,7 @@
 ---
-description: Import an exported chat history
+description: Nhập lịch sử trò chuyện đã xuất
 ---
 
-Triage the export at $ARGUMENTS. Privacy pass first, then the three piles, then ingest only what is approved.
+Phân loại bản xuất lịch sử trò chuyện tại $ARGUMENTS. Thực hiện bước rà soát quyền riêng tư trước, chia thành ba nhóm phân loại, sau đó chỉ nạp những nội dung đã được phê duyệt.
 
-Follow the `second-brain-chat-import` skill.
+Thực hiện theo skill `second-brain-chat-import`.

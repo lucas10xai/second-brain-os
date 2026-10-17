@@ -1,65 +1,43 @@
-# Privacy
+# Quyền riêng tư và thông tin nhạy cảm
 
-A mature second brain is one of the highest-signal documents about a person that
-exists. Everything you read, worked on, worried about and asked, connected and
-indexed.
+Một Second Brain khi đã trưởng thành là một trong những tài liệu chứa nhiều tín hiệu rõ nét nhất về một con người. Mọi thứ bạn đọc, làm việc, trăn trở và đặt câu hỏi đều được kết nối và lập chỉ mục tại đây.
 
-That is the point, and it is the reason to be deliberate about what goes in and
-where it lives.
+Đó chính là mục đích của hệ thống, và cũng là lý do bạn phải hết sức có chủ đích về những gì được đưa vào và nơi lưu trữ chúng.
 
-## Decide at capture, not later
+## Quyết định ngay ở khâu thu thập, đừng đợi đến sau này
 
-Redaction after ingest does not work. By the time you decide something should not
-be there, it has propagated into concept pages, links and synthesis pages, and
-removing it means finding all of them.
+Việc biên tập xóa bỏ thông tin nhạy cảm sau khi đã Ingest là không khả thi. Đến lúc bạn nhận ra một thông tin nào đó không nên xuất hiện ở đây, nó đã kịp lan truyền sang các trang khái niệm, các liên kết và các trang tổng hợp, và việc gỡ bỏ đồng nghĩa với việc phải truy tìm toàn bộ những nơi đó.
 
-Decide before the file lands in `raw/`. See [chat
-exports](../03-ingestion/chat-exports.md), which is where this bites hardest,
-because chat history contains more than any other source and is imported in bulk.
+Hãy quyết định trước khi file được đưa vào `raw/`. Xem thêm [bản xuất lịch sử trò chuyện](../03-ingestion/chat-exports.md) — đây là nơi vấn đề này gây hậu quả nặng nề nhất, bởi lịch sử trò chuyện chứa nhiều thông tin nhạy cảm hơn bất kỳ nguồn nào khác và lại thường được nhập vào hàng loạt.
 
-## What does not belong
+## Những thứ không thuộc về nơi này
 
-**Credentials of any kind.** Not because the agent leaks them, but because the
-vault gets synced, committed, backed up and occasionally shared. Every copy is
-another place the key exists.
+**Thông tin xác thực (Credentials) dưới mọi hình thức.** Không phải vì sợ Agent làm rò rỉ chúng, mà vì Vault được đồng bộ, commit lên Git, sao lưu và đôi khi được chia sẻ. Mỗi bản sao là thêm một nơi mà khóa bảo mật đó tồn tại.
 
-**Other people's private information.** Meeting transcripts, personal messages,
-anything told to you in confidence. Your notes are not the right home for
-someone else's confidences, and they did not consent to being ingested.
+**Thông tin riêng tư của người khác.** Bản ghi lời thoại cuộc họp (meeting transcripts), tin nhắn cá nhân, hay bất kỳ điều gì được tâm sự riêng với bạn. Ghi chú của bạn không phải là nơi thích hợp để lưu giữ bí mật của người khác, và họ cũng chưa từng đồng ý cho phép thông tin đó được Ingest.
 
-**Material you are contractually bound to keep confidential.** Client work under
-NDA in a vault that syncs to a personal cloud account is a real exposure.
+**Tài liệu bạn có nghĩa vụ bảo mật theo hợp đồng.** Công việc của khách hàng thuộc diện thỏa thuận bảo mật (NDA) mà lại nằm trong một Vault đồng bộ lên tài khoản đám mây cá nhân là một rủi ro lộ lọt dữ liệu thực sự.
 
-## Separate vaults over careful filtering
+## Tách hẳn thành các Vault riêng thay vì cố lọc cẩn thận
 
-If you have material that must not mix, use a separate vault rather than tags or
-folders inside one.
+Nếu bạn có những nhóm tài liệu tuyệt đối không được phép trộn lẫn với nhau, hãy dùng một Vault riêng biệt thay vì dựa vào thẻ (tags) hay thư mục bên trong cùng một Vault.
 
-A single vault with a private section relies on every query, every export and
-every publish step respecting the boundary. Two vaults cannot leak into each
-other, and the cost is having to pick which one to open.
+Một Vault dùng chung có chứa phân khu riêng tư sẽ phụ thuộc vào việc mọi câu truy vấn, mọi lần trích xuất và mọi bước xuất bản đều phải tuân thủ nghiêm ngặt ranh giới đó. Hai Vault tách biệt thì không thể rò rỉ dữ liệu sang nhau, và cái giá duy nhất phải trả chỉ là việc chọn mở đúng Vault khi làm việc.
 
-## Local models for sensitive material
+## Dùng mô hình cục bộ (Local models) cho tài liệu nhạy cảm
 
-If a category of material should not leave your machine at all, a local model
-handles ingestion for that vault. Quality is lower than a frontier model, which
-is the trade.
+Nếu một nhóm tài liệu tuyệt đối không được phép rời khỏi máy tính của bạn, hãy dùng một mô hình chạy cục bộ để xử lý khâu Ingest cho Vault đó. Chất lượng sẽ thấp hơn so với các mô hình hàng đầu (frontier models), và đó là sự đánh đổi tất yếu.
 
-Worth it for medical, legal or financial material. Usually not worth it for
-articles about software.
+Sự đánh đổi này hoàn toàn xứng đáng đối với tài liệu y tế, pháp lý hoặc tài chính. Nhưng thường là không đáng đối với các bài viết về phần mềm thông thường.
 
-## Publishing
+## Xuất bản
 
-Explicit opt-in only. See [publishing and
-export](../08-outputs/publishing-and-export.md).
+Chỉ áp dụng cơ chế chủ động chọn (explicit opt-in). Xem thêm [xuất bản và trích xuất](../08-outputs/publishing-and-export.md).
 
-## Before sharing a vault
+## Trước khi chia sẻ một Vault
 
-Search it for keys, run through the frontmatter for personal identifiers, and
-read the log for what was ingested from where. Once shared, it is out, and the
-graph makes it easy for a reader to assemble a picture you did not intend to
-give.
+Hãy tìm kiếm toàn bộ Vault để rà soát các khóa bảo mật (keys), kiểm tra kỹ Frontmatter xem có chứa thông tin định danh cá nhân hay không, và đọc lại file nhật ký (`log.md`) để biết những gì đã được Ingest từ nguồn nào. Một khi đã chia sẻ ra ngoài là không thể thu hồi, và cấu trúc Knowledge graph sẽ giúp người đọc dễ dàng ghép nối các mảnh thông tin thành một bức tranh toàn cảnh mà bạn không hề có ý định tiết lộ.
 
-## Next
+## Tiếp theo
 
-[Scaling past a thousand pages](scaling.md)
+[Mở rộng quy mô vượt ngưỡng một nghìn trang](scaling.md)

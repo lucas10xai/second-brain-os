@@ -1,7 +1,7 @@
 ---
-description: Export the graph for outside analysis
+description: Xuất đồ thị để phân tích bên ngoài
 ---
 
-Run `scripts/graph_export.py` for $ARGUMENTS, defaulting to CSV edges, and summarise what the export contains.
+Chạy `scripts/graph_export.py` cho $ARGUMENTS (mặc định xuất ra danh sách cạnh dạng CSV) và tóm tắt nội dung bản xuất.
 
-Follow the `second-brain-graph` skill.
+Thực hiện theo skill `second-brain-graph`.

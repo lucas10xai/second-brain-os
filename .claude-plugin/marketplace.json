@@ -4,12 +4,12 @@
     "name": "undefinedKi",
     "url": "https://x.com/undefinedKi"
   },
-  "description": "Plugins from the Second Brain OS repo and its agents course.",
+  "description": "Các plugin từ kho mã nguồn Second Brain OS và khóa học xây dựng Agent đi kèm.",
   "plugins": [
     {
       "name": "agents-course",
       "source": "./plugins/agents-course",
-      "description": "Tools from the agents course: audit your context, write done as a script, bootstrap your eval suite, and a loop critic agent."
+      "description": "Bộ công cụ từ khóa học Agent: kiểm toán ngữ cảnh, viết tiêu chí hoàn thành dưới dạng script, khởi tạo bộ kiểm thử đánh giá (eval suite), và agent phản biện vòng lặp (loop critic)."
     }
   ]
 }

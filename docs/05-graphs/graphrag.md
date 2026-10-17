@@ -1,61 +1,35 @@
-# GraphRAG and where it fits
+# GraphRAG và vị trí của nó
 
-GraphRAG is the approach of building a graph from a corpus first, then answering
-questions against the graph rather than against raw chunks. Microsoft Research
-published the best-known version, "From Local to Global: A Graph RAG Approach to
-Query-Focused Summarization".
+`GraphRAG` là phương pháp xây dựng một đồ thị từ kho dữ liệu trước, sau đó trả lời các câu hỏi dựa trên đồ thị đó thay vì dựa trên các phân đoạn văn bản thô (raw chunks). Microsoft Research đã công bố phiên bản nổi tiếng nhất của phương pháp này trong bài báo *"From Local to Global: A Graph RAG Approach to Query-Focused Summarization"*.
 
-The pipeline, in outline: extract entities and relationships from every
-document, build a graph, detect communities of densely connected entities,
-summarise each community, and answer questions by drawing on the community
-summaries rather than on retrieved passages.
+Quy trình tổng quát: trích xuất các thực thể và mối quan hệ từ mọi tài liệu, xây dựng đồ thị, phát hiện các cộng đồng (communities) gồm những thực thể kết nối dày đặc với nhau, tóm tắt từng cộng đồng, và trả lời câu hỏi bằng cách dựa trên các bản tóm tắt cộng đồng đó thay vì dựa trên các đoạn văn bản được truy xuất riêng lẻ.
 
-## Why it exists
+## Tại sao phương pháp này tồn tại
 
-It targets a specific failure of chunk retrieval: questions about the corpus as
-a whole. "What are the main themes here" cannot be answered by retrieving the
-five most similar chunks, because no chunk contains the answer. It has to be
-assembled from everything.
+Nó nhắm vào một điểm yếu cụ thể của việc truy xuất theo phân đoạn (chunk retrieval): những câu hỏi về toàn bộ kho dữ liệu nói chung. Câu hỏi kiểu *"Những chủ đề chính ở đây là gì?"* không thể được trả lời bằng cách lấy ra năm phân đoạn có độ tương đồng cao nhất, bởi vì chẳng có phân đoạn đơn lẻ nào chứa câu trả lời cả. Câu trả lời phải được lắp ghép từ tất cả mọi thứ.
 
-That class of question is exactly what people want from a second brain and
-exactly what similarity search is worst at.
+Nhóm câu hỏi đó chính xác là những gì mọi người mong muốn ở một `Second Brain`, và cũng chính xác là thứ mà tìm kiếm tương đồng (similarity search) làm tệ nhất.
 
-## What your vault already has
+## Những gì Vault của bạn đã có sẵn
 
-Read the pipeline again against a well-maintained wiki and most of it is already
-built.
+Hãy đọc lại quy trình trên và đối chiếu với một `wiki/` được duy trì tốt: hầu hết các thành phần đó thực chất đã được xây dựng sẵn rồi.
 
-Entity extraction is what ingestion does when it writes entity pages.
-Relationships are the wikilinks, with types if you added them. The graph is the
-vault. What is missing is the community layer: the detection of clusters and the
-summaries over them.
+Trích xuất thực thể chính là việc quá trình `Ingest` làm khi nó viết ra các trang thực thể (entity pages). Các mối quan hệ chính là các `Wikilink`, kèm theo kiểu quan hệ nếu bạn có sử dụng liên kết định kiểu. Đồ thị chính là `Vault` của bạn. Thứ duy nhất còn thiếu là tầng cộng đồng: việc tự động phát hiện các cụm (clusters) và viết bản tóm tắt bao quát lên chúng.
 
-And that missing piece has a manual equivalent you are already writing.
-Synthesis pages are community summaries, produced by a model that read the
-sources rather than by an algorithm clustering entities.
+Và mảnh ghép còn thiếu đó thực ra đã có một phiên bản thủ công tương đương mà bạn vốn đang viết hàng ngày. Các trang tổng hợp (synthesis pages) chính là các bản tóm tắt cộng đồng, được tạo ra bởi một mô hình đã đọc trực tiếp các tài liệu nguồn thay vì bởi một thuật toán gom cụm các thực thể.
 
-## Whether to run it
+## Có nên chạy GraphRAG hay không
 
-Probably not, at personal scale, and the honest reason is size. The approach
-earns its cost on corpora too large to have been curated by hand. A few thousand
-curated pages with real links do not need automated community detection to find
-their own themes; you can see the clusters in the graph view.
+Có lẽ là không, ở quy mô cá nhân, và lý do thẳng thắn nhất là vì kích thước dữ liệu. Phương pháp này chỉ bù đắp được chi phí của nó trên những kho dữ liệu quá lớn không thể biên tập thủ công. Vài nghìn trang đã được biên tập kỹ lưỡng với các liên kết thực sự thì không cần đến thuật toán phát hiện cộng đồng tự động mới tìm ra được chủ đề của chúng; bạn hoàn toàn có thể nhìn thấy các cụm đó ngay trên chế độ xem đồ thị (graph view).
 
-There is a case for it as an audit rather than as a retrieval system. Running
-community detection over your exported graph and comparing the algorithmic
-clusters against your synthesis pages tells you where the vault has themes you
-have not noticed. That is a once-a-quarter exercise, not infrastructure.
+Tuy nhiên, có một trường hợp đáng để dùng nó như một công cụ kiểm toán (audit) hơn là một hệ thống truy xuất. Việc chạy thuật toán phát hiện cộng đồng trên đồ thị đã xuất ra của bạn và so sánh các cụm do thuật toán tìm được với các trang tổng hợp hiện có sẽ cho bạn biết những nơi nào trong `Vault` đang hình thành các chủ đề lớn mà bạn chưa nhận ra. Đó là một bài tập nên làm mỗi quý một lần, chứ không phải là hạ tầng chạy thường trực.
 
-## Related research worth reading
+## Các nghiên cứu liên quan đáng đọc
 
-**HippoRAG** applies personalised PageRank over a knowledge graph for multi-hop
-questions, which is a more direct analogue of what an agent does walking links
-outward from a starting page.
+**HippoRAG** áp dụng thuật toán Personalized PageRank trên một `Knowledge graph` để giải quyết các câu hỏi đa bước nhảy (multi-hop questions) — đây là một mô hình tương đồng trực tiếp hơn nhiều với cách một `Agent` lần theo các liên kết tỏa ra từ một trang khởi đầu.
 
-Read the papers themselves rather than summaries of them. Both are specific
-about the conditions their results hold under, and those conditions are what
-decide whether the approach transfers to your situation.
+Hãy đọc trực tiếp các bài báo khoa học gốc thay vì chỉ đọc bản tóm tắt của chúng. Cả hai nghiên cứu đều nêu rất cụ thể những điều kiện mà tại đó kết quả của họ có giá trị, và chính những điều kiện đó mới là yếu tố quyết định liệu phương pháp này có áp dụng được vào tình huống của bạn hay không.
 
-## Next
+## Tiếp theo
 
-[Exporting the graph](exporting-your-graph.md)
+[Xuất dữ liệu đồ thị](exporting-your-graph.md)

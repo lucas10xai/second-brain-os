@@ -1,7 +1,7 @@
 ---
-description: The weekly review
+description: Tổng kết hàng tuần
 ---
 
-Last seven days: what was added, where attention went, what is unresolved, three things to do next.
+Trong bảy ngày qua: những gì đã được thêm mới, sự chú ý đã tập trung vào đâu, những vấn đề nào còn bỏ ngỏ, và ba việc cần làm tiếp theo.
 
-Follow the `second-brain-review` skill.
+Thực hiện theo skill `second-brain-review`.

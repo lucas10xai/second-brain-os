@@ -1,7 +1,7 @@
 ---
-description: Periodic review of what the vault learned
+description: Ôn tập định kỳ những gì kho tri thức đã học được
 ---
 
-Review the period in $ARGUMENTS, defaulting to seven days.
+Ôn tập và đánh giá khoảng thời gian được chỉ định trong $ARGUMENTS, mặc định là bảy ngày gần nhất.
 
-Follow the `second-brain-review` skill.
+Thực hiện theo skill `second-brain-review`.

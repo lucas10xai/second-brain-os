@@ -1,62 +1,47 @@
-# The agent writes garbage
+# Agent viết ra nội dung rác
 
-Pages that are technically about the right thing and useless to read.
+Những trang về mặt kỹ thuật thì đúng chủ đề đấy, nhưng đọc vào lại chẳng có chút giá trị nào.
 
-## Diagnose the source first
+## Chẩn đoán tài liệu nguồn trước tiên
 
-Before touching instructions, check the input. Open the file in `raw/` and read
-it.
+Trước khi sửa đổi các chỉ dẫn, hãy kiểm tra dữ liệu đầu vào. Hãy mở file tương ứng trong `raw/` và đọc thử nó.
 
-Half of the bad pages people blame on the agent come from a bad extraction: a PDF
-whose columns interleaved, an auto-caption transcript with no punctuation, a
-clipped page that captured the cookie banner instead of the article.
+Một nửa số trang chất lượng kém mà người dùng đổ lỗi cho Agent thực chất bắt nguồn từ khâu trích xuất văn bản tồi: một file PDF bị trộn lẫn các cột văn bản vào nhau, một bản Transcripts phụ đề tự động không hề có dấu câu, hay một trang lưu qua Web Clipper chỉ chụp được mỗi khung thông báo cookie thay vì nội dung bài viết.
 
-The agent cannot write a good page from mangled text, and it will not tell you it
-is struggling. See [PDFs](../03-ingestion/pdfs-and-books.md) and
-[transcripts](../03-ingestion/youtube-transcripts.md).
+Agent không thể viết ra một trang tốt từ một đoạn văn bản bị băm nát, và nó cũng sẽ không báo cho bạn biết là nó đang phải vật lộn với dữ liệu hỏng đâu. Xem thêm hướng dẫn xử lý [PDF và sách](../03-ingestion/pdfs-and-books.md) cùng [Transcripts từ YouTube](../03-ingestion/youtube-transcripts.md).
 
-## Then check CLAUDE.md
+## Sau đó kiểm tra CLAUDE.md
 
-If the source is clean, the page contract is the problem.
+Nếu tài liệu nguồn đã sạch sẽ, vấn đề nằm ở quy ước trang (page contract).
 
-The specific things that produce vague pages: no definition of what each page
-type contains, the word "summarise" anywhere, no instruction to write for a
-reader who has not seen the source, no requirement to link.
+Những nguyên nhân cụ thể tạo ra các trang viết mơ hồ, chung chung gồm: không định nghĩa rõ mỗi loại trang cần chứa những gì, xuất hiện từ "tóm tắt" (summarise) ở bất kỳ đâu trong chỉ dẫn, không yêu cầu viết cho một người đọc chưa từng xem tài liệu gốc, và không bắt buộc phải gắn liên kết.
 
-Rewrite the contract with the shape spelled out. See [page
-types](../04-structuring/page-types.md).
+Hãy viết lại quy ước trang với cấu trúc được quy định rõ ràng từng phần. Xem thêm [các loại trang](../04-structuring/page-types.md).
 
-## Add an example, not another rule
+## Thêm một ví dụ mẫu, thay vì thêm một quy tắc mới
 
-The highest-leverage fix and the least used. Put one good concept page in
-`CLAUDE.md`, in full, as the target.
+Đây là cách khắc phục có đòn bẩy cao nhất nhưng lại ít được sử dụng nhất. Hãy đưa nguyên văn một trang khái niệm mẫu mực vào trong `CLAUDE.md` để làm đích nhắm chuẩn.
 
-Rules describe the output abstractly and each new rule interacts with the others.
-One example communicates the target directly, and it is what a person would ask
-for if you told them to match a style.
+Các quy tắc chỉ mô tả kết quả đầu ra một cách trừu tượng, và mỗi quy tắc mới thêm vào lại va chạm với các quy tắc cũ. Một ví dụ cụ thể sẽ truyền tải trực tiếp hình mẫu mong muốn — và đó cũng chính là thứ một người bình thường sẽ hỏi xin nếu bạn yêu cầu họ viết theo một văn phong nhất định.
 
-## Ask what it was working from
+## Hỏi xem Agent đã dựa vào đâu để viết
 
 ```
-You wrote [[page]]. Which parts of the source did you use, and what did you leave
-out?
+Bạn đã viết trang [[page]]. Bạn đã sử dụng những phần nào trong tài liệu nguồn, và đã bỏ qua những phần nào?
 ```
 
-The answer usually identifies the problem immediately: it read a fragment, it
-could not tell what the source claimed versus reported, or the instructions
-pulled it toward summarising.
+Câu trả lời thường chỉ ra ngay nguyên nhân cốt lõi: hoặc là nó chỉ đọc được một mảnh nhỏ của tài liệu, hoặc nó không phân biệt được đâu là nhận định của tác giả gốc so với thông tin trích dẫn lại, hoặc các chỉ dẫn đã kéo nó về hướng viết tóm tắt chung chung.
 
-## Roll back and re-run
+## Hoàn tác và chạy lại
 
-Fix the contract, revert the bad pages, re-ingest.
+Sửa lại quy ước trang, hoàn tác các trang viết hỏng, rồi chạy Ingest lại từ đầu.
 
 ```bash
 git checkout HEAD~1 -- wiki/
 ```
 
-Do not patch the bad pages by hand. If the contract was wrong, every page from
-that run has the same flaw, and hand-fixing the three you noticed leaves the rest.
+Đừng tự tay ngồi vá lại từng trang hỏng. Nếu quy ước trang đã sai, thì mọi trang sinh ra từ lượt chạy đó đều mắc chung một khuyết điểm, và việc sửa thủ công ba trang bạn tình cờ thấy sẽ bỏ sót toàn bộ phần còn lại.
 
-## Next
+## Tiếp theo
 
-[Broken links and orphans](broken-links.md)
+[Liên kết gãy và các trang mồ côi](broken-links.md)

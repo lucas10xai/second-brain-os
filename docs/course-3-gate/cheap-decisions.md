@@ -1,34 +1,34 @@
-# Cheap Decisions
+# Những quyết định chi phí thấp
 
-An agent does two kinds of work. It writes — summaries, plans, replies, code — and it decides — is this urgent, which folder does this belong in, does this need a person. Writing is open-ended and genuinely needs a large model. Deciding is bounded: the answer comes from a set you already know. Most pipelines send both kinds of work to the same frontier model, which is paying the lawyer to sort the envelopes.
+Một `Agent` thực hiện hai loại công việc khác nhau. Nó viết — viết bản tóm tắt, kế hoạch, câu trả lời, mã nguồn — và nó ra quyết định — việc này có khẩn cấp không, tài liệu này thuộc về thư mục nào, trường hợp này có cần con người can thiệp không. Viết là tác vụ mở (open-ended) và thực sự cần đến một mô hình ngôn ngữ lớn. Ngược lại, ra quyết định là tác vụ đóng (bounded): câu trả lời chỉ nằm trong một tập hợp các lựa chọn mà bạn đã biết trước. Hầu hết các đường ống xử lý (pipelines) hiện nay đều đẩy cả hai loại công việc này cho cùng một mô hình tiên tiến đắt đỏ nhất (frontier model), chẳng khác nào thuê một luật sư cao cấp chỉ để ngồi phân loại phong bì thư.
 
-This module is about the gate: a cheap decision layer that sits in front of the expensive model and sorts the stream, so the frontier model only sees the items that actually need judgement.
+Học phần này bàn về `Gate` (cổng phân luồng): một tầng ra quyết định chi phí thấp nằm ngay phía trước mô hình đắt tiền để phân loại luồng dữ liệu đầu vào, giúp mô hình lớn chỉ phải nhìn thấy những mục thực sự đòi hỏi khả năng phán đoán sâu.
 
 
-A note on names: the module is called the gate, after the pattern. Its deep-dive handbook is [Jev engineering](../track-jev/system-one-models.md), after the class of System One models that most often stands in the gate — the pattern and one strong way to build it.
+Một lưu ý nhỏ về tên gọi: học phần này được đặt tên là `Gate`, gọi theo tên của mẫu kiến trúc (pattern). Còn cuốn cẩm nang chuyên sâu đi kèm có tên là [Kỹ thuật Jev (Jev engineering)](../track-jev/system-one-models.md), đặt theo tên dòng mô hình `System One` thường được dùng nhất để trấn giữ vị trí `Gate` này — tức là mối quan hệ giữa một mẫu kiến trúc và một công cụ mạnh mẽ để hiện thực hóa nó.
 
-## Two kinds of work
+## Hai loại công việc
 
-Watch an agent process an inbox and count the decisions. Is this spam. Is this a newsletter. Which project does it touch. Does it need a reply. Only after all of that does any writing happen — and for most items it never does; the item is filed, archived, or dropped. A frontier model answering "is this a newsletter" burns seconds and real money to produce one bit of information. The decision was worth a fraction of a cent. The writing, on the rare item that needs it, is worth the full price.
+Hãy quan sát một `Agent` xử lý hộp thư đến và đếm số lượng các quyết định diễn ra. Đây có phải thư rác (spam) không? Đây có phải bản tin định kỳ (newsletter) không? Email này liên quan đến dự án nào? Có cần phải viết thư trả lời không? Chỉ sau khi trả lời xong tất cả những câu hỏi đó thì việc viết lách mới bắt đầu — và đối với phần lớn email, việc viết lách thậm chí không bao giờ xảy ra; bức thư chỉ đơn giản được phân vào thư mục, lưu trữ hoặc xóa bỏ. Việc dùng một mô hình tiên tiến nhất chỉ để trả lời câu hỏi "đây có phải là newsletter không" sẽ đốt mất hàng giây đồng hồ và tiền bạc thật chỉ để tạo ra đúng một bit thông tin. Quyết định phân loại đó đáng giá chưa tới một phần nhỏ của một xu. Trong khi đó, việc soạn thảo nội dung — trên số ít những mục thực sự cần đến nó — mới xứng đáng để trả mức giá đầy đủ.
 
-## What a gate is
+## Gate là gì
 
-A gate asks one narrow question per item and routes on the answer. The shape is always the same: everything comes in; each item gets a bounded question — one of these labels, yes or no, a score; items the gate answers confidently and routinely are handled by cheap deterministic code; anything the gate is unsure about goes through to the main model. Unsure means escalate. The gate is never the only path, only the fast one.
+Một `Gate` chỉ đặt ra đúng một câu hỏi hẹp cho mỗi mục dữ liệu và điều hướng luồng đi dựa trên câu trả lời nhận được. Hình thái hoạt động luôn cố định: mọi dữ liệu đi vào; mỗi mục nhận một câu hỏi đóng — chọn một trong các nhãn cho sẵn, trả lời có hoặc không, hoặc chấm một thang điểm; những mục mà `Gate` trả lời được một cách tự tin và quen thuộc sẽ được xử lý ngay bằng các đoạn code tất định (deterministic) siêu rẻ; bất cứ mục nào mà `Gate` không chắc chắn sẽ được chuyển tiếp vào trong cho mô hình chính. Không chắc chắn đồng nghĩa với việc chuyển giao lên tuyến trên (escalate). `Gate` không bao giờ là con đường duy nhất, nó chỉ là làn đường cao tốc mà thôi.
 
 
 ![](fig-gate.svg)
 
-## The taxonomy of gates
+## Phân loại các công cụ làm Gate
 
-Four tools, in rising order of cost and fallibility:
+Có bốn công cụ phổ biến, xếp theo thứ tự chi phí và độ phức tạp tăng dần:
 
-- **Rules.** Regular expressions, sender allowlists, "has an unsubscribe link". Free, instant, and blind to anything you did not anticipate. Always the first layer, never the last.
-- **A classic classifier.** Logistic regression or similar over TF-IDF features, trained on a few hundred of your own labelled examples. Runs in microseconds on your own machine, costs nothing per call, and its mistakes are inspectable.
-- **A small LLM.** A Haiku-class model prompted to answer with one word. No training data needed and it copes with novelty, but it is the slowest and dearest of the cheap options, and you must parse text to get your answer.
-- **A System One model.** Jev, released by TypeSafe AI in September 2026, is the first of these: typed decisions — yes/no, one of up to 255 options, or a scalar on an ordered scale — each with a confidence score, and no text generation at all. Background in [system one models](../track-jev/system-one-models.md).
+- **Tập luật cứng (Rules).** Biểu thức chính quy (regex), danh sách người gửi được phép (allowlists), kiểm tra xem "có chứa liên kết hủy đăng ký (unsubscribe) hay không". Miễn phí, tức thời, nhưng hoàn toàn mù tịt trước bất kỳ tình huống nào bạn chưa kịp lường trước. Luôn luôn là lớp phòng tuyến đầu tiên, nhưng không bao giờ là lớp cuối cùng.
+- **Bộ phân loại cổ điển (Classic classifier).** Hồi quy logistic (Logistic regression) hoặc các thuật toán tương tự chạy trên đặc trưng TF-IDF, được huấn luyện từ vài trăm mẫu dữ liệu đã gán nhãn của chính bạn. Chạy mất vài micro-giây ngay trên máy cá nhân, không tốn chi phí cho mỗi lần gọi, và khi nó đoán sai, bạn hoàn toàn có thể mổ xẻ nguyên nhân.
+- **Mô hình LLM nhỏ.** Một mô hình cỡ Haiku được viết prompt để trả lời bằng đúng một từ duy nhất. Không cần dữ liệu huấn luyện trước và xử lý tốt các tình huống mới lạ, nhưng lại chậm nhất và đắt nhất trong nhóm các lựa chọn giá rẻ, đồng thời bạn phải viết code bóc tách văn bản (parse text) để lấy được câu trả lời.
+- **Mô hình `System One`.** `Jev`, do TypeSafe AI phát hành vào tháng 9/2026, là đại diện đầu tiên của dòng này: đưa ra các quyết định có kiểu dữ liệu chặt chẽ (typed decisions) — có/không, chọn một trong tối đa 255 phương án, hoặc trả về một giá trị vô hướng trên thang đo có thứ tự — mỗi kết quả đều đi kèm điểm số độ tự tin (confidence score) và hoàn toàn không sinh văn bản. Kiến thức nền tảng về dòng mô hình này nằm ở bài [các mô hình System One](../track-jev/system-one-models.md).
 
-## Where gates belong
+## Nên đặt Gate ở đâu
 
-Anywhere the stream fans in. At ingestion, before anything reaches the main agent: spam, duplicates, and pure reference material should never cost a frontier token. Before expensive tool calls: "does this query need the web" is a gate. And around actions, as guardrails: "is this destructive" as a yes/no, blocked above a threshold. Layer them — rules first, classifier second, model only for what survives the first two.
+Ở bất cứ nơi nào luồng dữ liệu đổ dồn vào. Ngay tại cổng tiếp nhận dữ liệu (ingestion), trước khi bất cứ thứ gì chạm tới `Agent` chính: thư rác, dữ liệu trùng lặp và các tài liệu tham khảo thuần túy không bao giờ được phép tiêu tốn dù chỉ một token của mô hình lớn. Đặt trước các lệnh gọi công cụ đắt đỏ: câu hỏi "truy vấn này có cần tìm kiếm trên web không" chính là một `Gate`. Và đặt bao quanh các hành động thực thi như những rào chắn bảo vệ (`Guardrails`): kiểm tra "hành động này có tính phá hủy dữ liệu không" dưới dạng câu hỏi có/không, và chặn đứng ngay nếu vượt ngưỡng rủi ro. Hãy xếp chồng chúng thành nhiều lớp — luật cứng đi trước, bộ phân loại đứng thứ hai, và chỉ gọi mô hình lớn cho những gì lọt qua được hai lớp đầu.
 
-The gate is an architecture decision, not a vendor decision. The architecture — narrow question, cheap answer, escalate on doubt — stays the same whichever tool fills the slot. Which tool that should be is an empirical question you answer with your own labels, and it is the subject of the next page: [gates in practice](gates-in-practice.md).
+Việc sử dụng `Gate` là một quyết định về mặt kiến trúc, không phải quyết định chọn nhà cung cấp (vendor). Kiến trúc cốt lõi — câu hỏi hẹp, câu trả lời rẻ, chuyển giao lên tuyến trên khi nghi ngờ — luôn giữ nguyên bất kể bạn lắp công cụ nào vào vị trí đó. Còn việc nên chọn công cụ cụ thể nào là một câu hỏi thực nghiệm mà bạn phải trả lời bằng chính bộ dữ liệu đã gán nhãn của mình, và đó cũng là chủ đề của trang tiếp theo: [Ứng dụng Gate trong thực tế](gates-in-practice.md).

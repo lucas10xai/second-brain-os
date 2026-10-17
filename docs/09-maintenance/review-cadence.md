@@ -1,65 +1,48 @@
-# Review cadence
+# Nhịp độ rà soát định kỳ
 
-Lint keeps the structure sound. Review is what keeps you in the loop, and it is
-the only maintenance task that produces something you read rather than something
-that happens.
+Lint giữ cho cấu trúc luôn vững vàng. Còn rà soát định kỳ (Review) là thứ giữ cho chính bạn luôn nắm bắt được mạch thông tin, và đây cũng là tác vụ bảo trì duy nhất tạo ra thứ để bạn đọc thay vì chỉ âm thầm chạy ngầm.
 
-## Weekly, ten minutes
+## Hàng tuần: mười phút
 
-The agent prepares it; you read it.
+Agent chuẩn bị nội dung; bạn là người đọc.
 
 ```
 /review
 ```
 
-What comes back: what was added, which concepts gained the most links,
-contradictions recorded and still unresolved, open questions, and three specific
-things to read or write next.
+Những gì được trả về gồm: nội dung nào mới được thêm vào, những khái niệm nào nhận được nhiều liên kết mới nhất, các mâu thuẫn đã được ghi nhận nhưng vẫn chưa giải quyết, các câu hỏi còn bỏ ngỏ, và ba gợi ý cụ thể về những thứ nên đọc hoặc viết tiếp theo.
 
-The clusters are the part worth attention. Where your links went last week is
-where your attention actually was, which is reliably different from where you
-think it was.
+Các cụm liên kết mới tập trung (clusters) là phần đáng chú ý nhất. Nơi mà các liên kết của bạn đổ về trong tuần qua chính là nơi sự chú ý thực sự của bạn hướng tới — và nó thường khác xa so với những gì bạn vẫn tưởng mình đang tập trung vào.
 
-## Monthly, structurally
+## Hàng tháng: nhìn vào cấu trúc
 
-Once a month, look at the vault rather than the week:
+Mỗi tháng một lần, hãy nhìn vào tổng thể Vault thay vì chỉ nhìn vào một tuần vừa qua:
 
-- The four [metrics](../05-graphs/metrics.md), appended to a note so you have a
-  trend
-- Concept pages untouched in ninety days while their topic kept getting sources
-- The Gaps list in `index.md`, which is a reading list you generated without
-  trying
-- One local graph of a page you wrote recently, as a spot check on linking
-  quality
+- Bốn [chỉ số đo lường](../05-graphs/metrics.md), được nối thêm vào một trang ghi chú để bạn theo dõi xu hướng biến đổi
+- Các trang khái niệm không được chạm tới trong suốt chín mươi ngày dù chủ đề của chúng vẫn liên tục nhận thêm tài liệu nguồn mới
+- Danh sách Gaps trong `index.md` — đây chính là danh sách tài liệu cần đọc mà bạn đã tự tạo ra một cách tự nhiên mà không cần cố gắng
+- Một đồ thị cục bộ (local graph) của một trang bạn mới viết gần đây, dùng làm bước kiểm tra xác suất về chất lượng gắn liên kết
 
-## Quarterly, honestly
+## Hàng quý: thành thật với chính mình
 
-Two questions.
+Có hai câu hỏi cần trả lời.
 
-**What have I changed my mind about?** Only answerable because of the
-[supersession rules](../04-structuring/contradictions-and-supersession.md), and
-worth the whole system on its own.
+**Tôi đã thay đổi suy nghĩ về điều gì?** Câu hỏi này chỉ có thể trả lời được nhờ [quy tắc thay thế thông tin cũ](../04-structuring/contradictions-and-supersession.md), và chỉ riêng giá trị của nó thôi đã đủ bù đắp công sức xây dựng toàn bộ hệ thống này.
 
-**What am I keeping that I will never use?** Archive it. A vault carrying dead
-material makes every query slightly worse, forever.
+**Tôi đang giữ lại thứ gì mà mình sẽ chẳng bao giờ dùng đến?** Hãy đưa chúng vào kho lưu trữ (archive). Một Vault ôm đồm đầy những tư liệu chết sẽ làm cho mọi câu truy vấn tệ đi một chút, mãi mãi.
 
-## What to prune
+## Những gì cần cắt tỉa
 
-Sources for topics you no longer care about: archive rather than delete, they
-cost nothing in `raw/` and the wiki pages can go.
+Các tài liệu nguồn thuộc những chủ đề bạn không còn quan tâm nữa: hãy đưa vào lưu trữ thay vì xóa hẳn; chúng chẳng tốn bao nhiêu chỗ trong `raw/` còn các trang trong `wiki/` thì có thể dọn đi.
 
-Concept pages that never got a second source: usually means the idea was not
-actually important to you.
+Các trang khái niệm không bao giờ có thêm được tài liệu nguồn thứ hai: điều này thường có nghĩa là ý tưởng đó thực chất không quan trọng với bạn đến thế.
 
-Nothing that is linked. A page five others depend on is load-bearing regardless
-of how it reads.
+Đừng xóa bất kỳ trang nào đang được nhiều nơi khác liên kết tới. Một trang mà năm trang khác phụ thuộc vào là một trang trụ cột, bất kể nội dung bản thân nó trông như thế nào.
 
-## Keep the review short
+## Giữ cho bản rà soát luôn ngắn gọn
 
-A review that lists everything gets skimmed and then ignored. Three
-recommendations, not ten. If a week produced nothing worth reporting, one line
-saying so is the correct output.
+Một bản rà soát liệt kê tất cả mọi thứ sẽ chỉ được đọc lướt qua rồi bị bỏ xó. Chỉ nêu ba khuyến nghị, đừng nêu mười. Nếu một tuần trôi qua mà không có gì đáng báo cáo, một dòng duy nhất thông báo điều đó chính là kết quả đầu ra chuẩn xác nhất.
 
-## Next
+## Tiếp theo
 
-[Versioning](versioning-with-git.md)
+[Quản lý phiên bản với Git](versioning-with-git.md)

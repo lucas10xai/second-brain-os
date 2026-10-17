@@ -1,7 +1,7 @@
 ---
-description: Ingest book or article highlights
+description: Nạp các đoạn tô sáng (highlights) từ sách hoặc bài viết
 ---
 
-Ingest the highlights in $ARGUMENTS as one source page per book, then build concept pages from the ideas rather than the quotes. Keep quotes short and cited.
+Nạp các đoạn tô sáng trong $ARGUMENTS thành một trang nguồn cho mỗi cuốn sách, sau đó xây dựng các trang khái niệm dựa trên ý tưởng thay vì chỉ chép lại câu trích dẫn. Giữ các trích dẫn ngắn gọn và có ghi nguồn đầy đủ.
 
-Follow the `second-brain-ingest` skill.
+Thực hiện theo skill `second-brain-ingest`.

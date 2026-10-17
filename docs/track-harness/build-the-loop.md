@@ -1,14 +1,14 @@
-# Build: the Loop
+# Thực hành: Vòng lặp (Loop)
 
-The [anatomy page](what-a-harness-is.md) claims the core of every harness is a while-loop. This page proves it. In roughly seventy lines of Python you get an agent that reads files and runs commands against the live Claude API; the [next part](build-guardrails.md) adds the machinery that makes it a harness. Budget an evening for all three pages, about 150 lines total.
+Trang [cấu trúc giải phẫu](what-a-harness-is.md) đã khẳng định phần lõi của mọi `Harness` chỉ là một vòng lặp `while`. Trang này sẽ chứng minh điều đó bằng mã nguồn thực tế. Chỉ với khoảng bảy mươi dòng mã Python, bạn sẽ có ngay một `Agent` biết đọc tệp tin và chạy các câu lệnh hệ thống thông qua Claude API trực tiếp; còn [phần tiếp theo](build-guardrails.md) sẽ lắp thêm các cơ chế bảo vệ để biến nó thành một bộ `Harness` thực thụ. Hãy dành ra một buổi tối cho trọn bộ cả ba trang thực hành, tổng cộng chỉ khoảng 150 dòng mã.
 
-You need Python 3.10+, `pip install anthropic` (the 1.x SDK), and `ANTHROPIC_API_KEY` set in your environment.
+Bạn cần cài sẵn Python 3.10 trở lên, chạy `pip install anthropic` (bộ SDK nhánh 1.x), và thiết lập biến môi trường `ANTHROPIC_API_KEY`.
 
-## Two tools
+## Hai công cụ cơ bản
 
-Tools are JSON schemas plus functions. The descriptions matter as much as the code — the model chooses by reading them, a point [tools and MCP](tools-and-mcp.md) makes at length.
+Công cụ (`Tool use`) thực chất là các lược đồ JSON cộng với các hàm xử lý tương ứng. Phần văn bản mô tả quan trọng không kém gì mã nguồn — mô hình chọn công cụ bằng cách đọc mô tả đó, một nguyên tắc mà bài [công cụ (Tools) và MCP](tools-and-mcp.md) đã phân tích rất kỹ.
 
-## The code
+## Mã nguồn triển khai
 
 ```python
 import json
@@ -91,12 +91,12 @@ if __name__ == "__main__":
     agent(" ".join(sys.argv[1:]) or "List the files here and describe this project.")
 ```
 
-## What each part is doing
+## Từng bộ phận đang làm gì
 
-The API signals its intent through `stop_reason`. While it says `tool_use`, the response contains `tool_use` blocks — each with an `id`, a `name` and a parsed `input` dict. You append the assistant's entire `response.content` back unchanged (current models include thinking blocks that must travel with it), execute every tool call, and return all results as `tool_result` blocks in a single user message, matched by `tool_use_id`. Failures go back too, flagged with `is_error` — a good error message lets the model recover in one turn instead of guessing.
+API báo hiệu ý định tiếp theo của mô hình thông qua trường `stop_reason`. Chừng nào giá trị này còn là `tool_use`, phản hồi trả về sẽ chứa các khối `tool_use` — mỗi khối mang một định danh `id`, một tên công cụ `name` và một từ điển tham số đầu vào `input` đã được phân tích cú pháp. Bạn nối nguyên vẹn toàn bộ `response.content` của phía assistant vào lại danh sách lịch sử mà không chỉnh sửa gì (các mô hình hiện tại có kèm theo cả các khối suy nghĩ `thinking` bắt buộc phải đi cùng nhau), thực thi từng lệnh gọi công cụ, rồi gói tất cả kết quả trả về dưới dạng các khối `tool_result` nằm trong một tin nhắn `user` duy nhất, khớp nối chính xác qua mã `tool_use_id`. Nếu có lỗi xảy ra khi chạy công cụ, thông báo lỗi cũng được gửi trả lại kèm cờ `is_error: True` — một thông báo lỗi rõ ràng sẽ giúp mô hình tự sửa sai ngay ở lượt kế tiếp thay vì phải đoán mò.
 
-Save it as `agent.py`, run `python agent.py "find the TODO comments in this repo and summarise them"`, and watch the loop go round. Thorsten Ball's tutorial in [resources](resources.md) does the same in Go; seeing it in your own terminal is the point.
+Hãy lưu đoạn mã trên thành tệp `agent.py`, chạy lệnh `python agent.py "find the TODO comments in this repo and summarise them"`, và tận mắt quan sát vòng lặp (`Loop`) vận hành. Bài hướng dẫn của Thorsten Ball trong trang [tài nguyên tham khảo](resources.md) cũng làm điều tương tự bằng ngôn ngữ Go; việc nhìn thấy nó tự chạy ngay trên cửa sổ dòng lệnh của chính bạn chính là mục tiêu lớn nhất của bước này.
 
-## What it is not, yet
+## Những gì nó vẫn chưa có
 
-This is a demo. It will run any command the model fancies, and a long task will grow the transcript without limit. Fixing those two things — permissions and context — is [part two](build-guardrails.md).
+Đây mới chỉ là một bản demo. Nó sẽ răm rắp chạy bất kỳ câu lệnh nào mà mô hình hứng lên yêu cầu, và nếu gặp một tác vụ dài hơi thì biên bản hội thoại sẽ phình to không giới hạn. Việc khắc phục hai điểm yếu chí mạng đó — kiểm soát quyền hạn và quản lý ngữ cảnh — sẽ nằm ở [phần hai](build-guardrails.md).

@@ -1,55 +1,37 @@
-# Subagents and parallel work
+# Subagents và xử lý song song
 
-Subagents run with their own context. That is the whole point: a subagent
-reading thirty pages to answer a question does not fill the main session's
-context with those thirty pages, only with the answer.
+Các `Subagents` chạy với `Context window` riêng biệt của chính chúng. Đó là toàn bộ ý nghĩa cốt lõi của cơ chế này: một subagent đọc ba mươi trang để trả lời một câu hỏi sẽ không làm đầy `Context window` của phiên làm việc chính bằng cả ba mươi trang đó, mà chỉ trả về duy nhất câu trả lời cuối cùng.
 
-## When to fan out
+## Khi nào nên phân nhánh song song (Fan out)
 
-**Research across many pages.** Send a subagent to read a cluster and come back
-with a summary. The main session keeps its budget for the actual work.
+**Nghiên cứu xuyên suốt nhiều trang.** Hãy cử một subagent đi đọc toàn bộ một cụm chủ đề (cluster) và quay về với bản tóm tắt. Phiên làm việc chính sẽ giữ nguyên được ngân sách ngữ cảnh cho công việc thực sự đang làm.
 
-**Independent sources.** Ingesting ten unrelated articles parallelises cleanly,
-because none of them touch the same wiki pages.
+**Các tài liệu nguồn độc lập nhau.** Việc `Ingest` mười bài viết không liên quan gì đến nhau có thể chạy song song cực kỳ trơn tru, bởi vì không có bài nào chạm vào cùng một trang `wiki/` của nhau.
 
-**Verification.** One agent writes, another checks the pages against the sources.
-Separate context is what makes the check meaningful; the same agent rereading its
-own work mostly agrees with itself.
+**Kiểm chứng chéo (Verification).** Một `Agent` viết bài, một `Agent` khác kiểm tra lại các trang vừa viết đối chiếu với tài liệu nguồn. Ngữ cảnh tách biệt chính là thứ làm cho bước kiểm tra này thực sự có ý nghĩa; còn nếu để cùng một `Agent` tự đọc lại bài do chính nó vừa viết thì hầu như lúc nào nó cũng sẽ gật gù đồng ý với chính mình.
 
-## When not to
+## Khi nào KHÔNG nên chạy song song
 
-**Related sources.** Three articles about the same topic must be ingested
-sequentially. In parallel, each one creates the concept page independently and
-you get three versions of it, or two of them are overwritten.
+**Các tài liệu nguồn có liên quan đến nhau.** Ba bài viết cùng bàn về một chủ đề bắt buộc phải được `Ingest` tuần tự từng bài một. Nếu chạy song song, mỗi subagent sẽ tự tạo ra một trang khái niệm riêng một cách độc lập, và bạn sẽ nhận về hoặc là ba phiên bản khác nhau của cùng một khái niệm, hoặc là hai trong số đó bị ghi đè mất.
 
-**Anything touching the index.** `index.md` and `log.md` are single files that
-every run wants to append to. Parallel writes to them conflict or silently lose
-entries.
+**Bất kỳ thao tác nào chạm vào file chỉ mục.** `index.md` và `log.md` là những file đơn lẻ mà mọi lượt chạy đều muốn ghi nối tiếp (append) vào. Việc ghi song song cùng lúc vào hai file này sẽ gây xung đột dữ liệu hoặc âm thầm làm mất các dòng bản ghi.
 
-**Small jobs.** Spawning a subagent costs a full context setup. For two files it
-is slower than doing it directly.
+**Những tác vụ nhỏ.** Việc khởi tạo một subagent tiêu tốn chi phí thiết lập toàn bộ một ngữ cảnh mới. Chỉ để xử lý hai file thì chạy subagent còn chậm hơn là làm trực tiếp luôn trong phiên chính.
 
-## Merging parallel work
+## Hợp nhất kết quả từ các luồng song song
 
-The rule that avoids most conflicts: subagents write to disjoint paths, the
-parent merges.
+Quy tắc giúp tránh hầu hết các xung đột: các `Subagents` chỉ được ghi vào các đường dẫn tách biệt nhau (disjoint paths), còn `Agent` cha (parent) sẽ đảm nhận việc hợp nhất (merge).
 
-Have each subagent report what it would write rather than writing shared files
-directly. The parent applies the index and log updates in one pass, after all
-subagents return. Page files themselves are safe to write in parallel as long as
-two subagents were never given overlapping material.
+Hãy yêu cầu mỗi subagent báo cáo lại những gì nó dự định ghi đối với các file dùng chung thay vì tự ghi trực tiếp vào đó. `Agent` cha sẽ áp dụng toàn bộ các cập nhật cho `index.md` và `log.md` trong một lượt duy nhất, sau khi tất cả các `Subagents` đã hoàn thành và trả kết quả về. Bản thân các file trang nội dung thì hoàn toàn an toàn để ghi song song miễn là không có hai subagent nào được giao xử lý các tài liệu chồng lấp lên nhau.
 
-Commit before any parallel run. When it goes wrong, it goes wrong across many
-files at once.
+Hãy luôn tạo commit `Git` trước bất kỳ lượt chạy song song nào. Một khi có sự cố xảy ra trong xử lý song song, nó sẽ làm hỏng hàng loạt file cùng một lúc.
 
-## Cost
+## Chi phí
 
-Parallelism does not reduce total token use, it reduces wall-clock time and
-protects the main context. Four subagents cost roughly four times one.
+Xử lý song song không hề làm giảm tổng lượng token tiêu thụ; nó chỉ giúp giảm thời gian chờ đợi thực tế (wall-clock time) và bảo vệ `Context window` của phiên chính. Bốn `Subagents` sẽ tốn chi phí xấp xỉ gấp bốn lần so với một `Agent`.
 
-That trade is worth it for a large backfill and pointless for a daily ingest of
-five clipped articles.
+Sự đánh đổi đó hoàn toàn xứng đáng cho một đợt nạp bổ sung dữ liệu lớn (backfill), nhưng lại là vô nghĩa đối với công việc `Ingest` hàng ngày chỉ có năm bài viết lưu từ web.
 
-## Next
+## Tiếp theo
 
 [Hooks](hooks.md)

@@ -1,22 +1,22 @@
-# Loop practice: filter, loop, fall back
+# Thực hành Loop: lọc trước, lặp ngắn, dự phòng
 
-The production pattern is not "run the agent on everything". It is filter first, loop briefly, fall back. Atlan's engineering write-up of its on-call agent shows the shape at scale: a deterministic, non-LLM filter suppressed roughly 86% of about 11,000 alerts in a 30-day window before a single token was spent, so only around 14% ever reached the agent; the agent then reasoned for about three cycles, and when confidence stayed below roughly 50% it escalated to a deterministic fallback workflow in plain Python. Investigations that had taken over ten minutes and a few dollars came down to about two minutes and $0.28 each. Cheap code handles the common case; the model handles the residue; a fixed path catches whatever the model cannot close.
+Mô hình chuẩn trên môi trường `Production` không phải là "cho `Agent` chạy trên mọi thứ". Mà là: lọc trước (filter first), lặp ngắn gọn (loop briefly), và chuyển sang luồng dự phòng (fall back). Bài chia sẻ kỹ thuật của Atlan về `Agent` trực vận hành (on-call agent) của họ đã minh chứng rõ nét cấu trúc này ở quy mô lớn: một bộ lọc tất định không dùng LLM đã chặn trước khoảng 86% trên tổng số khoảng 11.000 cảnh báo trong vòng 30 ngày trước khi tốn bất kỳ một token nào, nhờ đó chỉ có khoảng 14% cảnh báo thực sự đi tới được `Agent`; sau đó `Agent` chỉ suy luận trong khoảng ba chu kỳ, và khi độ tự tin vẫn nằm dưới ngưỡng khoảng 50%, nó sẽ chuyển giao (escalate) sang một `Workflow` dự phòng tất định viết bằng Python thuần. Những cuộc điều tra sự cố trước đây từng mất hơn mười phút và tốn vài đô la nay giảm xuống chỉ còn khoảng hai phút và 0,28 đô la mỗi vụ. Code thông thường chi phí thấp xử lý các trường hợp phổ biến; mô hình xử lý phần phức tạp còn sót lại; và một luồng cố định sẽ đón lõng bất cứ thứ gì mô hình không thể tự khép lại.
 
 
-> The goal-test half of this pattern is packaged as a skill: install [the course plugin](../../plugins/README.md) and run `/agents-course:goal-test`; the checker role ships as the `loop-critic` agent.
+> Nửa phần kiểm tra mục tiêu (goal-test) của mô hình này đã được đóng gói thành một `Skill`: hãy cài đặt [plugin của khóa học](../../plugins/README.md) và chạy lệnh `/agents-course:goal-test`; vai trò `Checker` được cung cấp sẵn dưới dạng `Agent` `loop-critic`.
 
-One frame before the code: this build is the triage shape — filter, loop briefly, fall back. The other production shape, a loop wrapped around a coding agent and driven by a goal test, is the [loop handbook's build](../track-loop/build-goal-test.md); same four parts, different body.
+Một lưu ý định hình trước khi vào code: bản triển khai dưới đây mang hình thái phân loại sự cố (triage shape) — lọc trước, lặp ngắn, dự phòng. Hình thái `Production` phổ biến còn lại, nơi một `Loop` bọc bên ngoài một `Agent` lập trình và được dẫn dắt bởi bài kiểm tra mục tiêu, được trình bày chi tiết tại [bài thực hành trong cẩm nang chuyên sâu về Loop](../track-loop/build-goal-test.md); vẫn cùng bốn thành phần cốt lõi, chỉ khác phần thân thực thi.
 
-## The build
+## Xây dựng hệ thống
 
-The whole hybrid fits in one file. It runs as-is; swap `model_next_step` for a real API call and the control flow does not change.
+Toàn bộ kiến trúc lai (hybrid) này gói gọn trong một tập tin duy nhất. Code dưới đây có thể chạy trực tiếp ngay lập tức; khi triển khai thực tế, bạn chỉ cần thay hàm `model_next_step` bằng lệnh gọi API thật mà không cần sửa đổi luồng điều khiển (control flow).
 
 ```python
-"""Hybrid alert triage: deterministic filter, bounded loop, fixed fallback."""
+"""Phân loại cảnh báo lai (Hybrid alert triage): bộ lọc tất định, Loop có giới hạn, và luồng dự phòng cố định."""
 
-MAX_TURNS = 3          # Atlan runs about three reasoning cycles before escalating
-BUDGET_USD = 0.10      # spend ceiling per alert
-COST_PER_TURN = 0.02   # replace with real usage figures from your API responses
+MAX_TURNS = 3          # Atlan chạy khoảng ba chu kỳ suy luận trước khi chuyển giao (escalate)
+BUDGET_USD = 0.10      # trần chi tiêu tối đa cho mỗi cảnh báo
+COST_PER_TURN = 0.02   # thay bằng số liệu chi phí thực tế từ phản hồi API của bạn
 
 ALERTS = [
     {"id": 1, "source": "cron", "message": "nightly backup finished OK"},
@@ -25,31 +25,31 @@ ALERTS = [
 ]
 
 def prefilter(alert):
-    """Deterministic, costs nothing. Returns a verdict, or None for the loop."""
+    """Tất định, không tốn chi phí. Trả về kết luận ngay, hoặc trả về None để chuyển vào Loop."""
     message = alert["message"].lower()
     if alert["source"] == "cron" or "finished ok" in message:
         return {"cause": "known-benign pattern", "next_step": "close", "via": "filter"}
     return None
 
 def checker(diagnosis):
-    """External judge: a diagnosis must name a cause and a concrete next step."""
+    """Checker bên ngoài: bản chẩn đoán bắt buộc phải nêu rõ nguyên nhân và bước xử lý tiếp theo cụ thể."""
     return bool(diagnosis.get("cause")) and bool(diagnosis.get("next_step"))
 
 def model_next_step(alert, history):
-    """Stub standing in for the model call. Swap in a real API call here."""
+    """Hàm giả lập (stub) đại diện cho lệnh gọi mô hình. Hãy thay thế bằng lệnh gọi API thực tế tại đây."""
     if "timeout" in alert["message"].lower():
         return {"cause": "client timeout on /sync", "next_step": "raise limit to 60s"}
-    return {"cause": "", "next_step": ""}   # the stub cannot close this one
+    return {"cause": "", "next_step": ""}   # hàm giả lập không thể tự xử lý xong trường hợp này
 
 def fallback_workflow(alert):
-    """Fixed path, no model: always produces a defensible answer."""
+    """Luồng cố định, không dùng mô hình: luôn tạo ra phương án xử lý an toàn, đáng tin cậy."""
     return {"cause": "unresolved by agent", "next_step": "page on-call with raw alert",
             "via": "fallback"}
 
 def triage(alert):
     verdict = prefilter(alert)
     if verdict is not None:
-        return verdict                                   # most alerts stop here
+        return verdict                                   # phần lớn cảnh báo dừng lại ngay tại đây
     history, spent = [], 0.0
     for turn in range(MAX_TURNS):
         diagnosis = model_next_step(alert, history)
@@ -57,31 +57,31 @@ def triage(alert):
         spent += COST_PER_TURN
         if checker(diagnosis):
             diagnosis["via"] = "loop, turn %d" % (turn + 1)
-            return diagnosis                             # exit 1: checker passed
+            return diagnosis                             # lối thoát 1: vượt qua Checker
         if len(history) >= 2 and history[-1] == history[-2]:
-            break                                        # exit 2: spinning
+            break                                        # lối thoát 2: lặp tại chỗ (spinning)
         if spent > BUDGET_USD:
-            break                                        # exit 3: over budget
-    return fallback_workflow(alert)                      # every other exit lands here
+            break                                        # lối thoát 3: vượt ngân sách
+    return fallback_workflow(alert)                      # mọi lối thoát khác đều đổ về đây
 
 if __name__ == "__main__":
     for alert in ALERTS:
         print(alert["id"], triage(alert))
 ```
 
-Alert 1 never touches the model, alert 2 closes on the loop's first turn, and alert 3 spins twice and lands in the fallback. Every path returns the same shape, so the caller never knows which layer answered.
+Cảnh báo số 1 không bao giờ chạm tới mô hình, cảnh báo số 2 được giải quyết xong ngay ở lượt đầu tiên của `Loop`, còn cảnh báo số 3 bị lặp tại chỗ hai lần rồi rơi xuống luồng dự phòng (`fallback_workflow`). Mọi nhánh xử lý đều trả về cùng một cấu trúc dữ liệu đồng nhất, nhờ đó thành phần gọi hàm bên ngoài không cần bận tâm tầng nào đã đưa ra câu trả lời.
 
-## Tips
+## Mẹo thực chiến
 
-- Grow the filter, not the loop. Every diagnosis the loop produces twice is a candidate rule for `prefilter`.
-- Log `via` on every result. The ratio of filter to loop to fallback is your health metric; a rising fallback share means the loop is failing quietly.
-- Keep the fallback boring. Its job is a defensible answer with no model, not a second attempt at cleverness.
-- Make the checker stricter than feels polite — it is the only part the model cannot talk its way past. Hardening it against a real coding agent is [the goal test build page](../track-loop/build-goal-test.md); the full menu of brakes is [stop conditions](../track-loop/stop-conditions.md).
+- Hãy mở rộng bộ lọc chứ đừng mở rộng `Loop`. Bất kỳ chẩn đoán nào mà `Loop` tạo ra lặp lại tới lần thứ hai đều là ứng cử viên sáng giá để viết thành quy tắc cứng trong hàm `prefilter`.
+- Ghi log trường `via` trên mọi kết quả trả về. Tỷ lệ phân bổ giữa `filter`, `loop` và `fallback` chính là chỉ số đo lường sức khỏe hệ thống của bạn; nếu tỷ lệ rơi vào `fallback` tăng lên, nghĩa là `Loop` đang thất bại một cách âm thầm.
+- Giữ cho luồng dự phòng (`fallback`) thật đơn giản và nhàm chán. Nhiệm vụ của nó là đưa ra một phương án xử lý an toàn không cần mô hình, chứ không phải là nỗ lực tỏ ra thông minh lần thứ hai.
+- Hãy thiết kế `Checker` khắt khe hơn mức bạn cảm thấy lịch sự — bởi đó là chốt chặn duy nhất mà mô hình không thể dùng lời lẽ khéo léo để lách qua. Cách gia cố `Checker` đủ cứng rắn cho một `Agent` lập trình thực thụ được trình bày tại [trang xây dựng bài kiểm tra mục tiêu (goal test)](../track-loop/build-goal-test.md); và toàn bộ danh mục các cơ chế phanh hãm nằm ở bài [các điều kiện dừng (stop conditions)](../track-loop/stop-conditions.md).
 
-## Prove it to yourself
+## Tự mình kiểm chứng
 
-1. Run the file, then set `MAX_TURNS = 0` and run it again. Every unfiltered alert should land in the fallback — if anything crashes instead, an exit path was missing.
-2. Make `model_next_step` return the same wrong answer forever. Confirm the spin check exits on turn two, not turn three.
-3. Add a fourth alert your filter catches, and log how many model calls the whole batch now makes. That number falling while coverage holds is the entire economics of the pattern — and deciding which decisions deserve a model at all is the next module, [cheap decisions](../course-3-gate/cheap-decisions.md).
+1. Chạy thử tập tin trên, sau đó đặt `MAX_TURNS = 0` và chạy lại lần nữa. Mọi cảnh báo không được lọc bởi `prefilter` đều phải rơi vào nhánh dự phòng (`fallback`) — nếu chương trình bị văng lỗi (crash), nghĩa là bạn đã bỏ sót một lối thoát nào đó.
+2. Sửa hàm `model_next_step` sao cho nó luôn trả về cùng một kết quả sai mãi mãi. Hãy xác nhận rằng điều kiện kiểm tra lặp tại chỗ (`spinning`) sẽ ngắt vòng lặp ngay ở lượt thứ hai chứ không đợi đến lượt thứ ba.
+3. Thêm một cảnh báo thứ tư mà bộ lọc của bạn có thể bắt được, rồi ghi log xem toàn bộ lô dữ liệu hiện tại thực hiện bao nhiêu lệnh gọi mô hình. Khi con số lệnh gọi mô hình giảm xuống trong khi độ phủ xử lý vẫn giữ nguyên, bạn đã nắm được toàn bộ bài toán kinh tế của mô hình này — và việc quyết định xem những phán đoán nào thực sự xứng đáng để gọi mô hình sẽ là chủ đề của học phần tiếp theo: [những quyết định chi phí thấp](../course-3-gate/cheap-decisions.md).
 
-Go deeper → the [loop engineering handbook](../track-loop/what-loop-engineering-is.md): stop conditions, critics, context hygiene, and an overnight loop you can trust by morning.
+Tìm hiểu sâu hơn → [cẩm nang chuyên sâu về kỹ thuật thiết kế Loop](../track-loop/what-loop-engineering-is.md): các điều kiện dừng (`Stop condition`), bộ phê bình (`Critic`), vệ sinh ngữ cảnh, và cách thiết kế một `Loop` chạy xuyên đêm mà bạn có thể hoàn toàn yên tâm vào sáng hôm sau.

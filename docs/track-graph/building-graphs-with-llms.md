@@ -1,25 +1,25 @@
-# Building Graphs with LLMs
+# Xây dựng đồ thị bằng LLM
 
-Extraction is the whole game. A graph store will faithfully persist whatever you put in it; whether that is knowledge or noise is decided in the pipeline. This page is the practical shape of that pipeline.
+Trích xuất chính là toàn bộ cuộc chơi. Một kho lưu trữ đồ thị sẽ lưu giữ trung thành bất cứ thứ gì bạn đưa vào; việc thứ đó là tri thức hay rác nhiễu được quyết định ngay trong đường ống xử lý (pipeline). Trang này trình bày hình hài thực tế của đường ống đó.
 
-## Schema before extraction
+## Định hình lược đồ trước khi trích xuất
 
-Unconstrained extraction produces a junk drawer: `WORKS_AT`, `WORKS_FOR`, `EMPLOYED_BY` as three different edges for one fact. Decide the ontology first, even a small one — five entity types and ten relation types cover most personal and agent corpora. Every serious tool lets you pass this as a constraint: LangChain's [LLMGraphTransformer](https://reference.langchain.com/python/langchain-neo4j/graph_transformers/llm/LLMGraphTransformer) takes `allowed_nodes` and `allowed_relationships`; LlamaIndex's [property graph index](https://developers.llamaindex.ai/python/framework/module_guides/indexing/lpg_index_guide/) has a `SchemaLLMPathExtractor` that enforces types at extraction time.
+Trích xuất không ràng buộc sẽ tạo ra một ngăn kéo chứa đồ hỗn tạp: `WORKS_AT`, `WORKS_FOR`, `EMPLOYED_BY` trở thành ba cạnh khác nhau cho cùng một dữ kiện. Hãy quyết định bản thể luận (ontology) trước, dù chỉ là một bộ nhỏ — năm loại thực thể và mười loại quan hệ là đủ bao quát hầu hết kho ngữ liệu cá nhân và bộ nhớ Agent. Mọi công cụ nghiêm túc đều cho phép bạn truyền cấu hình này vào như một ràng buộc: [LLMGraphTransformer](https://reference.langchain.com/python/langchain-neo4j/graph_transformers/llm/LLMGraphTransformer) của LangChain nhận tham số `allowed_nodes` và `allowed_relationships`; [chỉ mục đồ thị thuộc tính](https://developers.llamaindex.ai/python/framework/module_guides/indexing/lpg_index_guide/) của LlamaIndex có `SchemaLLMPathExtractor` giúp ép kiểu ngay tại thời điểm trích xuất.
 
-Start narrower than feels right. Widening a schema later is cheap; collapsing a zoo of near-duplicate predicates is not.
+Hãy bắt đầu hẹp hơn mức bạn cảm thấy vừa vặn. Mở rộng lược đồ về sau rất rẻ; còn thu gọn một "vườn thú" gồm hàng tá vị ngữ gần giống nhau thì cực kỳ vất vả.
 
-## The extraction pass
+## Lượt chạy trích xuất
 
-The mechanics are stable across tools: chunk the source, prompt the model for typed triples plus a short description per entity, keep the provenance — which chunk, which document, which date each triple came from. Provenance is what lets you answer "why does the graph believe this" and delete edges when a source is retracted. Structured output modes make the parsing reliable; the residual failure is semantic, not syntactic, so sample and read a few dozen triples per batch rather than trusting the pass rate.
+Cơ chế vận hành khá ổn định giữa các công cụ: cắt nhỏ tài liệu nguồn (chunking), nhắc (prompt) mô hình xuất ra các bộ ba có định kiểu kèm mô tả ngắn cho từng thực thể, và giữ lại thông tin truy nguyên nguồn gốc (provenance) — bộ ba này đến từ đoạn cắt nào, tài liệu nào, vào ngày nào. Truy nguyên nguồn gốc là thứ giúp bạn trả lời câu hỏi "tại sao đồ thị lại tin vào điều này" và xóa bỏ các cạnh khi một nguồn tin bị rút lại. Các chế độ đầu ra có cấu trúc (structured output) giúp việc phân tích cú pháp luôn đáng tin cậy; lỗi còn sót lại nằm ở tầng ngữ nghĩa chứ không phải cú pháp, vì vậy hãy lấy mẫu và đọc kiểm tra vài chục bộ ba trên mỗi lô (batch) thay vì tin mù quáng vào tỷ lệ chạy thành công.
 
-## Incremental updates
+## Cập nhật tăng dần (Incremental updates)
 
-The original [GraphRAG](graphrag.md) pipeline assumed batch re-indexing, which is unaffordable for a corpus that changes daily. The current generation is built incremental-first. [Graphiti](https://github.com/getzep/graphiti) is the strongest design here: each new episode is extracted, checked against the existing graph, and contradicting edges are not deleted but marked invalid with a timestamp — the graph keeps both "true until March" and "true since March". For agent memory, that temporal layer is the difference between a memory and a cache.
+Đường ống [GraphRAG](graphrag.md) nguyên bản giả định việc lập chỉ mục lại theo lô (batch re-indexing), điều không thể kham nổi về chi phí đối với một kho ngữ liệu thay đổi hàng ngày. Thế hệ công cụ hiện tại được thiết kế ưu tiên cập nhật tăng dần ngay từ đầu. [Graphiti](https://github.com/getzep/graphiti) là thiết kế mạnh nhất ở mảng này: mỗi sự kiện (episode) mới được trích xuất, đối chiếu với đồ thị hiện có, và các cạnh mâu thuẫn không bị xóa đi mà được đánh dấu hết hiệu lực kèm dấu thời gian (timestamp) — đồ thị lưu giữ cả hai trạng thái "đúng cho đến tháng Ba" và "đúng từ tháng Ba trở đi". Đối với bộ nhớ của Agent, tầng thời gian đó chính là ranh giới phân biệt giữa một bộ nhớ thực thụ và một bộ đệm (cache).
 
-## Dedup and entity resolution
+## Khử trùng lặp và phân giải thực thể
 
-The same person arrives as `J. Smith`, `John Smith` and `john from ops`. Merge policy, in rising cost order: exact and normalised name matching; embedding similarity over entity descriptions with a threshold; an LLM adjudicating candidate pairs. Do the cheap tiers first and send only the ambiguous residue to the model. Resolve at write time — dedup as a later batch job means every query until then sees a fractured graph.
+Cùng một người có thể xuất hiện dưới tên `J. Smith`, `John Smith` và `john bên ops`. Chính sách hợp nhất, xếp theo thứ tự chi phí tăng dần: khớp tên chính xác và chuẩn hóa chuỗi; tính độ tương đồng Embeddings trên phần mô tả thực thể theo ngưỡng; dùng LLM phân xử các cặp ứng viên còn nhập nhằng. Hãy thực hiện các tầng chi phí thấp trước và chỉ gửi phần dư mơ hồ cho mô hình xử lý. Hãy phân giải ngay tại thời điểm ghi — nếu để việc khử trùng lặp thành một tác vụ chạy lô sau đó, mọi truy vấn diễn ra trước đợt chạy lô đều sẽ nhìn thấy một đồ thị bị phân mảnh.
 
-## Keep the loop small
+## Giữ vòng lặp nhỏ gọn
 
-Extract a hundred documents, look at the graph, fix the schema, re-run. The pipelines that fail are the ones that process the whole corpus before anyone looks. Where the result lives — embedded database, files, or plain wikilinks — is the subject of [graph stores](graph-stores.md), and the off-the-shelf implementations are surveyed in [tools](tools.md).
+Hãy trích xuất thử một trăm tài liệu, nhìn vào đồ thị, sửa lại lược đồ, rồi chạy lại. Những đường ống thất bại thường là những đường ống xử lý toàn bộ kho ngữ liệu trước khi có bất kỳ ai nhìn vào kết quả. Nơi lưu trữ kết quả đầu ra — cơ sở dữ liệu nhúng, tệp tin, hay các Wikilink thuần túy — là chủ đề của phần [kho lưu trữ đồ thị](graph-stores.md), và các bản cài đặt dựng sẵn được khảo sát chi tiết trong phần [công cụ](tools.md).

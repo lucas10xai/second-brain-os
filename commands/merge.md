@@ -1,7 +1,7 @@
 ---
-description: Merge two pages
+description: Gộp hai trang làm một
 ---
 
-Merge the pages named in $ARGUMENTS following the full procedure: survivor, claims, aliases, inbound links, log entry.
+Gộp các trang được nêu tên trong $ARGUMENTS theo đúng quy trình đầy đủ: chọn trang giữ lại, hợp nhất các nhận định, cập nhật `aliases`, chuyển hướng các liên kết trỏ đến, và ghi vào nhật ký.
 
-Follow the `second-brain-merge` skill.
+Thực hiện theo skill `second-brain-merge`.

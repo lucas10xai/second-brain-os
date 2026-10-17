@@ -1,7 +1,7 @@
 ---
-description: Set up scheduled maintenance
+description: Thiết lập lịch bảo trì định kỳ
 ---
 
-Propose a schedule for ingest, link, lint and review with the right cadence for this vault's volume, and the exact prompt for each task.
+Đề xuất lịch trình cho các tác vụ nạp (ingest), liên kết (link), kiểm toán (lint) và ôn tập (review) với tần suất phù hợp với khối lượng tài liệu của kho tri thức này, kèm theo câu lệnh (prompt) chính xác cho từng tác vụ.
 
-Follow the `second-brain-review` skill.
+Thực hiện theo skill `second-brain-review`.

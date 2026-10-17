@@ -1,7 +1,7 @@
 ---
-description: The monthly structural review
+description: Đánh giá cấu trúc hàng tháng
 ---
 
-Metrics with trend, stale concept pages, the gaps list, and one structural thing to fix.
+Tổng hợp các chỉ số kèm xu hướng biến động, danh sách các trang khái niệm lâu không cập nhật, danh sách các khoảng trống kiến thức, và một vấn đề cấu trúc quan trọng cần khắc phục.
 
-Follow the `second-brain-metrics` skill.
+Thực hiện theo skill `second-brain-metrics`.

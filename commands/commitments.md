@@ -1,7 +1,7 @@
 ---
-description: List open commitments
+description: Liệt kê các cam kết đang mở
 ---
 
-List commitments recorded in $ARGUMENTS with owners, and flag any with no clear next step.
+Liệt kê các cam kết được ghi nhận trong $ARGUMENTS kèm người phụ trách, và đánh dấu bất kỳ cam kết nào chưa có bước tiếp theo rõ ràng.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

@@ -1,7 +1,7 @@
 ---
-description: Ask a question answered only from the vault
+description: Đặt câu hỏi và chỉ trả lời từ dữ liệu trong kho tri thức
 ---
 
-Answer $ARGUMENTS from vault pages only. Cite every page. Name what the vault does not cover.
+Chỉ trả lời $ARGUMENTS dựa trên các trang trong kho tri thức. Trích dẫn mọi trang được sử dụng. Nêu rõ những phần mà kho tri thức chưa đề cập tới.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

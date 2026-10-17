@@ -1,63 +1,48 @@
-# Asking the vault
+# Đặt câu hỏi cho Vault
 
-You built the vault so answers would come from what you actually read. An agent
-that quietly falls back on its own knowledge destroys that, and it does so
-invisibly: the answer is fluent, plausible, and unverifiable.
+Bạn xây dựng Vault để câu trả lời xuất phát từ những gì bạn thực sự đã đọc. Một Agent âm thầm quay về dùng kiến thức sẵn có của chính nó sẽ phá hỏng mục đích đó một cách vô hình: câu trả lời nghe rất trôi chảy, hợp lý nhưng lại không thể kiểm chứng.
 
-## The rule
+## Quy tắc cốt lõi
 
-Every claim in an answer comes from a page, and names the page.
+Mọi nhận định trong câu trả lời phải xuất phát từ một trang cụ thể và chỉ rõ tên trang đó.
 
 ```
-Answer from my vault only. Cite the page for each claim. If the vault does not
-cover part of the question, say which part rather than filling it in.
+Chỉ trả lời dựa trên Vault của tôi. Trích dẫn trang tương ứng cho từng nhận định. Nếu Vault không bao hàm phần nào của câu hỏi, hãy nói rõ phần đó thay vì tự điền thêm.
 ```
 
-That instruction belongs in `CLAUDE.md`, not typed each time. A rule you have to
-remember is a rule that lapses on the day it matters.
+Chỉ dẫn đó phải nằm trong `CLAUDE.md`, chứ không phải gõ lại mỗi lần hỏi. Một quy tắc mà bạn phải tự nhớ thì sớm muộn cũng sẽ bị bỏ quên đúng vào ngày quan trọng nhất.
 
-## Start from the index
+## Bắt đầu từ trang chỉ mục
 
-The agent should read `index.md` first, then open the pages that look relevant,
-then follow links outward from those.
+Agent nên đọc `index.md` trước tiên, sau đó mở các trang có vẻ liên quan, rồi lần theo các liên kết từ những trang đó mở rộng ra ngoài.
 
-The alternative, a full-text sweep, is slower, spends context on near-misses, and
-misses pages whose wording differs from your question. The index exists to make
-this cheap; see [index.md and log.md](../04-structuring/index-and-log.md).
+Cách làm ngược lại — quét toàn văn (full-text sweep) — vừa chậm hơn, vừa tốn Context window vào những kết quả gần giống nhưng không trúng đích, lại vừa bỏ sót các trang dùng cách diễn đạt khác với câu hỏi của bạn. Trang chỉ mục tồn tại là để giúp bước này trở nên gọn nhẹ; xem thêm [index.md và log.md](../04-structuring/index-and-log.md).
 
-## Outside knowledge, labelled
+## Gắn nhãn rõ ràng cho kiến thức bên ngoài
 
-Sometimes the model knows something useful that the vault does not contain. That
-is fine as long as it is marked:
+Đôi khi mô hình biết một thông tin hữu ích mà Vault chưa có. Điều đó hoàn toàn ổn miễn là nó được đánh dấu rõ ràng:
 
 ```
-Cite vault pages for anything from my notes. Anything you know that my vault
-does not contain, put under a separate heading marked outside the vault.
+Trích dẫn các trang trong Vault cho bất kỳ nội dung nào lấy từ ghi chú của tôi. Bất kỳ điều gì bạn biết mà Vault của tôi không có, hãy đặt dưới một tiêu đề riêng được đánh dấu là ngoài phạm vi Vault.
 ```
 
-Separated, it is useful context. Blended, it makes the whole answer unreliable,
-because you no longer know which parts you can trace.
+Khi được tách bạch, đó là ngữ cảnh bổ trợ hữu ích. Khi bị trộn lẫn, nó làm cả câu trả lời mất đi độ tin cậy, vì bạn không còn biết phần nào có thể truy nguyên nguồn gốc.
 
-## Empty is a valid answer
+## "Không có thông tin" là một câu trả lời hợp lệ
 
-If the vault has nothing on a topic, the right response is one sentence saying
-so.
+Nếu Vault không có gì về một chủ đề, phản hồi đúng đắn nhất là một câu duy nhất nói rõ điều đó.
 
-An agent padding an empty result with general knowledge is the failure mode to
-watch for, because it feels like a good answer. Notice when an answer contains no
-page references at all; that is the signal.
+Việc Agent cố lấp đầy một kết quả trống rỗng bằng kiến thức chung chính là kiểu lỗi cần cảnh giác nhất, bởi nghe qua nó rất giống một câu trả lời hay. Hãy để ý khi một câu trả lời không hề chứa bất kỳ trích dẫn trang nào; đó chính là dấu hiệu cảnh báo.
 
-## Answers should end with what is missing
+## Kết thúc câu trả lời bằng những gì còn thiếu
 
 ```
-Read: [[page]], [[page]], [[page]]
-Not covered: whether this holds for the streaming case
+Đã đọc: [[page]], [[page]], [[page]]
+Chưa được đề cập: liệu điều này có đúng cho trường hợp truyền phát trực tiếp (streaming) hay không
 ```
 
-Two lines, and they do more than they look. They tell you how much of the vault
-the answer rests on, and the gap line is often the more useful half, because it
-is a precise statement of what to go read next.
+Chỉ hai dòng, nhưng tác dụng lớn hơn vẻ bề ngoài rất nhiều. Chúng cho bạn biết câu trả lời dựa trên bao nhiêu phần của Vault, và dòng chỉ ra khoảng trống thường là nửa giá trị hơn, vì nó nêu chính xác thứ bạn cần tìm đọc tiếp theo.
 
-## Next
+## Tiếp theo
 
-[Query patterns](query-patterns.md)
+[Các mẫu truy vấn](query-patterns.md)

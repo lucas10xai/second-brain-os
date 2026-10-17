@@ -1,88 +1,61 @@
-# Agent roles
+# Các vai trò của Agent
 
-One agent doing everything produces mediocre work at every job. The instructions
-that make a good ingestor are not the ones that make a good reviewer, and stuffed
-into one prompt they dilute each other.
+Một `Agent` ôm đồm mọi việc sẽ tạo ra kết quả tầm thường ở mọi khâu. Những chỉ dẫn tạo nên một bộ nạp dữ liệu (`ingestor`) giỏi hoàn toàn khác với những chỉ dẫn tạo nên một người rà soát (`reviewer`) giỏi, và khi bị nhồi nhét chung vào một prompt, chúng sẽ làm loãng lẫn nhau.
 
-Six roles cover a vault, four of them read-only. The definitions are in
-[`agents/`](../../agents/README.md).
+Sáu vai trò là đủ để bao quát toàn bộ một `Vault`, trong đó có bốn vai trò chỉ đọc (read-only). Các định nghĩa chi tiết nằm trong thư mục [`agents/`](../../agents/README.md).
 
-## Ingestor
+## Ingestor (Bộ nạp dữ liệu)
 
-Reads `raw/`, writes wiki pages, links them, updates the index and log. Writes
-more than any other role and is the one whose output quality determines
-everything downstream.
+Đọc thư mục `raw/`, viết các trang vào `wiki/`, liên kết chúng, cập nhật `index.md` và `log.md`. Vai trò này thực hiện thao tác ghi nhiều hơn bất kỳ vai trò nào khác, và chất lượng đầu ra của nó quyết định mọi thứ ở các khâu phía sau.
 
-Its instructions are narrow on purpose: it does not answer questions, does not
-restructure existing pages beyond adding links, and does not delete. An ingestor
-that reorganises while ingesting produces runs you cannot review, because content
-changes and structural changes arrive mixed in the same diff.
+Chỉ dẫn dành cho nó được giới hạn hẹp một cách có chủ đích: nó không trả lời câu hỏi, không tái cấu trúc các trang hiện có ngoài việc thêm liên kết mới, và không xóa bất kỳ thứ gì. Một `ingestor` vừa nạp dữ liệu vừa sắp xếp lại tổ chức trang sẽ tạo ra những lượt chạy mà bạn không thể nào kiểm duyệt (review) nổi, bởi vì các thay đổi về nội dung và các thay đổi về cấu trúc bị trộn lẫn vào nhau trong cùng một bản diff.
 
-## Linker
+## Linker (Bộ kết nối liên kết)
 
-Finds connections between existing pages that ingestion missed.
+Tìm kiếm các mối liên hệ giữa những trang hiện có mà quá trình `Ingest` đã bỏ sót.
 
-Runs after imports and weekly. Adds links, creates nothing, rewrites nothing.
-Separating it from the ingestor matters because linking well requires reading
-broadly across the vault, which is a different job from reading one source
-closely.
+Chạy sau các đợt nhập dữ liệu lớn và định kỳ hàng tuần. Chỉ thêm liên kết, không tạo trang mới, không viết lại nội dung. Việc tách riêng nó khỏi `ingestor` rất quan trọng vì để liên kết tốt đòi hỏi phải đọc rộng khắp toàn bộ `Vault` — một công việc hoàn toàn khác với việc đọc kỹ từng tài liệu nguồn đơn lẻ.
 
-Its one rule: a link it adds must be one you would agree with on reading both
-pages side by side. A linker optimising for link count degrades the graph while
-appearing productive.
+Quy tắc duy nhất của nó: bất kỳ liên kết nào nó thêm vào phải là một liên kết mà chính bạn cũng sẽ đồng tình khi đặt hai trang đó cạnh nhau để đọc. Một `linker` chỉ chăm chăm tối ưu số lượng liên kết sẽ làm suy thoái chất lượng đồ thị trong khi bề ngoài trông có vẻ rất năng suất.
 
-## Reviewer
+## Reviewer (Bộ rà soát định kỳ)
 
-Read-only. Produces the periodic review: what changed, where attention went,
-what contradicts what, what to read next.
+Chỉ đọc (Read-only). Tạo ra bản báo cáo rà soát định kỳ: những gì đã thay đổi, sự chú ý của bạn đã dồn vào đâu, nội dung nào đang mâu thuẫn với nội dung nào, và tiếp theo nên đọc gì.
 
-Read-only is not caution, it is what makes the review trustworthy. A reviewer
-that can edit will fix small things as it goes, and then its report describes a
-vault that no longer exists.
+Cơ chế chỉ đọc không phải vì sự thận trọng quá mức, mà chính là yếu tố làm nên độ tin cậy của bản rà soát. Một `reviewer` có quyền chỉnh sửa sẽ tiện tay sửa luôn những lỗi nhỏ trên đường đi, và kết quả là bản báo cáo của nó lại mô tả một `Vault` đã không còn tồn tại như lúc đầu nữa.
 
-## Researcher
+## Researcher (Bộ nghiên cứu truy vấn)
 
-Read-only. Answers questions from the vault, cites pages, names what is missing.
+Chỉ đọc (Read-only). Trả lời các câu hỏi dựa trên dữ liệu trong `Vault`, trích dẫn trang rõ ràng, và chỉ đích danh những thông tin nào đang còn thiếu.
 
-Also the role you talk to most, and the one that most needs the rule about not
-falling back on general knowledge. See the
-[query skill](../../skills/README.md).
+Đây cũng là vai trò mà bạn trò chuyện nhiều nhất, và là vai trò cần tuân thủ nghiêm ngặt nhất quy tắc không được tự ý lấy kiến thức phổ thông bên ngoài để trả lời thay cho `Vault`. Xem thêm [skill truy vấn (query skill)](../../skills/README.md).
 
-## Graph analyst
+## Graph analyst (Bộ phân tích đồ thị)
 
-Read-only. Runs the metrics, finds hubs, bridges and clusters, and says what the
-numbers mean for retrieval. Monthly.
+Chỉ đọc (Read-only). Chạy tính toán các chỉ số đo lường, tìm kiếm các trang trung tâm (hubs), trang cầu nối (bridges) và các cụm (clusters), đồng thời giải thích ý nghĩa của những con số đó đối với chất lượng truy xuất. Chạy định kỳ hàng tháng.
 
-Separate from the linter because analysis and repair want opposite dispositions:
-one should notice everything, the other should touch as little as possible.
+Được tách riêng khỏi bộ kiểm tra lỗi (`linter`) bởi vì việc phân tích và việc sửa chữa đòi hỏi hai khuynh hướng hoàn toàn trái ngược nhau: một bên cần quan sát và nhận diện mọi thứ, bên kia lại cần can thiệp ít nhất có thể.
 
-## Curator
+## Curator (Bộ giám tuyển nội dung)
 
-Read-only. Proposes what to prune, archive or merge, quarterly.
+Chỉ đọc (Read-only). Đề xuất những trang nào cần cắt tỉa (prune), lưu trữ (archive) hoặc gộp lại (merge), chạy định kỳ hàng quý.
 
-Proposals only, never actions. Deletion is the one operation you cannot recover
-from by reading a diff, so it stays a decision the owner makes.
+Chỉ đưa ra đề xuất, tuyệt đối không tự thực thi hành động. Xóa bỏ là thao tác duy nhất bạn không thể khôi phục bằng cách đọc lướt qua bản diff, vì vậy nó luôn phải là quyết định do chính chủ nhân của `Vault` đưa ra.
 
-## Roles not worth creating
+## Những vai trò không đáng tạo ra
 
-**A deleter.** Deletion should be a decision you make, executed with a record.
-The curator proposes; you dispose.
+**Bộ xóa dữ liệu (Deleter).** Việc xóa trang phải là quyết định của bạn, được thực thi có lưu vết nhật ký. `curator` đề xuất; bạn định đoạt.
 
-**A summariser.** Summaries of pages that are already summaries produce a layer
-that is less true than what is under it and gets read instead of it.
+**Bộ tóm tắt (Summariser).** Việc tóm tắt lại những trang vốn dĩ đã là bản chất lọc sẽ sinh ra một tầng thông tin kém chân thực hơn phần gốc nằm bên dưới, nhưng người ta lại cứ đọc nó thay vì đọc bản gốc.
 
-**A tagger.** Tagging is a five-second judgement made during ingest with full
-context. A separate pass has less context and produces worse tags.
+**Bộ gắn thẻ (Tagger).** Gắn thẻ là một phán đoán chỉ mất năm giây được thực hiện ngay trong lúc `Ingest` khi đang có đầy đủ ngữ cảnh nhất. Một lượt chạy tách biệt sau đó có ít ngữ cảnh hơn và chỉ tạo ra những thẻ kém chất lượng hơn.
 
-## Handoffs
+## Chuyển giao công việc giữa các vai trò (Handoffs)
 
-Roles communicate through the vault, not through each other. The ingestor writes
-gaps into `index.md`; the linker reads them. The ingestor logs its run; the
-reviewer reads the log.
+Các vai trò giao tiếp với nhau thông qua chính `Vault`, chứ không gọi trực tiếp nhau. `ingestor` ghi các khoảng trống (gaps) vào `index.md`; `linker` đọc chúng từ đó. `ingestor` ghi nhật ký lượt chạy vào `log.md`; `reviewer` đọc nhật ký để tổng hợp.
 
-That is deliberate. Files as the interface means any run is inspectable
-afterwards, and a role can be replaced without touching the others.
+Đây là thiết kế có chủ đích. Lấy file làm giao diện chung (interface) có nghĩa là bất kỳ lượt chạy nào cũng có thể kiểm tra lại sau đó, và bạn có thể thay thế một vai trò bất kỳ mà không hề làm ảnh hưởng đến các vai trò còn lại.
 
-## Next
+## Tiếp theo
 
-[Scheduling](scheduled-maintenance.md)
+[Lập lịch tự động (Scheduling)](scheduled-maintenance.md)

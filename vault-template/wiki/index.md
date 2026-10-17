@@ -4,28 +4,28 @@ type: index
 updated: 1970-01-01
 ---
 
-# Index
+# Chỉ mục (Index)
 
-Catalog of every page in this vault. The agent keeps this current.
+Danh mục toàn bộ các trang trong vault này. Agent chịu trách nhiệm giữ cho trang này luôn được cập nhật.
 
-## Concepts
+## Concepts (Khái niệm)
 
-_Nothing yet._
+_Chưa có gì._
 
-## Entities
+## Entities (Thực thể)
 
-_Nothing yet._
+_Chưa có gì._
 
-## Synthesis
+## Synthesis (Tổng hợp)
 
-_Nothing yet._
+_Chưa có gì._
 
-## Sources
+## Sources (Nguồn tài liệu)
 
-_Nothing yet._
+_Chưa có gì._
 
-## Gaps
+## Gaps (Khoảng trống)
 
-Pages that are linked but do not exist yet.
+Các trang đã được liên kết tới nhưng hiện chưa tồn tại.
 
-_Nothing yet._
+_Chưa có gì._

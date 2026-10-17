@@ -1,9 +1,9 @@
-# 0 · The map
+# 0 · Bản đồ tổng quan
 
-What an agent is, the five layers around the model, and when a workflow beats a loop.
+Agent là gì, năm tầng kiến trúc bao quanh mô hình, và khi nào một quy trình cố định (workflow) vượt trội hơn vòng lặp (loop).
 
-A course module beside [the main guide](../../README.md) — read it on the site or in order below.
+Một học phần thuộc khóa học bên cạnh [cẩm nang chính](../../README.md) — đọc trực tiếp trên trang web hoặc theo thứ tự dưới đây.
 
-1. [What an agent is](what-an-agent-is.md)
-2. [Five layers, one system](five-layers.md)
-3. [Agents or workflows](agents-or-workflows.md)
+1. [Agent là gì](what-an-agent-is.md)
+2. [Năm tầng kiến trúc, một hệ thống](five-layers.md)
+3. [Chọn Agent hay Workflow](agents-or-workflows.md)

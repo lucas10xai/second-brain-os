@@ -5,8 +5,8 @@
   /* one hue per layer of the graph, in the same muted register */
   --c-root:#15201B; --c-guide:#1F6B52; --c-course:#8A6B23; --c-handbook:#3F5F86;
   --c-term:#A24E36; --c-tool:#6B4C80; --c-res:#7D6B5D;
-  --serif:Charter,"Bitstream Charter",Georgia,"Iowan Old Style",serif;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",Monaco,"Courier New",Consolas,"DejaVu Sans Mono",monospace;
   --glass:rgba(247,249,246,.88);
   --edge:1px solid var(--rule);
   --lift:0 1px 0 rgba(21,32,27,.03),0 18px 40px -18px rgba(21,32,27,.28);

@@ -1,67 +1,46 @@
 ---
 name: context-audit
 description: >-
-  Audit an agent's context layout against the four places: system prompt,
-  tools, history, tail. Use when the user asks to audit, review or fix their
-  agent's context, prompt caching, token spend per turn, or CLAUDE.md /
-  AGENTS.md layout. Read-only: reports findings and a fix list, changes
-  nothing. Do NOT use for writing evals (evals-bootstrap) or for loop
-  design (goal-test).
+  Kiểm toán bố cục ngữ cảnh (context layout) của agent dựa trên bốn vùng:
+  system prompt, công cụ (tools), lịch sử (history), và phần đuôi (tail).
+  Sử dụng khi người dùng yêu cầu kiểm toán, đánh giá hoặc tối ưu ngữ cảnh
+  của agent, bộ nhớ đệm prompt (prompt caching), lượng token tiêu thụ mỗi lượt,
+  hoặc bố cục CLAUDE.md / AGENTS.md. Chỉ đọc: báo cáo phát hiện và danh sách
+  khắc phục, không tự ý thay đổi file. KHÔNG dùng để viết bộ kiểm thử đánh giá
+  (evals-bootstrap) hoặc thiết kế vòng lặp (goal-test).
 ---
 
-# Audit the context window
+# Kiểm toán cửa sổ ngữ cảnh (Context Window)
 
-Theory: [How models read context](https://secondbrainos.dev/#/read/course-1-context/how-models-read)
-and [The four places](https://secondbrainos.dev/#/read/course-1-context/the-four-places).
-Every piece of context belongs in exactly one of four places — a byte-stable
-system prompt, a frozen tool set, a compacting history, and a short live tail —
-and most agent problems trace back to something sitting in the wrong one.
+Lý thuyết: [Cách mô hình đọc ngữ cảnh](https://secondbrainos-vn.pages.dev/#/read/course-1-context/how-models-read)
+và [Bốn vùng ngữ cảnh](https://secondbrainos-vn.pages.dev/#/read/course-1-context/the-four-places).
+Mỗi mảnh thông tin trong ngữ cảnh đều thuộc về đúng một trong bốn vùng — một system prompt cố định từng byte, một tập công cụ đóng băng, một lịch sử được nén gọn, và một phần đuôi trực tiếp ngắn gọn — và hầu hết các vấn đề của agent đều bắt nguồn từ việc đặt nhầm thông tin vào sai vùng.
 
-## Core rule
+## Quy tắc cốt lõi
 
-Report and rank; never edit. The output is an audit, and the user decides
-what to apply. If they ask you to apply fixes afterwards, that is a normal
-edit session, not this skill.
+Báo cáo và xếp hạng; không bao giờ tự chỉnh sửa. Đầu ra là một bản báo cáo kiểm toán, và người dùng sẽ quyết định áp dụng phần nào. Nếu sau đó họ yêu cầu bạn thực hiện các sửa đổi, đó là một phiên chỉnh sửa bình thường, không thuộc phạm vi của kỹ năng này.
 
-## Workflow
+## Quy trình thực hiện
 
-1. **Find the context sources.** Locate what actually reaches the model:
-   system prompt (or CLAUDE.md / AGENTS.md for a Claude Code setup), tool
-   definitions, and — if the project logs requests — one full mid-conversation
-   payload. If nothing is logged, say so and audit the static files; ask for
-   one captured request only if the user can produce it cheaply.
-2. **Measure the five numbers.** Approximate token counts for: system prompt,
-   tool definitions, message history, retrieved content, current query.
-   A rough count (chars / 4) is fine; write all five down.
-3. **Hunt cache killers.** Flag every dynamic value in the system prompt —
-   timestamps, user names, injected memories, "current task" lines. Each one
-   is a guaranteed cache miss on every call. Check whether the tool list can
-   change mid-run; a changing list invalidates the whole prefix.
-4. **Hunt window bloat.** Find the largest single item in the history. A
-   verbatim tool result over ~2,000 tokens should have been a file path plus
-   a one-line receipt. Count tools: past twenty (or ~10K tokens of
-   definitions), recommend deferred tools + tool search.
-5. **Check the tail.** Locate the current goal. If it appears only in the
-   opening message, it lives in the weak middle of the window — recommend
-   restating it in the tail every three to five steps.
-6. **Check guides.** If CLAUDE.md / AGENTS.md exists: it should be a few
-   lines of constraints the code cannot show, not four pages of narrative.
-   Flag anything the repo already records (structure, history).
+1. **Tìm các nguồn ngữ cảnh.** Xác định những gì thực sự được gửi tới mô hình: system prompt (hoặc `CLAUDE.md` / `AGENTS.md` đối với thiết lập Claude Code), định nghĩa công cụ (tool definitions), và — nếu dự án có ghi log request — một payload đầy đủ ở giữa cuộc hội thoại. Nếu không có log, hãy nêu rõ điều đó và kiểm toán các file tĩnh; chỉ hỏi xin một bản chụp request nếu người dùng có thể lấy nó dễ dàng.
+2. **Đo lường năm con số.** Ước tính số lượng token cho: system prompt, định nghĩa công cụ, lịch sử tin nhắn, nội dung truy xuất (retrieved content), và truy vấn hiện tại. Một phép tính ước lượng (số ký tự / 4) là đủ; hãy ghi rõ cả năm con số ra.
+3. **Truy lùng các yếu tố phá bộ nhớ đệm (cache killers).** Gắn cờ mọi giá trị động nằm trong system prompt — dấu thời gian (timestamps), tên người dùng, bộ nhớ được tiêm vào, các dòng "tác vụ hiện tại". Mỗi giá trị động này chắc chắn gây trượt bộ nhớ đệm (cache miss) ở mọi lệnh gọi. Kiểm tra xem danh sách công cụ có bị thay đổi giữa chừng khi đang chạy hay không; một danh sách thay đổi sẽ làm mất hiệu lực toàn bộ phần tiền tố (prefix).
+4. **Truy lùng sự phình to cửa sổ ngữ cảnh (window bloat).** Tìm mục đơn lẻ lớn nhất trong lịch sử. Một kết quả trả về nguyên văn từ công cụ vượt quá ~2.000 token lẽ ra chỉ nên là một đường dẫn file kèm một dòng biên nhận. Đếm số lượng công cụ: nếu vượt quá 20 công cụ (hoặc ~10K token định nghĩa), hãy khuyến nghị sử dụng cơ chế trì hoãn tải công cụ (deferred tools) kết hợp tìm kiếm công cụ (tool search).
+5. **Kiểm tra phần đuôi (tail).** Xác định vị trí của mục tiêu hiện tại. Nếu nó chỉ xuất hiện ở tin nhắn mở đầu, tức là nó đang nằm ở vùng giữa yếu ớt của cửa sổ ngữ cảnh — hãy khuyến nghị nhắc lại mục tiêu ở phần đuôi sau mỗi ba đến năm bước.
+6. **Kiểm tra các file chỉ dẫn (guides).** Nếu có `CLAUDE.md` / `AGENTS.md`: nó chỉ nên gồm vài dòng ràng buộc mà mã nguồn không thể tự nói lên, chứ không phải bốn trang văn xuôi dài dòng. Hãy gắn cờ bất kỳ thông tin nào mà bản thân repo đã tự thể hiện rõ (cấu trúc thư mục, lịch sử git).
 
-## Output format
+## Định dạng đầu ra
 
 ```
-Context audit — <project>
-system prompt   <n> tok   <clean | N dynamic values: ...>
-tools           <n> tok   <n> tools  <frozen | mutates mid-run>
-history         <n> tok   largest item: <what, n tok>
-tail            <present | goal only in opening message>
+Context audit — <dự án>
+system prompt   <n> tok   <sạch | N giá trị động: ...>
+tools           <n> tok   <n> tools  <đóng băng | thay đổi giữa chừng>
+history         <n> tok   mục lớn nhất: <là gì, n tok>
+tail            <có mặt | mục tiêu chỉ nằm ở tin nhắn mở đầu>
 
-Top fixes, in order of saved tokens per turn:
+Các mục cần khắc phục hàng đầu, xếp theo số token tiết kiệm được mỗi lượt:
 1. ...
 2. ...
 ```
 
-Each fix names the file and line where possible, states what moves to which
-of the four places, and estimates the saving. Close with the one-line rule:
-stable prefix, frozen tools, compact history, live tail.
+Mỗi mục khắc phục cần chỉ rõ tên file và dòng (nếu có thể), nêu rõ nội dung nào cần chuyển sang vùng nào trong bốn vùng, và ước tính mức tiết kiệm. Kết thúc bằng quy tắc một dòng: tiền tố ổn định, công cụ đóng băng, lịch sử nén gọn, phần đuôi sống động (stable prefix, frozen tools, compact history, live tail).

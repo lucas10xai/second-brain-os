@@ -12,10 +12,10 @@ tags: []
 
 # {{title}}
 
-## What it is
+## Đây là gì
 
-## Claims
+## Các luận điểm chính
 
-## Why it matters here
+## Tại sao tài liệu này quan trọng ở đây
 
-## Links
+## Liên kết

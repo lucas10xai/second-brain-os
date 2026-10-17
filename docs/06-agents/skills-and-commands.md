@@ -1,80 +1,61 @@
-# Skills and slash commands
+# Skills và Slash commands
 
-Two mechanisms that look similar and do different jobs.
+Hai cơ chế trông có vẻ giống nhau nhưng thực chất đảm nhận hai công việc khác nhau.
 
-**A skill** teaches repeatable behaviour. It loads when relevant and shapes how
-the agent does something, whether you invoked it explicitly or just described the
-task.
+**Một `Skill`** dạy cho `Agent` một hành vi có thể lặp lại. Nó tự động được nạp vào khi phù hợp với ngữ cảnh và định hình cách `Agent` thực hiện công việc, bất kể là bạn gọi tên nó một cách tường minh hay chỉ mô tả yêu cầu bằng lời tự nhiên.
 
-**A command** is a shortcut for a task you run often. It points at a skill and
-saves you typing the instructions.
+**Một `Slash command`** (lệnh gạch chéo) là phím tắt cho một tác vụ bạn thường xuyên chạy. Nó trỏ tới một skill và giúp bạn tiết kiệm công sức gõ lại các dòng chỉ dẫn.
 
-The behaviour belongs in the skill. That way ingestion works the same whether it
-was triggered by `/ingest`, by a scheduled task, or by you saying "add this to my
-vault".
+Hành vi xử lý cốt lõi phải nằm ở trong skill. Nhờ vậy, quá trình `Ingest` sẽ luôn hoạt động theo cùng một chuẩn mực thống nhất, dù nó được kích hoạt bằng lệnh `/ingest`, bởi một tác vụ chạy theo lịch định kỳ, hay chỉ bằng câu nói tự nhiên của bạn: *"thêm tài liệu này vào `Vault` giúp tôi"*.
 
-## What this repo ships
+## Những gì kho mã nguồn (repo) này cung cấp sẵn
 
-Eighteen skills in [`skills/`](../../skills/README.md), one per workflow in this
-guide. Seventy-two commands in [`commands/`](../../commands/README.md), each a
-few lines pointing at a skill and setting its scope.
+Mười tám `Skills` nằm trong thư mục [`skills/`](../../skills/README.md), mỗi skill tương ứng với một `Workflow` trong hướng dẫn này. Bảy mươi hai lệnh trong thư mục [`commands/`](../../commands/README.md), mỗi lệnh chỉ dài vài dòng trỏ về một skill tương ứng và thiết lập phạm vi (scope) hoạt động cho nó.
 
-The ratio is deliberate. Behaviour belongs in a small number of well-written
-skills; commands are cheap, so there is no reason to make you remember how to
-phrase a request you make every week.
+Tỷ lệ chênh lệch này là có chủ đích. Hành vi cốt lõi chỉ nên nằm gọn trong một số lượng nhỏ các `Skills` được biên soạn kỹ lưỡng; còn các lệnh (`commands`) thì rất nhẹ và dễ tạo, nên chẳng có lý do gì bắt bạn phải nhớ cách diễn đạt dài dòng cho một yêu cầu mà tuần nào bạn cũng dùng tới.
 
-Install them inside the vault at `.claude/skills/` and `.claude/commands/` so
-they are versioned alongside your notes and travel with the vault.
+Hãy cài đặt chúng ngay bên trong `Vault` tại đường dẫn `.claude/skills/` và `.claude/commands/` để chúng được quản lý phiên bản cùng với kho ghi chú và luôn đi kèm theo `Vault` tới bất cứ đâu.
 
-## Writing your own
+## Tự viết Skill của riêng bạn
 
-A skill worth writing has three properties: you do it repeatedly, you have
-opinions about how, and the opinions are not obvious enough for the model to
-guess.
+Một skill đáng để viết ra khi hội tụ đủ ba tính chất: bạn lặp đi lặp lại việc đó nhiều lần, bạn có quan điểm và tiêu chuẩn riêng về cách thực hiện nó, và những tiêu chuẩn đó không đủ hiển nhiên để mô hình có thể tự đoán trúng.
 
-Structure that works:
+Cấu trúc hiệu quả trên thực tế:
 
 ```markdown
 ---
 name: skill-name
 description: >-
-  What it does. When to use it, written pushy, because agents under-trigger
-  skills. Do NOT use for the tempting near-misses.
+  Nó làm việc gì. Khi nào cần dùng nó, được viết với giọng điệu thúc giục mạnh mẽ, bởi vì các Agent
+  thường có xu hướng lười kích hoạt skill. Tuyệt đối KHÔNG dùng cho các trường hợp gần giống dễ gây nhầm lẫn.
 ---
 
-# Name
+# Tên Skill
 
-[Why this skill exists: what failure it prevents. This paragraph is the rubric
-for every case the rules below do not cover.]
+[Lý do skill này tồn tại: nó ngăn chặn kiểu lỗi cụ thể nào. Đoạn văn mở đầu này chính là kim chỉ nam (rubric)
+để Agent tự suy luận cho mọi trường hợp ngoại lệ mà các quy tắc bên dưới chưa liệt kê hết.]
 
-## Core rule
-## Workflow
-## Output format
-## Calibration
-## Example
+## Quy tắc cốt lõi (Core rule)
+## Quy trình thực hiện (Workflow)
+## Định dạng đầu ra (Output format)
+## Tinh chỉnh (Calibration)
+## Ví dụ (Example)
 ```
 
-The opening paragraph does more work than the rules. Rules cover the cases you
-thought of; the reason covers the rest.
+Đoạn văn mở đầu làm được nhiều việc hơn cả danh sách các quy tắc cộng lại. Các quy tắc chỉ bao phủ được những trường hợp bạn đã nghĩ tới; còn lý do tồn tại sẽ bao phủ toàn bộ phần còn lại.
 
-## Explain the why
+## Hãy giải thích lý do "Tại sao"
 
-"Never overwrite a contradiction" gets applied literally and fails on the edge
-cases. "Never overwrite a contradiction, because the history of what you believed
-is the thing this vault has that a search engine does not" generalises to
-situations you never described.
+Chỉ dẫn kiểu *"Không bao giờ được ghi đè lên một thông tin mâu thuẫn"* sẽ bị áp dụng một cách máy móc theo nghĩa đen và thất bại ngay ở các trường hợp biên (edge cases). Ngược lại, chỉ dẫn *"Không bao giờ được ghi đè lên một thông tin mâu thuẫn, bởi vì lịch sử những gì bạn từng tin tưởng chính là tài sản duy nhất mà `Vault` này có được còn công cụ tìm kiếm thì không"* sẽ giúp mô hình tự khái quát hóa để xử lý đúng ngay cả trong những tình huống bạn chưa từng mô tả.
 
-All-caps NEVER without a reason is usually a missing explanation.
+Một chữ NEVER viết hoa toàn bộ mà không kèm theo lời giải thích thường là dấu hiệu của một chỉ dẫn còn thiếu chiều sâu.
 
-## Versioning
+## Quản lý phiên bản (Versioning)
 
-Skills live in the vault, so git tracks them. When output quality changes, the
-skill diff is the first place to look.
+Các `Skills` nằm ngay bên trong `Vault`, vì vậy `Git` sẽ theo dõi lịch sử thay đổi của chúng. Khi chất lượng đầu ra của `Agent` bỗng nhiên thay đổi, bản diff của thư mục skills chính là nơi đầu tiên bạn nên mở ra xem.
 
-Test a skill on three or four real cases before letting a scheduled task use it.
-A flaw in a skill that runs nightly is a flaw in three hundred pages by the end
-of the year.
+Hãy thử nghiệm một skill mới trên ba hoặc bốn trường hợp thực tế trước khi giao nó cho một tác vụ chạy tự động theo lịch. Một khiếm khuyết nhỏ trong một skill chạy tự động hàng đêm sẽ nhân bản thành một khiếm khuyết nằm trên ba trăm trang ghi chú vào thời điểm cuối năm.
 
-## Next
+## Tiếp theo
 
-[Guardrails](safety-and-guardrails.md)
+[Guardrails (Rào chắn an toàn)](safety-and-guardrails.md)

@@ -1,7 +1,7 @@
 ---
-description: Ingest a video or podcast transcript
+description: Nạp bản gỡ băng video hoặc podcast
 ---
 
-Pull the transcript for $ARGUMENTS into `raw/`, clean it with `second-brain-transcript`, then ingest. Split by topic first if the recording covers more than one.
+Tải bản gỡ băng (transcript) của $ARGUMENTS vào `raw/`, làm sạch nội dung bằng `second-brain-transcript`, sau đó nạp vào kho tri thức. Hãy tách theo từng chủ đề trước nếu bản ghi âm bàn về nhiều hơn một chủ đề.
 
-Follow the `second-brain-transcript` skill.
+Thực hiện theo skill `second-brain-transcript`.

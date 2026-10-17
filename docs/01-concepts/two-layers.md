@@ -1,24 +1,16 @@
-# The two layers
+# Cấu trúc hai tầng
 
-Most second-brain setups fail because they pick one shape and try to make it do
-two jobs.
+Hầu hết các thiết lập Second Brain đều thất bại vì người dùng chỉ chọn một cấu trúc duy nhất nhưng lại ép nó gánh vác cùng lúc hai công việc hoàn toàn khác bản chất.
 
-**The knowledge layer** answers "what do I know about X". It is organised by
-idea, it grows forever, and its value is in the links between pages. This is the
-LLM wiki pattern: sources in, concepts out, everything connected.
+**Tầng tri thức (Knowledge layer)** trả lời câu hỏi "tôi đang biết gì về X". Nó được tổ chức xoay quanh các ý tưởng, phát triển tích lũy mãi mãi theo thời gian, và giá trị cốt lõi nằm ở mạng lưới liên kết giữa các trang. Đây chính là mô hình LLM wiki: nạp nguồn tài liệu vào, đúc kết các khái niệm ra, và kết nối mọi thứ lại với nhau.
 
-**The project layer** answers "what am I doing this week". It is organised as a
-pipeline, inputs to outputs, and most of it goes cold the moment the project
-ships.
+**Tầng dự án (Project layer)** trả lời câu hỏi "tuần này tôi đang làm việc gì". Nó được tổ chức như một đường ống xử lý (pipeline) đi từ đầu vào đến đầu ra, và phần lớn dữ liệu trong đó sẽ hoàn thành sứ mệnh ngay tại thời điểm dự án kết thúc và bàn giao.
 
-They fail differently when merged. A wiki with project folders in it fills up
-with dead task lists that make every search worse. A project system with
-conceptual notes in it buries the working files under material nobody opens
-while working.
+Khi bị trộn lẫn vào nhau, hai tầng này sẽ gây hỏng hệ thống theo hai kiểu khác nhau. Một hệ thống wiki chứa lẫn các thư mục dự án sẽ nhanh chóng ngập ngụa những danh sách công việc đã cũ, làm giảm chất lượng của mọi thao tác tìm kiếm. Ngược lại, một hệ thống quản lý dự án nhồi nhét thêm các ghi chú khái niệm trừu tượng sẽ chôn vùi các file đang làm việc hằng ngày dưới đống tài liệu tham khảo mà chẳng ai mở ra trong lúc đang chạy việc.
 
-## How they connect
+## Cách hai tầng kết nối với nhau
 
-Projects consume the knowledge layer and feed it back:
+Các dự án tiêu thụ tri thức từ tầng wiki và sau đó bồi đắp ngược trở lại cho nó:
 
 ```
         wiki/concepts ──────> project Inputs/
@@ -29,16 +21,12 @@ Projects consume the knowledge layer and feed it back:
               └──────────────────────────────────┘
 ```
 
-Work produces material worth keeping. Ingesting your own finished work is the
-step almost everyone skips, and it is the one that makes the second project in
-a domain meaningfully faster than the first.
+Quá trình làm việc thực tế luôn tạo ra những tư liệu rất đáng lưu giữ. Việc Ingest lại chính những thành phẩm đã hoàn thành của bản thân là bước mà hầu như ai cũng bỏ qua, nhưng đó lại chính là chìa khóa giúp dự án thứ hai của bạn trong cùng lĩnh vực diễn ra nhanh hơn vượt trội so với dự án đầu tiên.
 
-## Which to build first
+## Nên xây dựng tầng nào trước
 
-The knowledge layer, if you read a lot and retain little.
+Hãy xây dựng **tầng tri thức** trước, nếu vấn đề của bạn là đọc rất nhiều nhưng đọng lại chẳng được bao nhiêu.
 
-The project layer, if your problem is that you re-explain your situation to a
-chat window every morning.
+Hãy xây dựng **tầng dự án** trước, nếu vấn đề của bạn là sáng nào cũng phải ngồi giải thích lại từ đầu bối cảnh công việc của mình cho khung trò chuyện AI.
 
-Both eventually. See [vault structure](../02-setup/vault-structure.md) for the
-layout that keeps them separate inside one folder.
+Và sớm muộn gì bạn cũng sẽ dùng cả hai. Hãy xem bài [Cấu trúc Vault](../02-setup/vault-structure.md) để nắm được cách bố trí giữ cho hai tầng này luôn tách biệt rõ ràng ngay bên trong cùng một thư mục gốc.

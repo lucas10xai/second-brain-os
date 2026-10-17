@@ -1,7 +1,7 @@
 ---
-description: Check frontmatter against the schema
+description: Kiểm tra frontmatter theo đúng schema
 ---
 
-Validate frontmatter across $ARGUMENTS, or the whole wiki. Report missing required fields, wrong types, malformed dates and tags outside the vocabulary. Fix the mechanical ones.
+Xác thực frontmatter trên phạm vi $ARGUMENTS, hoặc toàn bộ wiki. Báo cáo các trường bắt buộc bị thiếu, sai kiểu dữ liệu, ngày tháng sai định dạng và các thẻ (tag) nằm ngoài bộ từ vựng chuẩn. Tự động sửa các lỗi cơ học.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

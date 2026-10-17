@@ -3,9 +3,9 @@ title: Log
 type: log
 ---
 
-# Log
+# Nhật ký (Log)
 
-One line per operation, newest at the bottom. Format:
+Mỗi thao tác một dòng, mục mới nhất nằm ở dưới cùng. Định dạng:
 
 ```
 DATE OPERATION target -> result

@@ -1,14 +1,14 @@
-# Jev engineering
+# Kỹ thuật Jev (Jev engineering)
 
-The gate is the layer; Jev is one way to build it. Typed decisions with confidence scores instead of generated text — and a build you can run before your Jev access lands.
+Cổng phân luồng (Gate) là tầng kiến trúc; Jev là một cách để xây dựng nó. Trả về quyết định định kiểu kèm điểm tự tin thay vì sinh văn bản tự do — cùng bài thực hành bạn có thể chạy ngay cả trước khi có quyền truy cập Jev.
 
-The handbook for [module 3](../course-3-gate/README.md) of the agents course: the module teaches the idea once; this holds the full menu — techniques, tools and builds. Read it on the site or dip in below.
+Sổ tay chuyên sâu cho [học phần 3](../course-3-gate/README.md) của khóa học AI Agent: học phần dạy khái niệm cốt lõi một lần; sổ tay này lưu giữ toàn bộ danh mục kỹ thuật, công cụ và bài thực hành. Đọc trên trang web hoặc tra cứu bất kỳ bài nào dưới đây.
 
-1. [System One Models](system-one-models.md)
-2. [What Jev Is Good For](what-jev-is-good-for.md)
-3. [Jev in an Agent Stack](jev-in-an-agent-stack.md)
-4. [Getting Started With Jev](getting-started.md)
-5. [Build: a Typed Decision Endpoint](build-decision-endpoint.md)
-6. [Build: the Confidence-Gated Router](build-router.md)
-7. [Build: the Jev Swap](build-swap-in-jev.md)
-8. [Jev Resources](resources.md)
+1. [Các mô hình System One](system-one-models.md)
+2. [Jev phù hợp với việc gì](what-jev-is-good-for.md)
+3. [Jev trong ngăn xếp Agent](jev-in-an-agent-stack.md)
+4. [Bắt đầu với Jev](getting-started.md)
+5. [Thực hành: Điểm cuối quyết định định kiểu](build-decision-endpoint.md)
+6. [Thực hành: Bộ định tuyến (Router) có ngưỡng tự tin](build-router.md)
+7. [Thực hành: Hoán đổi sang Jev](build-swap-in-jev.md)
+8. [Tài nguyên tham khảo về Jev](resources.md)

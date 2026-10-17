@@ -1,18 +1,18 @@
-# Build: Query It
+# Thực hành: Truy vấn đồ thị
 
-Part two of the build. [Build: Extract the Graph](build-extract.md) left two files at the vault root: `edges.csv` with the plain links and `typed_edges.csv` with the typed pass. This page turns them into answers, in a little over forty lines of Python.
+Phần hai của bài thực hành. Bước [Thực hành: Trích xuất đồ thị](build-extract.md) đã để lại hai tệp ở thư mục gốc của Vault: `edges.csv` chứa các liên kết thuần và `typed_edges.csv` chứa kết quả từ lượt quét gắn kiểu. Trang này sẽ biến chúng thành câu trả lời chỉ với hơn bốn mươi dòng mã Python.
 
-The store is NetworkX in memory, loaded fresh from the CSVs on every call — the second rung on the ladder in [graph stores](graph-stores.md). No server, no schema migration, and at personal-vault scale a full load takes milliseconds. One dependency:
+Kho lưu trữ ở đây là NetworkX nằm trên bộ nhớ trong (in-memory), được nạp mới từ các tệp CSV trong mỗi lần gọi — bậc thang thứ hai trong bài [kho lưu trữ đồ thị](graph-stores.md). Không máy chủ, không kịch bản di trú lược đồ, và ở quy mô một Vault cá nhân thì việc nạp toàn bộ dữ liệu chỉ mất vài mili-giây. Chỉ cần cài đặt một thư viện phụ thuộc duy nhất:
 
 ```
 pip install networkx
 ```
 
-NetworkX 3.7 at the time of writing; anything in the 3.x line works.
+Phiên bản NetworkX là 3.7 tại thời điểm viết bài; bất kỳ bản nào thuộc nhánh 3.x đều hoạt động tốt.
 
-## The script
+## Kịch bản truy vấn
 
-Save this as `scripts/graph_query.py` in the vault:
+Hãy lưu đoạn mã sau thành tệp `scripts/graph_query.py` trong Vault:
 
 ```python
 #!/usr/bin/env python3
@@ -92,9 +92,9 @@ if __name__ == "__main__":
         print(__doc__)
 ```
 
-Design notes, briefly. Loading typed edges after plain ones means a typed edge overwrites the `links-to` between the same pair — deliberate, since the typed edge is the better description of the same link. Paths run over an undirected view, because "how do these relate" does not care which page linked which. And label propagation stands in for the Leiden step in [GraphRAG](graphrag.md): cruder, but stdlib-plus-NetworkX and instant at this scale.
+Đôi dòng ghi chú ngắn về thiết kế. Việc nạp các cạnh có định kiểu sau các cạnh liên kết thuần có nghĩa là cạnh có định kiểu sẽ ghi đè lên nhãn `links-to` giữa cùng một cặp nút — đây là chủ đích thiết kế, bởi cạnh có định kiểu mô tả chính xác hơn về cùng mối liên kết đó. Phép tìm đường đi (`path`) chạy trên góc nhìn vô hướng (undirected view), vì câu hỏi "hai thứ này liên quan thế nào" không quan tâm trang nào đặt liên kết sang trang nào. Và thuật toán lan truyền nhãn (label propagation) đóng vai trò thay thế cho bước phân cụm Leiden trong [GraphRAG](graphrag.md): thô sơ hơn, nhưng chỉ cần thư viện chuẩn cộng với NetworkX và cho kết quả tức thì ở quy mô này.
 
-## What each command answers
+## Câu trả lời từ mỗi lệnh
 
 ```
 $ python scripts/graph_query.py neighbors "RAG"
@@ -108,11 +108,11 @@ $ python scripts/graph_query.py communities
 [2] Jerry Liu, LlamaIndex
 ```
 
-`neighbors` is the one-hop view of a page, both directions, with the relationship named. `communities` is the theme layer: each line one cluster, largest first.
+Lệnh `neighbors` cung cấp góc nhìn một bước nhảy (one-hop) quanh một trang theo cả hai chiều đi và đến, kèm theo tên mối quan hệ. Lệnh `communities` chính là tầng chủ đề: mỗi dòng là một cụm, xếp từ cụm lớn nhất trở xuống.
 
-## What connects X and Y
+## Điều gì kết nối X và Y
 
-The reason this build exists. `connects` returns the shortest chain between two pages with every hop typed:
+Đây chính là lý do bài thực hành này tồn tại. Lệnh `connects` trả về chuỗi liên kết ngắn nhất giữa hai trang cùng kiểu quan hệ rõ ràng trên từng bước nhảy:
 
 ```
 $ python scripts/graph_query.py connects "Jerry Liu" "Lost in the Middle"
@@ -121,4 +121,4 @@ LlamaIndex <-[uses]- RAG
 RAG <-[links-to]- Lost in the Middle
 ```
 
-That is a multi-hop join, computed rather than guessed — the exact question [why graphs](why-graphs.md) says vector retrieval fails on. It is also a plain function taking two strings and returning a string, which is precisely the shape an agent tool wants. Wiring that up is [Build: Put It in the Loop](build-use.md).
+Đó là một phép kết nối đa bước (multi-hop join) được tính toán đàng hoàng thay vì đoán mò — đúng dạng câu hỏi mà bài [tại sao cần Knowledge Graph](why-graphs.md) đã chỉ ra rằng truy xuất Vector sẽ thất bại. Bản thân nó cũng chỉ là một hàm thuần túy nhận vào hai chuỗi ký tự và trả về một chuỗi ký tự, khớp hoàn hảo với hình hài mà một công cụ của Agent (Agent tool) mong muốn. Việc đấu nối hàm này vào hệ thống sẽ nằm ở phần [Thực hành: Đưa vào vòng lặp (Loop)](build-use.md).

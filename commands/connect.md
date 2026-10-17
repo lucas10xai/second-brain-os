@@ -1,7 +1,7 @@
 ---
-description: Find the path between two ideas
+description: Tìm đường dẫn kết nối giữa hai ý tưởng
 ---
 
-Find how the two things in $ARGUMENTS connect in the vault. Show the path through pages, not just the endpoints.
+Tìm cách hai khái niệm trong $ARGUMENTS kết nối với nhau trong kho tri thức. Hiển thị toàn bộ đường dẫn đi qua các trang trung gian chứ không chỉ hai điểm đầu cuối.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

@@ -1,10 +1,10 @@
-# Build: the Jev Swap
+# Thực hành: Hoán đổi sang Jev
 
-The point of the last two pages was to make this one boring. The [decision endpoint](build-decision-endpoint.md) and the [router](build-router.md) agree on one contract — `decide(schema, question, state)` returning a value and a confidence — so replacing the LLM stand-in with Jev should be a one-file change, not a rewrite. Whether you can make the change yet depends on the waitlist; current access status in [getting started](getting-started.md).
+Mục đích của hai trang trước là làm cho trang này trở nên đơn giản đến mức nhàm chán. [Điểm cuối quyết định](build-decision-endpoint.md) và [bộ định tuyến (Router)](build-router.md) đã thống nhất với nhau trên một bản hợp đồng giao tiếp duy nhất — hàm `decide(schema, question, state)` trả về một giá trị kèm độ tự tin — nhờ đó việc thay thế bản đóng thế dùng LLM bằng Jev chỉ là thao tác sửa một tệp duy nhất, chứ không phải viết lại từ đầu. Việc bạn đã có thể thực hiện bước chuyển đổi này ngay hay chưa phụ thuộc vào danh sách chờ; xem tình trạng cấp quyền truy cập hiện tại ở bài [bắt đầu với Jev](getting-started.md).
 
-## The seam
+## Đường khớp nối (The seam)
 
-Give the router a single import point that names no implementation. This file is the only one that ever changes:
+Hãy cung cấp cho Router một điểm nhập (import) duy nhất không gắn cứng với bất kỳ cách triển khai cụ thể nào. Tệp dưới đây là nơi duy nhất cần thay đổi về sau:
 
 ```python
 # decider.py — the seam. Swapping implementations is an edit here, nowhere else.
@@ -13,7 +13,7 @@ from decision import decide  # today: the LLM stand-in
 # from jev_decider import decide  # later: Jev, once access arrives
 ```
 
-Change `router.py` to `from decider import decide` and the swap is staged. The Jev side maps schema shapes onto its primitives — enums become a `Choice`, booleans a `Noul`, and anything open-ended is refused, because Jev only answers bounded questions:
+Chỉ cần đổi dòng import trong `router.py` thành `from decider import decide` là quá trình hoán đổi đã sẵn sàng vào bệ phóng. Ở phía Jev, mã nguồn sẽ ánh xạ các hình thái lược đồ (schema) sang các kiểu nguyên thủy tương ứng — danh sách liệt kê (`enum`) trở thành `Choice`, kiểu logic (`boolean`) trở thành `Noul`, và bất kỳ kiểu đầu ra mở nào khác đều bị từ chối thẳng, bởi Jev chỉ trả lời các câu hỏi có phạm vi hữu hạn:
 
 ```python
 # jev_decider.py — written from TypeSafe's published docs, UNTESTED until you
@@ -34,9 +34,9 @@ def decide(schema: dict, question: str, state: str) -> dict:
     return {"value": answer.value, "confidence": answer.probability}
 ```
 
-## Shadow mode first
+## Chạy chế độ ẩn (Shadow mode) trước
 
-Do not flip the import on day one. Run Jev in shadow: the stand-in still answers every request, Jev answers the same request on the side, and both go in the log. Jev failures cannot hurt production because nothing reads its answer yet.
+Đừng vội gạt công tắc đổi dòng import ngay trong ngày đầu tiên. Hãy cho Jev chạy ở chế độ ẩn (shadow mode): bản đóng thế LLM vẫn trả lời mọi yêu cầu thực tế, Jev âm thầm trả lời cùng yêu cầu đó ở nhánh phụ, và kết quả của cả hai cùng được ghi vào nhật ký. Nếu Jev gặp lỗi thì hệ thống thực tế (production) cũng không hề hấn gì vì chưa có luồng nghiệp vụ nào đọc câu trả lời của nó cả.
 
 ```python
 # shadow.py — point the seam here during the trial period.
@@ -65,13 +65,13 @@ def decide(schema: dict, question: str, state: str) -> dict:
     return live  # callers only ever see the stand-in
 ```
 
-## What to measure before flipping
+## Những chỉ số cần đo lường trước khi chuyển hẳn
 
-Baseline the stand-in for a week, then compare on the shadow log:
+Hãy thu thập số liệu cơ sở (baseline) của bản đóng thế trong một tuần, sau đó đem so sánh trên tệp nhật ký chạy ẩn (`shadow.jsonl`):
 
-- **Latency.** p50 and p95 of `live_ms` against `shadow_ms`, measured from your infrastructure — not TypeSafe's 70–500ms claim.
-- **Cost.** Five Haiku calls per decision against Jev's metered input tokens, per thousand decisions.
-- **Agreement rate.** How often the two `value`s match. High agreement plus better latency is the green light; low agreement means someone is wrong, and only labels say who.
-- **Calibration.** Bucket Jev's probabilities and check accuracy per bucket against your labels — the vendor's central claim, tested on your traffic.
+- **Độ trễ (Latency).** Phân vị p50 và p95 của `live_ms` đối chiếu với `shadow_ms`, được đo trực tiếp từ hạ tầng mạng của bạn — chứ không phải con số quảng cáo 70–500ms của TypeSafe.
+- **Chi phí (Cost).** Năm lệnh gọi Haiku cho mỗi quyết định đặt cạnh lượng token đầu vào tính phí của Jev, quy chuẩn trên mỗi một nghìn quyết định.
+- **Tỷ lệ đồng thuận (Agreement rate).** Tần suất hai trường `value` khớp nhau là bao nhiêu. Tỷ lệ đồng thuận cao đi kèm độ trễ tốt hơn là tín hiệu đèn xanh để chuyển đổi; tỷ lệ đồng thuận thấp có nghĩa là một trong hai bên đã sai, và chỉ có bộ nhãn của con người mới phân xử được ai đúng ai sai.
+- **Độ hiệu chuẩn (Calibration).** Gom nhóm (bucket) các mức xác suất của Jev và kiểm tra độ chính xác thực tế trong từng nhóm đối chiếu với nhãn của bạn — đây chính là bước kiểm chứng tuyên bố cốt lõi của nhà cung cấp ngay trên lưu lượng dữ liệu thực của bạn.
 
-Flip the import in `decider.py` when the numbers earn it, and keep the stand-in one comment away as the rollback.
+Hãy đổi dòng import trong `decider.py` khi các con số thực tế chứng minh nó xứng đáng, và luôn giữ bản đóng thế cách đó đúng một dấu chú thích (`#`) làm phương án quay lui (rollback) tức thì.

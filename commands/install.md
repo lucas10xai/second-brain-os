@@ -1,5 +1,5 @@
 ---
-description: Install the skills, commands and agents
+description: Cài đặt bộ skills, commands và agents
 ---
 
-Copy the skills, commands and agents into `.claude/` inside the vault, and the scripts into `scripts/`, so they are versioned with the notes. Ask for the path of the `second-brain-os` checkout if it is not given as $ARGUMENTS. Do not copy the folder README.md files, since a README in `.claude/commands/` becomes a `/README` command. Report what was installed and what already existed.
+Sao chép các thư mục skills, commands và agents vào `.claude/` bên trong kho tri thức, đồng thời chép các script vào `scripts/` để chúng được quản lý phiên bản cùng với các ghi chú. Hỏi đường dẫn tới thư mục mã nguồn `second-brain-os` nếu người dùng không truyền qua $ARGUMENTS. Không sao chép các file README.md trong từng thư mục, vì một file README nằm trong `.claude/commands/` sẽ biến thành lệnh `/README`. Báo cáo những gì đã được cài đặt mới và những gì đã tồn tại từ trước.

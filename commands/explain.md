@@ -1,7 +1,7 @@
 ---
-description: Explain it back and find the gaps
+description: Tự giải thích lại để tìm ra khoảng trống kiến thức
 ---
 
-Ask the user to explain $ARGUMENTS from memory, then compare what they said against their page and name what was left out.
+Yêu cầu người dùng tự giải thích $ARGUMENTS theo trí nhớ của họ, sau đó đối chiếu những gì họ nói với trang ghi chú của chính họ và chỉ ra những điểm bị bỏ sót.
 
-Follow the `second-brain-quiz` skill.
+Thực hiện theo skill `second-brain-quiz`.

@@ -1,20 +1,18 @@
-# Maintenance
+# Bảo trì (Maintenance)
 
-What keeps the thing alive after the novelty wears off.
+Những việc giúp duy trì sức sống cho toàn bộ hệ thống sau khi cảm giác hào hứng ban đầu qua đi.
 
-Month one is easy because it is new. The vault that still works in year two is
-the one where maintenance is automated, cheap, and produces something you
-actually read.
+Tháng đầu tiên luôn dễ dàng vì mọi thứ còn mới mẻ. Một Vault vẫn còn hoạt động tốt sang đến năm thứ hai là một Vault mà công việc bảo trì đã được tự động hóa, nhẹ nhàng, ít tốn kém và tạo ra những bản tổng hợp mà bạn thực sự muốn đọc.
 
-## Pages
+## Các trang trong chương
 
-- [Linting the vault](lint-and-health.md)
-- [Review cadence](review-cadence.md)
-- [Versioning](versioning-with-git.md)
-- [Backups and portability](backups-and-portability.md)
-- [Privacy](privacy-and-secrets.md)
-- [Scaling past a thousand pages](scaling.md)
+- [Kiểm tra sức khỏe Vault bằng Lint](lint-and-health.md)
+- [Nhịp độ rà soát định kỳ](review-cadence.md)
+- [Quản lý phiên bản với Git](versioning-with-git.md)
+- [Sao lưu và tính khả chuyển](backups-and-portability.md)
+- [Quyền riêng tư và thông tin nhạy cảm](privacy-and-secrets.md)
+- [Mở rộng quy mô vượt ngưỡng một nghìn trang](scaling.md)
 
 ---
 
-[Back to the full guide](../README.md)
+[Quay lại toàn bộ hướng dẫn](../README.md)

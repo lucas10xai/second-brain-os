@@ -1,28 +1,24 @@
-# Contributing
+# Hướng dẫn đóng góp
 
-## What is wanted
+## Những đóng góp được hoan nghênh
 
-- Fixes to the guide where it is wrong or out of date
-- Resources that are genuinely worth someone's time
-- Examples: real vault structures, real output, screenshots
-- Skills and commands that solve a problem the existing ones do not
+- Sửa các điểm sai sót hoặc thông tin đã lỗi thời trong cẩm nang
+- Các nguồn tài nguyên thực sự đáng để người đọc dành thời gian tìm hiểu
+- Các ví dụ thực tế: cấu trúc Vault thật, kết quả đầu ra thật, ảnh chụp màn hình
+- Các Skills và Slash commands giải quyết được những vấn đề mà bộ công cụ hiện tại chưa làm được
 
-## What is not
+## Những nội dung không phù hợp
 
-- Tool listings with no explanation of why the tool is worth using
-- Affiliate or referral links
-- Pages padded with general advice that applies to any note system
+- Danh sách liệt kê công cụ nhưng không giải thích rõ vì sao công cụ đó đáng dùng
+- Liên kết tiếp thị liên kết (affiliate) hoặc giới thiệu (referral)
+- Các trang viết lan man bằng những lời khuyên chung chung áp dụng cho hệ thống ghi chú nào cũng được
 
-## Standards
+## Tiêu chuẩn nội dung
 
-Every factual claim needs a source, and the source has to be the primary one:
-the README, the paper, the release note, not somebody's summary of it. Numbers
-that appear only in secondary coverage get dropped. If two sources disagree,
-say so rather than picking the one that reads better.
+Mọi khẳng định mang tính dữ kiện đều phải có nguồn dẫn chứng, và đó phải là nguồn gốc (primary source): file README chính thức, bài báo nghiên cứu gốc, ghi chú phát hành (release note), chứ không phải bài tóm tắt lại của một bên thứ ba. Những con số chỉ xuất hiện trên các bài viết thứ cấp sẽ bị loại bỏ. Nếu hai nguồn thông tin mâu thuẫn nhau, hãy nêu rõ sự khác biệt đó thay vì chỉ chọn nguồn nào nghe xuôi tai hơn.
 
-Write plainly. No marketing language, no emoji, no filler.
+Hãy viết ngắn gọn, rõ ràng, trực diện. Không dùng ngôn từ quảng cáo, không dùng biểu tượng cảm xúc (emoji), không thêm câu chữ rườm rà.
 
-## Pull requests
+## Gửi Pull Request
 
-One topic per PR. If you are adding a docs page, follow the shape of the
-existing pages in that section and update the section `README.md` index.
+Mỗi Pull Request chỉ nên tập trung vào một chủ đề duy nhất. Nếu bạn thêm một trang tài liệu mới vào `docs/`, hãy tuân thủ bố cục của các trang hiện có trong chương đó và cập nhật lại danh mục trong file `README.md` của chương.

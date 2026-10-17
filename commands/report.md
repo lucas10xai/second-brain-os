@@ -1,7 +1,7 @@
 ---
-description: Write a research report
+description: Viết báo cáo nghiên cứu
 ---
 
-Report on $ARGUMENTS. Scope against the vault first, name the gaps before writing, cite pages, state what could not be established.
+Viết báo cáo về $ARGUMENTS. Xác định phạm vi dựa trên kho tri thức trước, chỉ rõ các khoảng trống thông tin trước khi đặt bút viết, trích dẫn các trang được dùng, và nêu rõ những điều chưa thể khẳng định.
 
-Follow the `second-brain-report` skill.
+Thực hiện theo skill `second-brain-report`.

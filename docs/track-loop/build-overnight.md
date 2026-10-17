@@ -1,10 +1,10 @@
-# Build: the Overnight Loop
+# Thực hành: Vòng lặp chạy qua đêm (Build: the Overnight Loop)
 
-The final build runs unattended. Everything from [parts one and two](build-goal-test.md) still applies; what changes is that nobody is watching, so the rails must make the worst case boring: a budget on iterations, a ratchet that stops the run the moment progress stalls, a morning report in markdown, and git as the safety net — own branch, hard reset on regression, and nothing is ever pushed.
+Bản dựng cuối cùng sẽ chạy tự động không cần người giám sát. Mọi nguyên tắc từ [phần một và phần hai](build-goal-test.md) vẫn được giữ nguyên; điều thay đổi là không có ai ngồi canh, vì vậy các thanh ray an toàn phải làm cho kịch bản tệ nhất trở nên nhàm chán: một ngân sách giới hạn số vòng lặp, một chốt chặn một chiều (ratchet) dừng phiên chạy ngay khoảnh khắc tiến độ chững lại, một bản báo cáo buổi sáng viết bằng markdown, và git đóng vai trò lưới an toàn — chạy trên nhánh riêng, `reset --hard` ngay khi có suy thoái (regression), và tuyệt đối không bao giờ tự động `push`.
 
-The ratchet is the heart. Each iteration must beat the best previous score — here, tests passing — or the loop resets the attempt and stops. Monotonic or nothing; a loop allowed to move sideways all night will. The reasoning is in [stop conditions](stop-conditions.md).
+Trái tim của hệ thống là cơ chế ratchet. Mỗi vòng lặp bắt buộc phải vượt qua điểm số tốt nhất trước đó — ở đây là số lượng bài test vượt qua — nếu không `Loop` sẽ khôi phục (reset) lần thử đó và dừng lại ngay. Hoặc tiến lên đơn điệu, hoặc không gì cả; một `Loop` được phép đi ngang suốt đêm chắc chắn sẽ đi ngang suốt đêm. Lý giải chi tiết nằm ở bài [điều kiện dừng (`Stop condition`)](stop-conditions.md).
 
-## The code
+## Mã nguồn thực thi
 
 ```python
 #!/usr/bin/env python3
@@ -69,12 +69,12 @@ if __name__ == "__main__":
     main()
 ```
 
-Run `python overnight.py` before bed; read `MORNING-REPORT.md` with coffee.
+Hãy chạy `python overnight.py` trước khi đi ngủ; và đọc `MORNING-REPORT.md` bên tách cà phê sáng hôm sau.
 
-## The rails, spelled out
+## Giải phẫu các thanh ray an toàn
 
-**Branch, commit, never push.** Every improvement is committed on `overnight/<stamp>`, so the morning decision is a normal code review of a normal branch. The script contains no push and the agent has no git permissions at all — its `--allowedTools` covers reading, editing and pytest, nothing else. `--permission-prompts none` tells the harness nobody is available: anything that would prompt is denied rather than left hanging until dawn.
+**Tạo nhánh riêng, commit, không bao giờ push.** Mọi bước tiến đều được commit trên nhánh `overnight/<stamp>`, nhờ vậy quyết định vào buổi sáng chỉ đơn giản là một buổi duyệt code (code review) bình thường trên một nhánh bình thường. Script không chứa lệnh push nào và `Agent` hoàn toàn không có quyền chạy lệnh git — cờ `--allowedTools` của nó chỉ bao gồm quyền đọc, sửa tệp và chạy pytest, ngoài ra không còn gì khác. Cờ `--permission-prompts none` báo cho `Harness` biết không có ai trực máy: bất kỳ thao tác nào đòi hỏi hỏi ý kiến người dùng đều bị từ chối ngay thay vì treo máy chờ đến bình minh.
 
-**Reset on regression.** When the score fails to improve, `git reset --hard` discards the attempt before stopping. Combined with the ratchet, the invariant is strong: the branch only ever contains states measurably better than the last, which is what lets you trust the report without rereading every diff.
+**Khôi phục cứng khi suy thoái (Reset on regression).** Khi điểm số không cải thiện được thêm, lệnh `git reset --hard` sẽ hủy bỏ ngay lần thử đó trước khi dừng vòng lặp. Kết hợp với cơ chế ratchet, tính bất biến (invariant) đạt được rất mạnh: nhánh làm việc chỉ chứa những trạng thái tốt hơn một cách đo lường được so với trạng thái trước đó, điều giúp bạn tin tưởng vào bản báo cáo mà không cần đọc lại từng dòng diff của các lần thử hỏng.
 
-**The report is the mailbox.** Unattended loops make unattended mistakes; the report is where they surface, per iteration, with the brake that fired. Between iterations, only `TODO.md` and the ratchet file persist — deliberately, per [context hygiene](context-hygiene.md). Each session wakes up cold, reads the todo, and does one bounded thing.
+**Bản báo cáo chính là hộp thư.** Các `Loop` chạy không người giám sát sẽ mắc những sai lầm không người giám sát; bản báo cáo là nơi chúng lộ diện qua từng vòng lặp, kèm theo thông tin về chiếc phanh đã kích hoạt. Giữa các vòng lặp, chỉ có `TODO.md` và tệp ratchet được lưu giữ lại — một sự chủ đích tuân theo đúng nguyên lý [vệ sinh ngữ cảnh (`Context hygiene`)](context-hygiene.md). Mỗi phiên làm việc thức dậy từ trạng thái lạnh, đọc danh sách việc cần làm và thực hiện đúng một công việc có ranh giới rõ ràng.

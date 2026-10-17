@@ -1,7 +1,7 @@
 ---
-description: Test yourself on your own pages
+description: Tự kiểm tra kiến thức trên chính các trang của bạn
 ---
 
-Generate questions from the pages on $ARGUMENTS. Withhold answers until attempted, then grade against the pages.
+Tạo câu hỏi ôn tập từ các trang viết về $ARGUMENTS. Giữ kín đáp án cho đến khi người dùng trả lời xong, sau đó chấm điểm dựa trên nội dung trong các trang đó.
 
-Follow the `second-brain-quiz` skill.
+Thực hiện theo skill `second-brain-quiz`.

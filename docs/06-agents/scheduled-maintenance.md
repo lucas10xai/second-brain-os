@@ -1,32 +1,24 @@
-# Scheduling
+# Lập lịch tự động (Scheduling)
 
-Scheduled runs are what make the vault feel alive. You wake up and it has filed
-what you clipped, noticed a contradiction, and left you three lines about what
-changed.
+Các lượt chạy theo lịch định kỳ chính là thứ làm cho `Vault` có cảm giác như một thực thể sống. Bạn thức dậy và thấy nó đã phân loại xong những gì bạn lưu qua `Web Clipper` hôm qua, phát hiện ra một điểm mâu thuẫn, và để lại cho bạn đúng ba dòng tóm tắt những gì đã thay đổi.
 
-They are also unattended writes to your notes, so the order matters: get the
-[guardrails](safety-and-guardrails.md) right first, then schedule.
+Nhưng đó cũng là những thao tác ghi tự động không có người giám sát trực tiếp vào kho ghi chú của bạn, vì vậy trình tự triển khai rất quan trọng: hãy thiết lập [Guardrails (Rào chắn an toàn)](safety-and-guardrails.md) thật chuẩn chỉnh trước, rồi mới lên lịch chạy tự động.
 
-## Cadence per job
+## Nhịp độ chạy cho từng tác vụ
 
-**Ingest, daily.** Overnight, on whatever accumulated in `raw/` during the day.
-Daily is right because a batch gives the agent a chance to notice that three
-things you saved are about the same idea. Hourly does not.
+**`Ingest`, hàng ngày.** Chạy qua đêm, xử lý bất cứ thứ gì đã tích lũy trong thư mục `raw/` suốt cả ngày hôm đó. Nhịp độ hàng ngày là vừa đẹp vì gom theo lô (batch) giúp `Agent` có cơ hội nhận ra rằng ba bài viết bạn lưu thực chất đang cùng bàn về một ý tưởng. Chạy hàng giờ sẽ không làm được điều đó.
 
-**Link, weekly.** Connections need material to connect. Run it after a week of
-ingestion.
+**`Link`, hàng tuần.** Việc tạo kết nối cần có đủ nguyên liệu mới để kết nối. Hãy chạy nó sau một tuần `Ingest` dữ liệu.
 
-**Lint, weekly.** After the linker, so it catches what that pass broke.
+**`Lint`, hàng tuần.** Chạy ngay sau `linker`, để nó bắt được bất kỳ lỗi nào mà lượt kết nối vừa rồi vô tình gây ra.
 
-**Review, weekly.** The one output you actually read. Put it on the morning you
-plan.
+**`Review`, hàng tuần.** Đây là kết quả đầu ra duy nhất mà bạn thực sự dành thời gian đọc kỹ. Hãy đặt lịch chạy vào buổi sáng mà bạn thường lên kế hoạch tuần mới.
 
-**Metrics, monthly.** Four numbers appended to a note. See
-[metrics](../05-graphs/metrics.md).
+**`Metrics`, hàng tháng.** Bốn con số được ghi nối tiếp vào một trang ghi chú. Xem thêm [Các chỉ số đồ thị đáng theo dõi](../05-graphs/metrics.md).
 
-## Setting one up
+## Cách thiết lập một lịch chạy
 
-In Claude Desktop, the Schedule tab, then a new task:
+Trong ứng dụng Claude Desktop, mở tab Schedule, sau đó tạo một tác vụ mới:
 
 ```
 Frequency:  Daily, 7:00am
@@ -37,43 +29,32 @@ Prompt:     File anything new in raw/ into the wiki following CLAUDE.md.
             what changed.
 ```
 
-Or ask for it in a session: "set up a daily task at 7am that ingests raw/ and
-summarises what changed".
+Hoặc yêu cầu trực tiếp ngay trong một phiên làm việc: *"thiết lập một tác vụ hàng ngày lúc 7 giờ sáng để ingest thư mục raw/ và tóm tắt những gì đã thay đổi"*.
 
-From a terminal, `cron` or Task Scheduler calling Claude Code headless works the
-same way, and is the better option if you want the run inside a git commit
-automatically.
+Từ cửa sổ dòng lệnh (terminal), dùng `cron` hoặc Task Scheduler gọi `Claude Code` ở chế độ không giao diện (headless) cũng hoạt động theo cách tương tự, và đây là lựa chọn tốt hơn nếu bạn muốn lượt chạy đó tự động được đóng gói bên trong một bản commit `Git`.
 
-## What a run must produce
+## Ba thứ mọi lượt chạy bắt buộc phải tạo ra
 
-Three things, every time.
+Ba thứ, không thiếu lần nào.
 
-**A log entry.** Otherwise you cannot audit what happened while you were asleep.
+**Một dòng nhật ký trong `log.md`.** Nếu không có nó, bạn không thể kiểm toán (audit) được chuyện gì đã diễn ra trong lúc mình đang ngủ.
 
-**A commit.** One per run, with the run named in the message. This is what makes
-a bad run revertible in one command instead of an evening.
+**Một bản commit `Git`.** Mỗi lượt chạy một commit, với tên lượt chạy được ghi rõ trong thông điệp commit. Đây là thứ giúp một lượt chạy lỗi có thể được hoàn tác (revert) chỉ bằng một câu lệnh thay vì mất cả buổi tối để dọn dẹp.
 
-**A report to you.** Even one line. A scheduled task that produces nothing
-visible is one you stop trusting and then stop reading.
+**Một báo cáo ngắn gửi cho bạn.** Dù chỉ là một dòng. Một tác vụ chạy ngầm theo lịch mà không tạo ra bất kỳ tín hiệu hiển thị nào là thứ bạn sẽ dần mất niềm tin và rồi ngừng ngó ngàng tới.
 
-## Detecting silent failure
+## Phát hiện lỗi âm thầm (Silent failure)
 
-The failure mode is not a crash. It is a run that completes and does nothing
-useful: the source was empty, the API call failed halfway, the instructions
-matched no files.
+Kiểu lỗi nguy hiểm nhất không phải là ứng dụng bị sập (crash). Mà là một lượt chạy báo hoàn tất thành công nhưng thực chất chẳng làm được việc gì hữu ích: tài liệu nguồn bị rỗng, lệnh gọi API bị đứt gánh giữa đường, hoặc bộ chỉ dẫn không khớp với bất kỳ file nào.
 
-Two cheap checks. Have the run report counts, not just completion, so "ingested
-0 sources" is visible. And look at commit frequency once a month: a week with no
-commits from the daily task means it has been failing quietly since Tuesday.
+Có hai bước kiểm tra rất rẻ. Thứ nhất, yêu cầu lượt chạy báo cáo các con số đếm cụ thể thay vì chỉ báo hoàn thành, để những dòng như *"đã ingest 0 tài liệu nguồn"* lập tức đập vào mắt bạn. Thứ hai, hãy nhìn vào tần suất commit mỗi tháng một lần: một tuần trôi qua mà không có commit nào từ tác vụ hàng ngày có nghĩa là nó đã âm thầm chết từ hôm thứ Ba rồi.
 
-## Start manual
+## Hãy bắt đầu bằng cách chạy thủ công
 
-Run each job by hand for a week before scheduling it. You are checking that the
-output is good enough to accept without reading it closely, because that is
-exactly what scheduling means.
+Hãy tự tay kích hoạt từng tác vụ trong suốt một tuần trước khi đưa nó vào lịch chạy tự động. Mục đích là để bạn kiểm tra xem chất lượng đầu ra đã đủ tốt để chấp nhận mà không cần đọc săm soi từng chữ hay chưa — bởi vì chấp nhận không cần đọc kỹ chính xác là bản chất của việc lập lịch tự động.
 
-Schedule the ingest last. It is the one that writes most.
+Hãy lên lịch tự động cho tác vụ `Ingest` sau cùng. Vì đó là tác vụ thực hiện việc ghi nhiều nhất.
 
-## Next
+## Tiếp theo
 
-[Subagents and parallel work](subagents.md)
+[Subagents và xử lý song song](subagents.md)

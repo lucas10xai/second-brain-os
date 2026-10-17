@@ -17,7 +17,7 @@ for secdir in sorted(glob.glob(f"{ROOT}/docs/*/")):
     m = re.search(r"^#[^\n]+\n\n([^\n].*?)\n\n", idx, re.S)
     if m: sblurb = " ".join(m.group(1).split())
     SECTION_TITLES[sec] = {"title": stitle, "blurb": sblurb}
-    listed = re.findall(r"^- \[[^\]]+\]\(([a-z0-9-]+)\.md\)", idx, re.M)
+    listed = re.findall(r"^\s*(?:\d+\.|[-*])\s+\[[^\]]+\]\(([a-z0-9-]+)\.md\)", idx, re.M)
     files = [f + ".md" for f in listed]
     for extra in sorted(os.path.basename(x) for x in glob.glob(secdir + "*.md")):
         if extra != "README.md" and extra not in files: files.append(extra)
@@ -74,8 +74,8 @@ edges = [{"a": a, "b": b, "w": n} for (a, b), n in w.items()]
 
 # ---- resources: parse every markdown table row that carries a link
 res = []
-CAT = {"plugins.md": "Obsidian plugin", "tools.md": "Tool", "skills.md": "Skills",
-       "repositories.md": "Repository", "papers.md": "Paper", "reading.md": "Reading"}
+CAT = {"plugins.md": "Plugin Obsidian", "tools.md": "Công cụ", "skills.md": "Skills",
+       "repositories.md": "Kho mã nguồn", "papers.md": "Bài báo khoa học", "reading.md": "Bài đọc"}
 for f in sorted(glob.glob(f"{ROOT}/resources/*.md")):
     fn = os.path.basename(f)
     if fn == "README.md": continue
@@ -92,11 +92,11 @@ for f in sorted(glob.glob(f"{ROOT}/resources/*.md")):
         metric = ""
         desc = ""
         for c in rest:
-            if re.fullmatch(r"[\d,.]+[KM]?|community plugin|small", c.strip()):
+            if re.fullmatch(r"[\d,.]+[KkM]?|community plugin|plugin cộng đồng|small|nhỏ", c.strip(), re.I):
                 metric = c.strip()
             else:
                 desc = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", c)
-        res.append({"file": fn, "kind": CAT.get(fn, "Link"), "group": group,
+        res.append({"file": fn, "kind": CAT.get(fn, "Liên kết"), "group": group,
                     "name": link.group(1), "url": link.group(2),
                     "metric": metric, "desc": desc.strip()})
 

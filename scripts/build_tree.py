@@ -11,8 +11,8 @@ import io, json, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-GH = "https://github.com/undefined-ui/second-brain-os/blob/main/"
-GHT = "https://github.com/undefined-ui/second-brain-os/tree/main/"
+GH = "https://github.com/lucas10xai/second-brain-os/blob/main/"
+GHT = "https://github.com/lucas10xai/second-brain-os/tree/main/"
 
 COMMAND_GROUPS = {
     "ingestion": ["ingest", "ingest-url", "ingest-youtube", "ingest-pdf",
@@ -35,33 +35,33 @@ COMMAND_GROUPS = {
 }
 
 TOP_FILES = [
-    ("README.md", "Guide index, quickstart, curated catalog"),
-    ("CONTRIBUTING.md", "Primary sources only, no affiliate links"),
+    ("README.md", "Mục lục cẩm nang, hướng dẫn bắt đầu nhanh, danh mục chọn lọc"),
+    ("CONTRIBUTING.md", "Chỉ nhận nguồn gốc chính thống, không chứa liên kết tiếp thị"),
     ("LICENSE", "MIT"),
 ]
 
 VAULT = [
-    ("CLAUDE.md", "Page contracts, linking rules, contradictions"),
-    ("raw/", "Sources land here, never edited after"),
-    ("wiki/", "The artefact the agent maintains"),
-    ("wiki/sources/", "One page per ingested item"),
-    ("wiki/entities/", "People, orgs, projects, tools"),
-    ("wiki/concepts/", "Ideas. The pages that compound"),
-    ("wiki/synthesis/", "Only when it says what no source did"),
-    ("wiki/index.md", "Catalog. Read first, always"),
-    ("wiki/log.md", "One line per run. Makes it auditable"),
+    ("CLAUDE.md", "Quy ước trang, quy tắc liên kết, xử lý mâu thuẫn"),
+    ("raw/", "Nguồn tài liệu thô đưa vào đây, không bao giờ chỉnh sửa"),
+    ("wiki/", "Kho tri thức do Agent duy trì"),
+    ("wiki/sources/", "Mỗi nguồn tài liệu đã nạp tương ứng một trang"),
+    ("wiki/entities/", "Con người, tổ chức, dự án, công cụ"),
+    ("wiki/concepts/", "Các khái niệm & ý tưởng — những trang tích lũy giá trị"),
+    ("wiki/synthesis/", "Chỉ tạo khi đúc kết được điều chưa nguồn đơn lẻ nào nói"),
+    ("wiki/index.md", "Danh mục tổng. Agent luôn đọc đầu tiên"),
+    ("wiki/log.md", "Mỗi lần chạy một dòng. Giúp toàn bộ vault có thể kiểm toán"),
     ("projects/", "Inputs / Process / Outputs / Feedback"),
-    ("templates/", "Source, concept, entity, synthesis"),
-    ("output/", "Reports and drafts, ingested back later"),
+    ("templates/", "Mẫu trang: Source, concept, entity, synthesis"),
+    ("output/", "Báo cáo và bản nháp, được nạp ngược lại vào vault sau đó"),
 ]
 
 RESOURCES_DESC = {
     "papers.md": "GraphRAG, HippoRAG, Lost in the Middle",
-    "plugins.md": "Obsidian plugins ranked by installs",
-    "reading.md": "Karpathy's gist, Ahrens, Forte, Matuschak",
-    "repositories.md": "GraphRAG, agent memory, RAG frameworks",
-    "skills.md": "More skills counted across the ecosystem",
-    "tools.md": "Editors, capture, search, graph, publishing",
+    "plugins.md": "Các plugin Obsidian xếp hạng theo lượt cài đặt",
+    "reading.md": "Gist của Karpathy, Ahrens, Forte, Matuschak",
+    "repositories.md": "GraphRAG, bộ nhớ Agent, các framework RAG",
+    "skills.md": "Các bộ sưu tập skills trong hệ sinh thái",
+    "tools.md": "Trình soạn thảo, thu thập, tìm kiếm, đồ thị, xuất bản",
 }
 
 
@@ -95,6 +95,9 @@ def docstring(path):
 
 
 def site_pages():
+    sd = os.path.join(ROOT, "site_data.json")
+    if os.path.exists(sd):
+        return json.load(io.open(sd, encoding="utf-8"))
     s = io.open(os.path.join(ROOT, "index.html"), encoding="utf-8").read()
     i = s.find('application/json">') + len('application/json">')
     D = json.loads(s[i:s.find("</script>", i)])
@@ -126,7 +129,7 @@ def main():
     ag = sorted(f for f in os.listdir(os.path.join(ROOT, "agents"))
                 if f.endswith(".md") and f != "README.md")
     out.append('<div class="sec">' + branch(
-        "agents/", GHT + "agents", f"{len(ag)} subagents, 4 of them read-only",
+        "agents/", GHT + "agents", f"{len(ag)} subagent, trong đó 4 subagent chỉ đọc (read-only)",
         [row(a, GH + "agents/" + a, fm_desc(os.path.join(ROOT, "agents", a)))
          for a in ag]) + "</div>")
 
@@ -134,7 +137,7 @@ def main():
     sk = sorted(d for d in os.listdir(os.path.join(ROOT, "skills"))
                 if os.path.isdir(os.path.join(ROOT, "skills", d)))
     out.append('<div class="sec">' + branch(
-        "skills/", GHT + "skills", f"{len(sk)} skills, one per workflow",
+        "skills/", GHT + "skills", f"{len(sk)} skills, mỗi quy trình một skill",
         [row(d + "/", GH + f"skills/{d}/SKILL.md",
              fm_desc(os.path.join(ROOT, "skills", d, "SKILL.md")))
          for d in sk]) + "</div>")
@@ -161,8 +164,8 @@ def main():
                 n_plug_tools += 1
     out.append('<div class="sec">' + branch(
         "plugins/", GHT + "plugins",
-        "the course's tools as a Claude Code plugin, installable in "
-        "two commands", plug_rows) + "</div>")
+        "Bộ công cụ của khóa học đóng gói thành plugin Claude Code, cài đặt bằng hai câu lệnh",
+        plug_rows) + "</div>")
 
     # commands, grouped
     cmd_desc = {}
@@ -185,7 +188,7 @@ def main():
             open_=False))
     out.append('<div class="sec"><details open><summary>'
                f'<a href="{GHT}commands">commands/</a>'
-               f'<span class="c"># {len(cmd_desc)} slash commands, thin by design'
+               f'<span class="c"># {len(cmd_desc)} slash commands, thiết kế gọn nhẹ'
                '</span></summary><div class="kids">'
                + "".join(groups_html) + "</div></details></div>")
 
@@ -193,14 +196,14 @@ def main():
     py = sorted(f for f in os.listdir(os.path.join(ROOT, "scripts"))
                 if f.endswith(".py"))
     out.append('<div class="sec">' + branch(
-        "scripts/", GHT + "scripts", "Dependency-free Python",
+        "scripts/", GHT + "scripts", "Python thuần không phụ thuộc thư viện ngoài",
         [row(f, GH + "scripts/" + f, docstring(os.path.join(ROOT, "scripts", f)))
          for f in py]) + "</div>")
 
     # vault template
     out.append('<div class="sec">' + branch(
         "vault-template/", GHT + "vault-template",
-        "Clone this folder, open it in Obsidian, run /init",
+        "Sao chép thư mục này, mở bằng Obsidian và chạy /init",
         [row(n, GHT + "vault-template/" + n.rstrip("/") if n.endswith("/")
              else GH + "vault-template/" + n, d) for n, d in VAULT]) + "</div>")
 
@@ -213,13 +216,13 @@ def main():
         meta = D["sections"][sec]
         n_guide += len(ids)
         guide_secs.append(branch(
-            sec + "/", "index.html#" + ids[0],
-            f"{meta['title']} · {len(ids)} pages",
-            [row(i.split("/")[1] + ".md", "index.html#" + i, title[i])
+            sec + "/", "index.html#/read/" + ids[0],
+            f"{meta['title']} · {len(ids)} trang",
+            [row(i.split("/")[1] + ".md", "index.html#/read/" + i, title[i])
              for i in ids], open_=False))
     out.append('<div class="sec"><details open><summary>'
-               f'<a href="index.html">docs/</a><span class="c"># The guide. '
-               f'10 sections, {n_guide} pages</span></summary>'
+               f'<a href="index.html">docs/</a><span class="c"># Cẩm nang Second Brain. '
+               f'10 chương, {n_guide} trang</span></summary>'
                '<div class="kids">' + "".join(guide_secs) + "</div></details></div>")
 
     # the course
@@ -230,13 +233,13 @@ def main():
         meta = D["sections"][sec]
         n_course += len(ids)
         course_secs.append(branch(
-            sec + "/", "index.html#" + ids[0],
-            f"{meta['title']} · {len(ids)} pages",
-            [row(i.split("/")[1] + ".md", "index.html#" + i, title[i])
+            sec + "/", "index.html#/read/" + ids[0],
+            f"{meta['title']} · {len(ids)} trang",
+            [row(i.split("/")[1] + ".md", "index.html#/read/" + i, title[i])
              for i in ids], open_=False))
     out.append('<div class="sec"><details open><summary>'
                f'<a href="index.html">docs/course-*/</a><span class="c"># '
-               f'The agents course. 7 modules, {n_course} pages'
+               f'Khóa học AI Agent. 7 học phần, {n_course} trang'
                '</span></summary><div class="kids">'
                + "".join(course_secs) + "</div></details></div>")
 
@@ -248,13 +251,13 @@ def main():
         meta = D["sections"][sec]
         n_track += len(ids)
         track_secs.append(branch(
-            sec + "/", "index.html#" + ids[0],
-            f"{meta['title']} · {len(ids)} pages",
-            [row(i.split("/")[1] + ".md", "index.html#" + i, title[i])
+            sec + "/", "index.html#/read/" + ids[0],
+            f"{meta['title']} · {len(ids)} trang",
+            [row(i.split("/")[1] + ".md", "index.html#/read/" + i, title[i])
              for i in ids], open_=False))
     out.append('<div class="sec"><details open><summary>'
                f'<a href="index.html">docs/track-*/</a><span class="c"># '
-               f'Five handbooks, {n_track} pages, each ends in a build'
+               f'5 sổ tay chuyên sâu, {n_track} trang, mỗi sổ tay kết thúc bằng bài thực hành'
                '</span></summary><div class="kids">'
                + "".join(track_secs) + "</div></details></div>")
 
@@ -265,16 +268,16 @@ def main():
                  .read().count("](http") for f in res)
     out.append('<div class="sec">' + branch(
         "resources/", "resources.html",
-        f"{nlinks} vetted links, checked September 2026",
+        f"{nlinks} liên kết đã kiểm chứng",
         [row(f, "resources.html", RESOURCES_DESC.get(f, "")) for f in res])
         + "</div>")
 
-    counts = (f"{len(sk)} skills · {len(cmd_desc)} commands · "
-              f"{len(ag)} subagents · {n_plug_tools} plugin tools · "
+    counts = (f"{len(sk)} skills · {len(cmd_desc)} lệnh · "
+              f"{len(ag)} subagents · {n_plug_tools} công cụ plugin · "
               f"{len(py)} scripts · "
-              f"{n_guide} pages of guide · {n_course} course pages · "
-              f"{n_track} handbook pages · "
-              f"{nlinks} vetted links")
+              f"{n_guide} trang cẩm nang · {n_course} trang khóa học · "
+              f"{n_track} trang sổ tay · "
+              f"{nlinks} liên kết chọn lọc")
 
     page = TEMPLATE.replace("{{TREE}}", "".join(out)) \
                    .replace("{{COUNTS}}", counts)
@@ -283,17 +286,20 @@ def main():
     print("tree.html written ·", counts)
 
 
-TEMPLATE = """<!DOCTYPE html><html lang="en"><head>
+TEMPLATE = """<!DOCTYPE html><html lang="vi"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The full component tree - Second Brain OS</title>
-<meta name="description" content="Every component in second-brain-os on one page: the guide, five handbooks, skills, commands, agents, scripts and resources, each line a link.">
+<title>Cây thư mục toàn hệ thống - Second Brain OS</title>
+<meta name="description" content="Toàn bộ thành phần trong second-brain-os trên một trang: cẩm nang, 5 sổ tay chuyên sâu, skills, commands, agents, scripts và tài nguyên.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23F7F9F6'/%3E%3Crect x='.5' y='.5' width='31' height='31' rx='6.5' fill='none' stroke='%23D2DACF'/%3E%3Cpath d='M10 21 L16 11 L22 19 M16 11 L23 9' stroke='%231F6B52' stroke-width='1.6' fill='none'/%3E%3Ccircle cx='10' cy='21' r='3' fill='%23F7F9F6' stroke='%231F6B52' stroke-width='1.6'/%3E%3Ccircle cx='16' cy='11' r='3' fill='%23F7F9F6' stroke='%231F6B52' stroke-width='1.6'/%3E%3Ccircle cx='22' cy='19' r='3' fill='%23F7F9F6' stroke='%231F6B52' stroke-width='1.6'/%3E%3Ccircle cx='24' cy='8' r='2' fill='%231F6B52'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
 <style>
 :root{--paper:#EAEEE9;--card:#F7F9F6;--ink:#15201B;--soft:#4B5A52;--faint:#7C8A82;
   --rule:#D2DACF;--accent:#1F6B52;--accent-bg:#E1EDE5}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--paper);color:var(--ink);
-  font:13px/1.7 ui-monospace,Menlo,Consolas,monospace}
+  font:13px/1.7 "JetBrains Mono",Monaco,"Courier New",Consolas,monospace}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 header{border-bottom:1px solid var(--rule);background:var(--card)}
@@ -303,7 +309,7 @@ header{border-bottom:1px solid var(--rule);background:var(--card)}
 nav{display:flex;gap:14px}
 nav a{color:var(--soft)}nav a.on{color:var(--ink);font-weight:600}
 .wrap{max-width:1240px;margin:0 auto;padding:26px 22px 60px}
-h1{font:700 26px/1.2 Georgia,'Times New Roman',serif;margin-bottom:6px}
+h1{font:700 26px/1.2 "Source Serif 4",Georgia,'Times New Roman',serif;margin-bottom:6px}
 .lede{color:var(--soft);margin-bottom:14px;max-width:70ch}
 .ctl{margin-bottom:16px;display:flex;gap:8px}
 .ctl button{font:inherit;font-size:11.5px;color:var(--soft);background:var(--card);
@@ -333,23 +339,23 @@ footer{border-top:1px solid var(--rule);padding:22px;text-align:center;color:var
 <header><div class="bar">
   <a class="brand" href="index.html">[[ second<span>brain</span>os ]]</a>
   <nav>
-    <a href="index.html">Guide</a>
-    <a href="resources.html">Resources</a>
-    <a href="tree.html" class="on">Tree</a>
-    <a href="https://github.com/undefined-ui/second-brain-os">Repo</a>
+    <a href="index.html">Bản đồ</a>
+    <a href="resources.html">Tài nguyên</a>
+    <a href="tree.html" class="on">Cây thư mục</a>
+    <a href="https://github.com/lucas10xai/second-brain-os">Mã nguồn</a>
   </nav>
 </div></header>
 <div class="wrap">
-  <h1>The full component tree</h1>
-  <p class="lede">Everything in the repository on one page, annotated. Every line is a link: pages open on this site, code opens on GitHub. Click a branch to fold it.</p>
+  <h1>Cây thư mục toàn hệ thống</h1>
+  <p class="lede">Mọi thành phần trong kho mã nguồn trên một trang duy nhất kèm chú thích. Mỗi dòng là một liên kết: các trang bài viết mở ngay trên web, mã nguồn mở trên GitHub. Nhấp vào nhánh bất kỳ để đóng/mở.</p>
   <div class="ctl">
-    <button onclick="document.querySelectorAll('details').forEach(d=>d.open=true)">expand all</button>
-    <button onclick="document.querySelectorAll('details').forEach(d=>d.open=false)">collapse all</button>
+    <button onclick="document.querySelectorAll('details').forEach(d=>d.open=true)">mở rộng tất cả</button>
+    <button onclick="document.querySelectorAll('details').forEach(d=>d.open=false)">thu gọn tất cả</button>
   </div>
   <div class="cols">{{TREE}}</div>
-  <div class="counts"><b>{{COUNTS}}</b><span>generated from the repo</span></div>
+  <div class="counts"><b>{{COUNTS}}</b><span>được tạo tự động từ kho mã nguồn</span></div>
 </div>
-<footer>Generated from the repository. <a href="https://github.com/undefined-ui/second-brain-os">github.com/undefined-ui/second-brain-os</a> · by <a href="https://x.com/undefinedKi" rel="noopener">@undefinedKi</a></footer>
+<footer>Được tạo từ kho mã nguồn. <a href="https://github.com/lucas10xai/second-brain-os">github.com/lucas10xai/second-brain-os</a> · made by Lê Quốc Nghĩa</footer>
 </body></html>"""
 
 

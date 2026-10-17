@@ -1,7 +1,7 @@
 ---
-description: Find the pages holding the graph together
+description: Tìm các trang cầu nối giữ đồ thị liên kết với nhau
 ---
 
-Compute betweenness and list the pages connecting otherwise separate clusters. Say what stops informing what if each one is wrong.
+Tính toán độ trung gian (betweenness) và liệt kê các trang đang kết nối những cụm chủ đề vốn tách biệt nhau. Chỉ rõ nhánh tri thức nào sẽ mất kết nối với nhánh nào nếu mỗi trang cầu nối đó bị sai.
 
-Follow the `second-brain-graph` skill.
+Thực hiện theo skill `second-brain-graph`.

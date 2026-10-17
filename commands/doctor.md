@@ -1,7 +1,7 @@
 ---
-description: Check the setup is working
+description: Kiểm tra thiết lập hệ thống có hoạt động bình thường không
 ---
 
-Verify the vault structure, CLAUDE.md, skills, git state and MCP connection if configured. Report what is missing or misconfigured.
+Kiểm tra cấu trúc kho tri thức, CLAUDE.md, các skill, trạng thái git và kết nối MCP (nếu có cấu hình). Báo cáo những thành phần còn thiếu hoặc cấu hình sai.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

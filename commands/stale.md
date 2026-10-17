@@ -1,7 +1,7 @@
 ---
-description: Find concept pages nobody has touched
+description: Tìm các trang khái niệm lâu ngày chưa được cập nhật
 ---
 
-List concept pages whose `updated` date is older than ninety days, sorted oldest first, with how many sources arrived on their topic since.
+Liệt kê các trang khái niệm có ngày `updated` cũ hơn chín mươi ngày, sắp xếp từ cũ nhất trước, kèm theo số lượng nguồn tài liệu mới về cùng chủ đề đã được nạp thêm kể từ ngày đó.
 
-Follow the `second-brain-graph` skill.
+Thực hiện theo skill `second-brain-graph`.

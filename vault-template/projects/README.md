@@ -1,20 +1,16 @@
 # projects/
 
-One folder per project. Each holds its own `CLAUDE.md` and the four-stage
-pipeline:
+Mỗi dự án một thư mục. Mỗi thư mục chứa file `CLAUDE.md` riêng cùng quy trình 4 giai đoạn:
 
 ```
 project-name/
-  CLAUDE.md    what this project is, its one goal, the agent's role
-  Inputs/      ideas, briefs, source material for this project
-  Process/     work in progress
-  Outputs/     finished work
-  Feedback/    results, metrics, what actually happened
+  CLAUDE.md    dự án này là gì, mục tiêu duy nhất của nó, vai trò của agent
+  Inputs/      ý tưởng, bản đề bài (brief), tài liệu nguồn cho dự án này
+  Process/     công việc đang thực hiện
+  Outputs/     sản phẩm hoàn chỉnh
+  Feedback/    kết quả, số liệu, những gì thực sự đã diễn ra
 ```
 
-`Feedback/` is the folder people skip and the one that makes the system
-improve. Without it the agent has no idea whether last month's output worked.
+`Feedback/` là thư mục mà mọi người thường bỏ qua nhưng lại chính là nơi giúp hệ thống ngày càng tốt lên. Không có nó, agent sẽ không hề biết sản phẩm của tháng trước có hiệu quả hay không.
 
-Open a project as its own vault when you are working in it, so the agent sees
-one goal instead of your whole life. See
-[project scoping](../../docs/02-setup/project-scoping.md).
+Hãy mở riêng từng dự án như một vault độc lập khi bạn làm việc trên đó, để agent chỉ tập trung vào một mục tiêu duy nhất thay vì toàn bộ cuộc sống của bạn. Xem thêm [khoanh vùng dự án (project scoping)](../../docs/02-setup/project-scoping.md).

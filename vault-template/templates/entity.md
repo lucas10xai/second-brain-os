@@ -10,8 +10,8 @@ tags: []
 
 # {{title}}
 
-## What it is
+## Đây là gì
 
-## Why it appears here
+## Tại sao xuất hiện ở đây
 
-## Mentioned in
+## Được nhắc đến trong

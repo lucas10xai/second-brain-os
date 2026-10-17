@@ -1,43 +1,43 @@
-# The four parts of a loop
+# Bốn thành phần của một Loop
 
-Every loop that survives production has the same four parts: a goal with a testable definition of done, a checker that lives outside the model, a stop rule, and a budget counted in both turns and dollars. Remove any one and you have not simplified the loop; you have removed its brakes. This page takes each part in depth, then annotates the canonical skeleton.
+Mọi `Loop` sống sót được trên môi trường `Production` đều có chung bốn thành phần: một mục tiêu có định nghĩa hoàn thành (done) có thể kiểm thử được, một bộ kiểm tra (`Checker`) nằm bên ngoài mô hình, một quy tắc dừng (`Stop condition`), và một ngân sách được đếm bằng cả số lượt chạy (turns) lẫn số tiền (dollars). Chỉ cần bỏ đi bất kỳ thành phần nào trong bốn thứ này, bạn không hề làm cho `Loop` đơn giản hơn; bạn vừa tháo bỏ phanh của nó. Trang này sẽ đi sâu vào từng thành phần, sau đó giải thích chi tiết trên bộ khung code chuẩn.
 
 
 ![](fig-four-parts.svg)
 
-## A goal with a testable done
+## Mục tiêu có định nghĩa hoàn thành kiểm thử được
 
-"Improve the error handling" cannot terminate a loop, because nothing can ever say it is finished. "All tests under `tests/` pass and the linter reports nothing" can. The goal must be phrased so that a program — not a person, not the model — returns true or false against it. If you cannot write done as a check, you do not have a loopable task yet; you have an interactive session. Writing done as a forty-line script is a skill in itself, built concretely in [the goal test build page](../track-loop/build-goal-test.md).
+Một mục tiêu kiểu "Cải thiện cơ chế xử lý lỗi" không thể nào làm điều kiện kết thúc cho một `Loop`, bởi không có bất cứ thứ gì có thể khẳng định khi nào nó đã hoàn tất. Ngược lại, "Tất cả các bài kiểm thử trong thư mục `tests/` đều vượt qua và công cụ linter không báo lỗi nào" thì hoàn toàn có thể. Mục tiêu phải được diễn đạt sao cho một chương trình máy tính — chứ không phải con người, và càng không phải bản thân mô hình — có thể trả về kết quả đúng (`true`) hoặc sai (`false`) khi đối chiếu với nó. Nếu bạn chưa thể viết định nghĩa hoàn thành dưới dạng một hàm kiểm tra tự động, nghĩa là bạn chưa có một tác vụ có thể chạy `Loop`; bạn mới chỉ có một phiên làm việc tương tác trực tiếp mà thôi. Việc viết định nghĩa hoàn thành thành một kịch bản code dài bốn mươi dòng tự thân nó đã là một kỹ năng quan trọng, được hướng dẫn cụ thể tại [trang xây dựng bài kiểm tra mục tiêu (goal test)](../track-loop/build-goal-test.md).
 
-## A checker outside the model
+## Bộ kiểm tra (Checker) nằm ngoài mô hình
 
-The checker is a test suite, a compiler, a linter, a schema validator — anything mechanical that judges the result without asking the model's opinion. Self-review is not a checker. The evidence here is direct: Huang et al., "Large Language Models Cannot Self-Correct Reasoning Yet" (ICLR 2024), found that models struggle to correct their own reasoning without external feedback, and that performance sometimes gets worse after self-correction. A model grading its own work is the same weights making the same mistake twice, now with more confidence. External checkers are therefore non-negotiable: the feedback that makes a loop converge has to come from outside the thing that produced the error. This is why coding is the best-behaved loop domain — the compiler and the test runner are free, fast, external checkers that come with the territory.
+`Checker` là một bộ kiểm thử (test suite), một trình biên dịch (compiler), một công cụ kiểm tra mã nguồn (linter), hoặc một bộ xác thực lược đồ (schema validator) — bất kỳ công cụ cơ học nào phán xét kết quả mà không cần hỏi ý kiến của mô hình. Cơ chế tự đánh giá (self-review) của mô hình không phải là một `Checker`. Bằng chứng khoa học về điểm này rất trực diện: nghiên cứu của Huang và cộng sự, "Large Language Models Cannot Self-Correct Reasoning Yet" (ICLR 2024), đã chỉ ra rằng các mô hình gặp rất nhiều khó khăn khi tự sửa lỗi suy luận của chính mình nếu không có phản hồi từ bên ngoài, và hiệu suất đôi khi còn tệ đi sau khi tự sửa. Việc để mô hình tự chấm điểm bài làm của chính nó chẳng khác nào dùng cùng một bộ trọng số (weights) để lặp lại cùng một sai lầm tới hai lần, chỉ có điều lần sau tự tin hơn lần trước. Do đó, các `Checker` bên ngoài là điều kiện bắt buộc không thể thương lượng: tín hiệu phản hồi giúp một `Loop` hội tụ về đích phải đến từ bên ngoài chủ thể đã tạo ra lỗi. Đây là lý do tại sao lập trình lại là lĩnh vực ứng dụng `Loop` hiệu quả nhất — trình biên dịch và trình chạy kiểm thử (test runner) là những `Checker` bên ngoài miễn phí, cực nhanh và có sẵn ngay trong môi trường làm việc.
 
-## A stop rule
+## Quy tắc dừng (Stop condition)
 
-Three exits, any of which ends the run: the checker passes (success), the turn limit is hit (out of attempts), or two consecutive attempts are identical (the loop is spinning and more turns will only spend money). That last one matters because spin is quiet — the same failing test, the same empty diff, attempt after attempt. The full menu of brakes, including ratchets and fingerprinting, is in [stop conditions](../track-loop/stop-conditions.md).
+Có ba lối thoát, chỉ cần chạm một trong ba là tiến trình chạy kết thúc: `Checker` báo đạt (thành công), chạm giới hạn số lượt chạy tối đa (hết lượt thử), hoặc hai lượt thử liên tiếp tạo ra kết quả giống hệt nhau (`Loop` đang bị xoay vòng tại chỗ và chạy thêm bao nhiêu lượt nữa cũng chỉ tốn tiền vô ích). Lối thoát thứ ba đặc biệt quan trọng vì hiện tượng xoay vòng tại chỗ (spinning) diễn ra rất âm thầm — vẫn bài test bị lỗi đó, vẫn bản diff trống rỗng đó, lặp đi lặp lại hết lượt này sang lượt khác. Toàn bộ danh mục các cơ chế phanh hãm, bao gồm cơ chế chốt chặn một chiều (ratchets) và lấy dấu vân tay trạng thái (fingerprinting), được trình bày chi tiết trong bài [các điều kiện dừng (stop conditions)](../track-loop/stop-conditions.md).
 
-## A budget in turns and dollars
+## Ngân sách tính bằng cả số lượt và tiền mặt
 
-Turns and dollars fail differently, so cap both. A turn cap bounds attempts; a dollar cap bounds damage when a single turn balloons — one tool call that returns a huge payload can cost more than ten normal turns. A loop with a turn cap but no spend cap is a bill with an unknown ceiling.
+Giới hạn số lượt (turns) và giới hạn tiền mặt (dollars) ngăn chặn hai kiểu sự cố khác nhau, vì vậy hãy khóa trần cả hai. Trần số lượt giới hạn số lần thử; trần tiền mặt giới hạn thiệt hại khi một lượt chạy đơn lẻ phình to bất thường — chỉ một lệnh gọi công cụ trả về gói dữ liệu khổng lồ cũng có thể tốn kém hơn cả mười lượt chạy bình thường cộng lại. Một `Loop` có giới hạn số lượt nhưng không có giới hạn chi tiêu là một hóa đơn không có trần.
 
-## The skeleton, annotated
+## Bộ khung chuẩn và chú giải chi tiết
 
 ```python
-for turn in range(MAX_TURNS):                      # budget, part one: turns
-    action = model.next_step(goal, history)        # the model chooses the step
-    result = run(action)                           # the world responds
-    history.append(result)                         # the observation survives
-    if checker(result):                            # external judge, never the model
-        break                                      # stop rule 1: done
-    if repeated(history, 2):                       # stop rule 2: spinning
+for turn in range(MAX_TURNS):                      # ngân sách, phần 1: số lượt (turns)
+    action = model.next_step(goal, history)        # mô hình chọn bước tiếp theo
+    result = run(action)                           # thế giới bên ngoài phản hồi
+    history.append(result)                         # lưu lại kết quả quan sát
+    if checker(result):                            # bộ chấm điểm bên ngoài, không bao giờ là mô hình
+        break                                      # quy tắc dừng 1: hoàn thành
+    if repeated(history, 2):                       # quy tắc dừng 2: lặp tại chỗ (spinning)
         break
-    if spent() > BUDGET:                           # budget, part two: dollars
+    if spent() > BUDGET:                           # ngân sách, phần 2: tiền mặt (dollars)
         break
 else:
-    fallback_workflow(goal)                        # turns exhausted: fixed path
+    fallback_workflow(goal)                        # hết sạch số lượt: chuyển sang luồng cố định
 ```
 
-Read the exits carefully. The `else` on a Python `for` runs only when the loop finishes without a `break`, so as written it catches exactly one failure mode: turns exhausted. The `repeated` and budget breaks leave without a result, so in production you route every exit that is not a checker pass to the same place — the fallback workflow, a deterministic path that produces a defensible answer without the model. The practice page wires that version up completely in [loop practice](loop-practice.md).
+Hãy đọc kỹ các lối thoát trên. Nhánh `else` đi kèm vòng lặp `for` trong Python chỉ chạy khi vòng lặp kết thúc tự nhiên mà không gặp lệnh `break` nào, vì vậy nếu viết như trên, nó chỉ bắt được đúng một kiểu thất bại: dùng hết sạch số lượt (`MAX_TURNS`). Trong khi đó, các lệnh `break` do lặp tại chỗ (`repeated`) và vượt ngân sách (`BUDGET`) lại thoát ra mà chưa có kết quả xử lý cuối cùng; bởi vậy trên môi trường `Production`, bạn cần điều hướng mọi lối thoát không phải do `Checker` báo đạt về chung một mối — đó là `Workflow` dự phòng (`fallback_workflow`), một luồng xử lý tất định (deterministic) luôn đưa ra được phương án xử lý an toàn mà không cần đến mô hình. Trang thực hành sẽ lắp ghép hoàn chỉnh phiên bản đó tại bài [Thực hành Loop](loop-practice.md).
 
-Notice also what the skeleton omits: there is no "ask the model if it is satisfied". The model chooses the next step; it never gets a vote on whether the work is done.
+Hãy để ý cả thứ mà bộ khung này cố tình lược bỏ: hoàn toàn không có bước "hỏi xem mô hình đã thấy hài lòng hay chưa". Mô hình chỉ được quyền chọn bước đi tiếp theo; nó không bao giờ có quyền bỏ phiếu quyết định xem công việc đã hoàn thành hay chưa.

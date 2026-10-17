@@ -1,10 +1,10 @@
-# Build: Permissions and Context
+# Thực hành: Phân quyền và ngữ cảnh (Guardrails)
 
-[Part one](build-the-loop.md) left you with a demo: an agent that runs whatever it likes and grows its transcript without limit. This part adds the three things that make it a harness — a permission gate, a context budget, and a stop condition. The [anatomy page](what-a-harness-is.md) called these the parts that let you leave an agent unattended; here they cost about eighty lines.
+[Phần một](build-the-loop.md) đã mang lại cho bạn một bản demo chạy được: một `Agent` chạy bất cứ lệnh gì nó thích và làm phình to biên bản hội thoại không giới hạn. Phần này sẽ lắp thêm ba mảnh ghép biến nó thành một bộ `Harness` thực thụ — một cổng kiểm soát quyền hạn (permission gate), một ngân sách ngữ cảnh (context budget), và một điều kiện dừng (stop condition). Trang [cấu trúc giải phẫu](what-a-harness-is.md) đã gọi đây là những bộ phận cho phép bạn yên tâm để mặc một Agent tự chạy mà không cần ngồi canh; ở đây chúng chỉ tốn của bạn khoảng tám mươi dòng mã.
 
-Everything from part one — imports, `TOOLS`, `read_file`, `run_command` — stays as it was. Replace `execute` and `agent`, and add the rest.
+Toàn bộ những gì từ phần một — các câu lệnh import, danh sách `TOOLS`, hàm `read_file`, `run_command` — đều được giữ nguyên. Hãy thay thế hai hàm `execute` và `agent`, đồng thời bổ sung thêm các hàm dưới đây.
 
-## The code
+## Mã nguồn triển khai
 
 ```python
 MAX_TURNS = 30
@@ -100,16 +100,16 @@ def agent(task):
     print("Stopped: hit the turn limit without finishing.")
 ```
 
-## The permission gate
+## Cổng kiểm soát quyền hạn (The permission gate)
 
-Allowlisted read-only commands run silently; anything else asks you via `input()`. A declined command goes back as an ordinary tool result, not an exception — the model reads it as data and adapts. Note the honesty required here: prefix matching is leaky (`git diff; rm -rf ~` starts with `git diff `), which is why production harnesses parse commands properly and sandbox execution besides. The gate teaches the shape, not the security.
+Các câu lệnh chỉ-đọc nằm trong danh sách cho phép (`ALLOWLIST`) sẽ được chạy êm thấm không cần hỏi; bất kỳ câu lệnh nào khác đều phải xin phép bạn qua hàm `input()`. Nếu bạn từ chối, lời từ chối sẽ được gửi trả lại cho mô hình như một kết quả công cụ thông thường chứ không quăng ra ngoại lệ (exception) làm sập chương trình — mô hình sẽ đọc thông báo đó như một dữ kiện đầu vào và tự điều chỉnh hướng đi. Hãy lưu ý sự thẳng thắn cần thiết ở đây: cách khớp tiền tố chuỗi như trên vẫn có lỗ hổng (ví dụ lệnh `git diff; rm -rf ~` vẫn bắt đầu bằng `git diff `), đó là lý do vì sao các bộ `Harness` thực tế phải phân tích cú pháp cây câu lệnh shell đàng hoàng và đồng thời nhốt quá trình thực thi vào trong môi trường hộp cát (sandbox). Cổng gác nhỏ này dạy cho bạn hình hài kiến trúc của `Guardrails`, chứ chưa phải là một giải pháp bảo mật hoàn chỉnh.
 
-## The context budget
+## Ngân sách ngữ cảnh (The context budget)
 
-When the transcript exceeds the budget, the oldest turns after the task are dropped in pairs — assistant turn plus its tool results, so no `tool_use` block loses its match — and a one-line gist of each joins a running summary that rides in the first message. Crude, deliberately: tool output is bulky and rarely needed again, exactly the trade described in [context engineering](context-engineering.md).
+Khi biên bản hội thoại vượt quá ngân sách ký tự cho phép, các lượt trao đổi cũ nhất ngay sau yêu cầu gốc sẽ bị cắt bỏ theo từng cặp — gồm lượt trả lời của assistant đi kèm với lượt kết quả công cụ tương ứng, nhằm đảm bảo không có khối `tool_use` nào bị mồ côi mất cặp — đồng thời một dòng tóm tắt ngắn gọn của mỗi lượt bị xóa sẽ được nối vào bản tóm tắt tích lũy nằm ngay trong tin nhắn đầu tiên. Cách làm này tuy thô sơ nhưng hoàn toàn có chủ đích: đầu ra của công cụ thường rất cồng kềnh và hiếm khi cần đọc lại nguyên văn, khớp chính xác với sự đánh đổi đã được phân tích trong bài [Context engineering](context-engineering.md).
 
-## The stop condition
+## Điều kiện dừng (The stop condition)
 
-`MAX_TURNS` bounds the bill when the model loops on a task it cannot finish. Every real harness has this; every builder forgets it once.
+Hằng số `MAX_TURNS` đặt ra mức trần bảo vệ hóa đơn tiền túi của bạn khi mô hình bị kẹt trong vòng lặp vô tận trước một tác vụ mà nó không thể hoàn thành. Mọi bộ `Harness` thực tế đều có chốt chặn này; và bất kỳ người xây dựng hệ thống nào cũng từng quên nó ít nhất một lần.
 
-You now have a harness in miniature. What it still lacks — and when that matters — is [part three](build-graduate.md).
+Giờ đây bạn đã có trong tay một bộ `Harness` thu nhỏ hoàn chỉnh. Những gì nó vẫn còn thiếu — và khi nào những khoảng trống đó thực sự trở thành vấn đề — sẽ được mổ xẻ ở [phần ba](build-graduate.md).

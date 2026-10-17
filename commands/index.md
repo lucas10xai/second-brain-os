@@ -1,7 +1,7 @@
 ---
-description: Rebuild the index
+description: Xây dựng lại trang chỉ mục
 ---
 
-Rebuild `index.md` from the actual contents of `wiki/`. Group by type and theme, one line of description per entry, gaps at the bottom.
+Xây dựng lại `index.md` từ nội dung thực tế trong `wiki/`. Nhóm theo phân loại trang và chủ đề, mỗi mục kèm một dòng mô tả, và liệt kê các khoảng trống kiến thức ở cuối trang.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

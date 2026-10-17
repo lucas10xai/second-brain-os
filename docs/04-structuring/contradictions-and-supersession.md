@@ -1,86 +1,71 @@
-# Contradictions and supersession
+# Mâu thuẫn và thay thế thông tin
 
-This is the rule that separates a second brain from a search engine, and the one
-most implementations get wrong.
+Đây là quy tắc phân biệt một `Second Brain` với một công cụ tìm kiếm, và cũng là quy tắc mà hầu hết các bản triển khai đều làm sai.
 
-When a new source disagrees with what a page already says, the page records
-both. It does not overwrite.
+Khi một tài liệu nguồn mới bất đồng với những gì một trang hiện có đang nói, trang đó phải ghi nhận cả hai. Nó không được phép ghi đè.
 
-## Why overwriting is the worst failure mode
+## Tại sao ghi đè là kiểu lỗi tệ hại nhất
 
-A vault that silently updates to the latest claim has no memory of what you
-believed and why. It always presents the most recent thing you read as the
-truth, which is a ranking by recency, not by evidence.
+Một `Vault` âm thầm cập nhật theo nhận định mới nhất sẽ không có ký ức về những gì bạn từng tin tưởng và lý do tại sao. Nó luôn trình bày thứ gần nhất bạn đọc được như là chân lý — tức là xếp hạng theo độ mới (recency) chứ không phải theo bằng chứng.
 
-Worse, it is invisible. Nothing errors. The page simply says something different
-than it did last month, with the same confidence, and you have no way to notice
-or to check what changed.
+Tệ hơn nữa, sự thay đổi này hoàn toàn vô hình. Không có lỗi nào được báo ra. Trang đó chỉ đơn giản là nói một điều khác hẳn so với tháng trước, với cùng một giọng điệu tự tin như vậy, và bạn không có cách nào để nhận ra hay kiểm tra xem điều gì đã thay đổi.
 
-The history is the asset. Knowing that you believed X because of a 2024 source,
-then revised to Y after better evidence, is more valuable than either claim
-alone, because it tells you how firm Y actually is.
+Lịch sử nhận thức chính là tài sản quý giá nhất. Việc biết rằng bạn từng tin vào X vì một tài liệu nguồn năm 2024, sau đó điều chỉnh sang Y sau khi có bằng chứng tốt hơn, có giá trị hơn nhiều so với bản thân từng nhận định đơn lẻ, bởi nó cho bạn biết mức độ vững chắc thực sự của Y.
 
-## What a contradiction looks like on a page
+## Một sự mâu thuẫn trông như thế nào trên trang
 
-Both positions, each attributed and dated:
+Cả hai quan điểm đều được trình bày, mỗi quan điểm đều có trích dẫn nguồn và ngày tháng rõ ràng:
 
 ```markdown
-## Current position
+## Quan điểm hiện tại
 
-Retrieval quality degrades past roughly 50k tokens of context
+Chất lượng truy xuất suy giảm khi vượt quá khoảng 50k token ngữ cảnh
 ([[Lost in the Middle]], 2023).
 
-## Contested
+## Đang tranh cãi
 
-[[Some 2026 benchmark]] reports no degradation up to 200k on the same task
-family. The two use different evaluation setups: the first measures position
-sensitivity, the second end-task accuracy. Unresolved.
+[[Some 2026 benchmark]] báo cáo không có sự suy giảm nào lên tới 200k token trên cùng
+nhóm tác vụ. Cả hai sử dụng thiết lập đánh giá khác nhau: nghiên cứu đầu đo lường độ nhạy
+vị trí (position sensitivity), nghiên cứu thứ hai đo độ chính xác tác vụ cuối (end-task accuracy). Chưa ngã ngũ.
 ```
 
-The reader can act on that. A page that had silently adopted whichever was
-ingested last cannot be acted on at all.
+Người đọc có thể hành động dựa trên thông tin đó. Còn một trang âm thầm chấp nhận bất cứ thứ gì được `Ingest` sau cùng thì hoàn toàn không thể dùng làm cơ sở hành động được.
 
-## Supersession
+## Thay thế thông tin cũ (Supersession)
 
-Sometimes it is not a genuine disagreement, it is old information. A tool
-changed its API, a company was acquired, a paper was retracted.
+Đôi khi đó không phải là một sự bất đồng quan điểm thực sự, mà chỉ là thông tin đã lỗi thời. Một công cụ thay đổi API, một công ty bị mua lại, một bài báo khoa học bị rút lại (retracted).
 
-Mark the old claim as superseded and keep it:
+Hãy đánh dấu nhận định cũ là đã bị thay thế (superseded) và vẫn giữ nó lại:
 
 ```markdown
-~~Requires Node 18 or later~~ superseded 2026-05: the native installer no
-longer requires Node ([[source]]).
+~~Yêu cầu Node 18 trở lên~~ đã được thay thế 2026-05: bộ cài đặt gốc (native installer) không
+còn yêu cầu Node nữa ([[source]]).
 ```
 
-Deleting it means that when you read something written before the change, you
-have no way to reconcile it with what the vault now says.
+Việc xóa bỏ hoàn toàn có nghĩa là khi bạn đọc một tài liệu nào đó được viết trước thời điểm thay đổi, bạn sẽ không có cách nào đối chiếu nó với những gì `Vault` hiện tại đang nói.
 
-## Confidence
+## Độ tin cậy (Confidence)
 
-Not everything ingested deserves equal weight. A tag or a frontmatter field is
-enough:
+Không phải mọi thứ được `Ingest` đều xứng đáng có trọng số ngang nhau. Chỉ cần một thẻ (tag) hoặc một trường trong `Frontmatter` là đủ:
 
-- **stated** by a primary source you trust
-- **reported** by secondary coverage
-- **self-reported** by the party it benefits
-- **unverified**
+- **stated** (được khẳng định): bởi một nguồn sơ cấp (primary source) mà bạn tin tưởng
+- **reported** (được tường thuật): bởi các nguồn tin thứ cấp
+- **self-reported** (tự công bố): bởi chính bên hưởng lợi từ thông tin đó
+- **unverified** (chưa kiểm chứng)
 
-Self-reported numbers in particular should never lose that label. A company's
-own performance claim repeated as fact in a concept page is how a vault becomes
-confidently wrong.
+Đặc biệt, những con số tự công bố (`self-reported`) không bao giờ được phép đánh mất nhãn này. Việc một tuyên bố về hiệu năng của chính một công ty được lặp lại như một sự thật hiển nhiên trong trang khái niệm chính là cách biến một `Vault` trở nên sai lầm một cách đầy tự tin.
 
-## The instruction
+## Chỉ dẫn cho Agent
 
-In `CLAUDE.md`, worded so it generalises rather than covering only the obvious
-case:
+Trong `CLAUDE.md`, hãy diễn đạt sao cho quy tắc có tính khái quát hóa thay vì chỉ bao phủ những trường hợp hiển nhiên:
 
 ```
-When a new source disagrees with an existing page, do not overwrite. Record both
-positions with sources and dates, and say what would settle it. If the new
-source is clearly better evidence, mark the older claim superseded rather than
-deleting it. Never resolve a contradiction by picking the more recent source.
+Khi một tài liệu nguồn mới mâu thuẫn với một trang hiện có, không được ghi đè. Hãy ghi nhận cả hai
+quan điểm kèm theo nguồn và ngày tháng, đồng thời nêu rõ điều gì sẽ giúp phân định mâu thuẫn đó. Nếu nguồn
+mới rõ ràng là bằng chứng tốt hơn, hãy đánh dấu nhận định cũ là đã bị thay thế (superseded) thay vì
+xóa bỏ nó. Không bao giờ giải quyết mâu thuẫn chỉ bằng cách chọn nguồn mới hơn về mặt thời gian.
 ```
 
-## Next
+## Tiếp theo
 
-[index.md and log.md](index-and-log.md)
+[index.md và log.md](index-and-log.md)

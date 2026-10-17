@@ -1,45 +1,45 @@
-# Agent Evals
+# Đánh giá Agent (Agent Evals)
 
-A single completion is a function; an agent is a process. It plans, calls tools, reads results, and recovers (or doesn't) from its own mistakes. Evaluating the final answer alone is like reviewing a chess game by the last move. This page builds on [designing evals](designing-evals.md).
+Một lần sinh phản hồi đơn lẻ là một hàm số; còn một `Agent` là cả một tiến trình. Nó lập kế hoạch, gọi công cụ, đọc kết quả và tự phục hồi (hoặc không) sau những sai lầm của chính mình. Chỉ đánh giá câu trả lời cuối cùng chẳng khác nào nhận xét cả một ván cờ chỉ qua nước đi cuối. Trang này phát triển tiếp từ bài [thiết kế bộ đánh giá](designing-evals.md).
 
-## Trajectories, not just outcomes
+## Quỹ đạo thực thi (`Trajectory`), không chỉ là kết quả đầu ra
 
-Log the whole trajectory: every model turn, tool call, tool result, and retry. Then evaluate at two levels:
+Hãy ghi log toàn bộ `Trajectory`: mọi lượt gọi mô hình, lệnh gọi công cụ, kết quả trả về từ công cụ và các lần thử lại. Sau đó đánh giá ở hai cấp độ:
 
-- **Outcome**: did the task complete, and is the end state correct? Best checked against the *environment* (the file exists, the row was inserted, the tests pass), not the agent's claim that it finished. Agents declare victory fluently.
-- **Trajectory**: was the path reasonable? Count steps, detect loops, flag tool errors that were silently ignored. Two agents with equal success rates are not equal if one takes 40 turns and burns 20x the tokens.
+- **Kết quả (Outcome)**: tác vụ đã hoàn thành chưa, và trạng thái cuối cùng có chính xác không? Tốt nhất nên kiểm tra trực tiếp trên *môi trường* (tệp tin đã tồn tại, dòng dữ liệu đã được chèn vào bảng, bộ test đã vượt qua), chứ không dựa vào lời tuyên bố hoàn thành của `Agent`. Các `Agent` luôn tuyên bố chiến thắng một cách cực kỳ lưu loát.
+- **Quỹ đạo (`Trajectory`)**: con đường đi đến kết quả có hợp lý không? Hãy đếm số bước, phát hiện các vòng lặp quẩn, gắn cờ những lỗi công cụ bị âm thầm phớt lờ. Hai `Agent` có cùng tỷ lệ thành công hoàn toàn không ngang bằng nhau nếu một bên mất tới 40 lượt và đốt gấp 20 lần lượng token.
 
-## Tool-call correctness
+## Tính chính xác của lệnh gọi công cụ (Tool-call correctness)
 
-The most mechanical and highest-yield checks:
+Những phép kiểm tra mang tính cơ học nhất nhưng mang lại hiệu suất phát hiện lỗi cao nhất:
 
-- Right tool chosen for the intent.
-- Arguments valid and correctly extracted from context (IDs, dates, filters — this is where agents quietly fail).
-- Ordering constraints respected (`search` before `answer`, `read` before `write`).
-- Error handling: feed a tool failure mid-trajectory and check the agent retries or reports rather than hallucinating a result.
+- Chọn đúng công cụ cho ý định tương ứng.
+- Các đối số (arguments) hợp lệ và được trích xuất chính xác từ ngữ cảnh (ID, ngày tháng, bộ lọc — đây là nơi các `Agent` thường âm thầm làm sai).
+- Tuân thủ các ràng buộc về thứ tự (`search` trước khi `answer`, `read` trước khi `write`).
+- Xử lý lỗi: chủ động bơm một lỗi công cụ vào giữa `Trajectory` và kiểm tra xem `Agent` có thử lại hoặc báo cáo lỗi hay không, thay vì tự ảo giác ra kết quả.
 
-These are code assertions over the trace, not judge calls. Save the [llm as judge](llm-as-judge.md) for "was the plan sensible" questions.
+Đây là các phép kiểm tra bằng code (code assertions) chạy trực tiếp trên bản ghi `Traces`, không phải lệnh gọi giám khảo LLM. Hãy để dành [`LLM-as-judge`](llm-as-judge.md) cho những câu hỏi kiểu "kế hoạch vạch ra có hợp lý hay không".
 
-## Environment-based evals
+## Đánh giá dựa trên môi trường (Environment-based evals)
 
-The gold standard: give the agent a sandboxed environment (a Docker container, a seeded database, a mock API) and grade the *state* afterwards with executable checks. Deterministic setup, programmatic teardown, no grader ambiguity. It is more work to build than a golden set of transcripts, and worth it for anything that mutates state.
+Tiêu chuẩn vàng: cung cấp cho `Agent` một môi trường cô lập (một Docker container, một cơ sở dữ liệu đã nạp sẵn dữ liệu mẫu, một mock API) và chấm điểm *trạng thái* của môi trường sau khi chạy xong bằng các bài kiểm tra thực thi được. Thiết lập tất định, dọn dẹp bằng chương trình, không có sự mơ hồ của người chấm. Cách này tốn nhiều công sức xây dựng hơn so với một `Golden set` gồm các bản ghi hội thoại tĩnh, nhưng hoàn toàn xứng đáng cho bất kỳ tác vụ nào làm thay đổi trạng thái hệ thống.
 
-## Harness benchmarks, 2026 edition
+## Các bộ benchmark `Harness`, phiên bản 2026
 
-Public benchmarks are for comparing models and harnesses, not for measuring your product — but they show what good environment-based evals look like:
+Các bộ benchmark công khai dùng để so sánh các mô hình và `Harness` với nhau, chứ không phải để đo lường sản phẩm của bạn — nhưng chúng cho thấy một hệ thống đánh giá dựa trên môi trường tốt sẽ trông như thế nào:
 
-- [SWE-bench](https://www.swebench.com/) family — real GitHub issues, graded by the repo's tests; SWE-bench Verified (the human-audited 500) remains the headline coding-agent number, with frontier models now in the 80–90s and the family sprouting harder variants as the original saturates.
-- [Terminal-Bench](https://www.tbench.ai/) — 2.0 has 89 hand-audited terminal tasks in real Docker containers, graded by executable tests. The cleanest template to steal from.
-- [GAIA](https://arxiv.org/abs/2311.12983) — general assistant tasks needing web, tools and multi-step reasoning.
-- [tau2-bench](https://github.com/sierra-research/tau2-bench) — tool-agent-*user* interaction with a simulated customer; measures conversation under policy constraints.
-- [Inspect Evals](https://github.com/UKGovernmentBEIS/inspect_evals) — 200+ implementations of the above under one framework.
+- Họ [SWE-bench](https://www.swebench.com/) — các issue thực tế trên GitHub, được chấm điểm bằng chính bộ test của kho mã nguồn đó; SWE-bench Verified (500 bài đã được con người kiểm duyệt) vẫn là con số tiêu điểm cho các coding `Agent`, với các mô hình tiên phong hiện đã đạt mức 80–90% và cả họ benchmark này đang đẻ thêm nhiều biến thể khó hơn khi tập gốc dần bão hòa.
+- [Terminal-Bench](https://www.tbench.ai/) — phiên bản 2.0 gồm 89 tác vụ dòng lệnh được kiểm duyệt thủ công chạy trong các Docker container thực, chấm điểm bằng các bài test thực thi được. Đây là khuôn mẫu sạch sẽ nhất để bạn học hỏi.
+- [GAIA](https://arxiv.org/abs/2311.12983) — các tác vụ trợ lý tổng quát đòi hỏi duyệt web, dùng công cụ và suy luận đa bước.
+- [tau2-bench](https://github.com/sierra-research/tau2-bench) — tương tác giữa công cụ - `Agent` - *người dùng* với một khách hàng mô phỏng; đo lường hội thoại dưới các ràng buộc chính sách.
+- [Inspect Evals](https://github.com/UKGovernmentBEIS/inspect_evals) — hơn 200 bản hiện thực hóa của các bộ đánh giá trên quy tụ dưới một framework duy nhất.
 
-## CI integration
+## Tích hợp vào CI
 
-Evals belong in the pipeline, not a notebook:
+`Evals` thuộc về đường ống CI/CD, không phải nằm trong một tệp notebook:
 
-- Small smoke suite (deterministic checks only) on every PR; full suite nightly and before releases.
-- Gate merges on a threshold; run N trials per case and gate on the mean.
-- Pin model versions in CI, and treat a model bump as a change that must pass the suite like any other.
+- Chạy bộ kiểm thử khói (smoke suite) nhỏ gọn (chỉ gồm các kiểm tra tất định) trên mỗi PR; chạy toàn bộ bộ đánh giá vào ban đêm (nightly) và trước mỗi đợt phát hành.
+- Đặt cổng chặn (`Gate`) cho thao tác gộp nhánh (merge) dựa trên một ngưỡng điểm; chạy $N$ lần thử cho mỗi ca và xét ngưỡng trên giá trị trung bình.
+- Ghim cố định phiên bản mô hình trong CI, và coi việc nâng cấp phiên bản mô hình là một thay đổi bắt buộc phải vượt qua bộ đánh giá giống như bất kỳ thay đổi mã nguồn nào khác.
 
-Tooling that makes this less painful is surveyed in [tooling](tooling.md).
+Các công cụ giúp quá trình này bớt vất vả hơn được khảo sát chi tiết tại bài [công cụ đánh giá](tooling.md).

@@ -1,7 +1,7 @@
 ---
-description: Ingest an academic paper
+description: Nạp một bài báo khoa học
 ---
 
-Ingest $ARGUMENTS as a paper: build the source page around the question, method, result with its actual numbers, and the limitations the authors state. Record sample sizes. Never report a finding without the condition it holds under.
+Nạp $ARGUMENTS dưới dạng một bài báo khoa học: xây dựng trang nguồn xoay quanh câu hỏi nghiên cứu, phương pháp, kết quả kèm số liệu thực tế, và những hạn chế mà chính nhóm tác giả đã nêu. Ghi nhận kích thước mẫu (sample size). Tuyệt đối không báo cáo một phát hiện mà thiếu đi điều kiện áp dụng của nó.
 
-Follow the `second-brain-ingest` skill.
+Thực hiện theo skill `second-brain-ingest`.

@@ -1,7 +1,7 @@
 ---
-description: Fix a page's type
+description: Sửa lại phân loại trang
 ---
 
-Check whether $ARGUMENTS is filed as the right page type, and rewrite it to that type's contract if not. A source page that explains an idea is a concept page in the wrong folder.
+Kiểm tra xem $ARGUMENTS đã được xếp đúng phân loại trang (page type) hay chưa, và viết lại theo đúng chuẩn của phân loại đó nếu đang bị xếp sai. Một trang nguồn nhưng lại đi giải thích một ý tưởng thực chất là một trang khái niệm đang nằm nhầm thư mục.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

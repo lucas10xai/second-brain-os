@@ -1,7 +1,7 @@
 ---
-description: Move cold material out of the wiki
+description: Chuyển tài liệu ít dùng ra khỏi wiki
 ---
 
-Propose pages to move to `archive/`: still on disk and searchable, out of the index and the graph. Reversible, and nothing linked.
+Đề xuất các trang cần chuyển sang `archive/`: vẫn lưu trên ổ đĩa và tìm kiếm được, nhưng nằm ngoài chỉ mục và đồ thị. Thao tác này có thể đảo ngược và không làm hỏng liên kết nào.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

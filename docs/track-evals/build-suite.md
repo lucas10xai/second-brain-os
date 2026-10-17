@@ -1,10 +1,10 @@
-# Build: the Suite
+# Thực hành: Xây dựng bộ đánh giá (Build: the Suite)
 
-You have `golden.jsonl` from [read your traces](build-traces.md). This page turns it into a runnable suite: one plain Python file, no framework. Code assertions grade everything they can; one narrow judge handles the rest, per [llm as judge](llm-as-judge.md). The example target is a support assistant behind a single prompt — swap `run_target` for however your app is called.
+Bạn đã có tệp `golden.jsonl` từ bài [đọc nhật ký thực thi (`Traces`)](build-traces.md). Trang này sẽ biến nó thành một bộ đánh giá có thể chạy được: chỉ một tệp Python thuần túy, không cần framework. Các phép kiểm tra bằng code sẽ chấm điểm mọi thứ chúng có thể đảm nhận; một giám khảo có tiêu chí hẹp sẽ xử lý phần còn lại, theo đúng nguyên tắc trong bài [`LLM-as-judge`](llm-as-judge.md). Đối tượng được đánh giá trong ví dụ này là một trợ lý hỗ trợ khách hàng đứng sau một prompt đơn lẻ — hãy thay hàm `run_target` bằng cách gọi ứng dụng thực tế của bạn.
 
-## The script
+## Kịch bản mã nguồn
 
-Save as `eval_suite.py`. Needs `pip install anthropic` and `ANTHROPIC_API_KEY` set. The judge is a different model to the target, deliberately.
+Lưu thành tệp `eval_suite.py`. Cần chạy `pip install anthropic` và thiết lập biến môi trường `ANTHROPIC_API_KEY`. Mô hình làm giám khảo được chủ đích chọn khác với mô hình đích đang bị đánh giá.
 
 ```python
 import argparse
@@ -109,11 +109,11 @@ if __name__ == "__main__":
     main()
 ```
 
-Run it with `python eval_suite.py golden.jsonl`. It prints one line per case, writes `results.json`, and — with `--threshold` — exits non-zero on a bad run, which is all CI needs.
+Hãy chạy bằng lệnh `python eval_suite.py golden.jsonl`. Chương trình sẽ in ra một dòng cho mỗi ca kiểm thử, ghi kết quả vào `results.json`, và — khi có cờ `--threshold` — trả về mã thoát khác 0 nếu tỷ lệ đạt thấp hơn ngưỡng, đó là tất cả những gì CI cần.
 
-## Calibrate the judge before trusting it
+## Hiệu chuẩn giám khảo trước khi tin tưởng
 
-Hand-label ten judged outputs first: `labels.jsonl`, one line per output with `id`, `output`, `expectation`, and your own `label` (true/false). Then check agreement:
+Trước tiên, hãy tự tay gán nhãn cho mười đầu ra cần giám khảo chấm: tạo tệp `labels.jsonl`, mỗi dòng một đầu ra gồm `id`, `output`, `expectation`, và nhãn `label` của chính bạn (`true`/`false`). Sau đó kiểm tra độ đồng thuận:
 
 ```python
 import json
@@ -132,8 +132,8 @@ for row in labels:
 print(f"agreement: {agree}/{len(labels)}")
 ```
 
-Read every disagreement; usually the expectation sentence was woolly, sometimes your label was. Ten labels is the afternoon version — the full 50–100 label procedure is in [llm as judge](llm-as-judge.md).
+Hãy đọc kỹ từng trường hợp bất đồng; thông thường là do câu mô tả kỳ vọng (`expectation`) còn mơ hồ, và đôi khi là do chính nhãn của bạn chưa chuẩn. Mười nhãn là phiên bản rút gọn trong một buổi chiều — quy trình đầy đủ với 50–100 nhãn nằm ở bài [`LLM-as-judge`](llm-as-judge.md).
 
-## When a framework earns its keep
+## Khi nào thì một framework đáng đồng tiền bát gạo
 
-This file is enough for one target, one judge, and a few hundred cases. Reach for promptfoo when you want to compare several prompts or models side by side without writing the matrix yourself, and for Inspect when you need sandboxed agent environments, solvers, and per-step scoring. Both are surveyed in [tooling](tooling.md); neither replaces the taxonomy work — they just run it at scale.
+Một tệp script này là quá đủ cho một đối tượng đích, một giám khảo và vài trăm ca kiểm thử. Hãy tìm đến `promptfoo` khi bạn muốn đặt nhiều prompt hoặc nhiều mô hình cạnh nhau để so sánh mà không muốn tự viết ma trận chạy, và tìm đến `Inspect` khi bạn cần môi trường `Agent` cô lập (sandboxed), các bộ giải (solvers) và cơ chế chấm điểm từng bước. Cả hai đều được khảo sát trong bài [công cụ đánh giá](tooling.md); không công cụ nào thay thế được công việc phân loại lỗi — chúng chỉ giúp chạy công việc đó ở quy mô lớn hơn.

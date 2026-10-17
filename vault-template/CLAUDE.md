@@ -1,102 +1,73 @@
-# This vault
+# Vault này
 
-You maintain this vault. The owner drops raw material into `raw/` and asks
-questions. Everything in `wiki/` is yours to write and keep correct.
+Bạn là người duy trì vault này. Chủ sở hữu thả tài liệu thô vào `raw/` và đặt câu hỏi. Mọi thứ trong `wiki/` là do bạn viết và giữ cho chính xác.
 
-The wiki is the primary artifact. `raw/` is an archive you can always re-read,
-but nobody reads it day to day. If something matters, it has to end up on a
-wiki page, in your own words, linked to everything related.
+Wiki là sản phẩm chính. `raw/` là kho lưu trữ bạn luôn có thể đọc lại, nhưng không ai đọc nó hàng ngày. Nếu có điều gì quan trọng, nó phải được đưa vào một trang wiki, bằng lời văn của chính bạn, và được liên kết tới mọi thứ có liên quan.
 
-## Folders
+## Thư mục
 
 ```
-raw/          source material, never edited after it lands
-  assets/     images and attachments
+raw/          tài liệu nguồn, không bao giờ chỉnh sửa sau khi đưa vào
+  assets/     hình ảnh và tệp đính kèm
 wiki/
-  sources/    one page per ingested item
-  entities/   people, organisations, products, tools
-  concepts/   ideas, methods, frameworks, arguments
-  synthesis/  comparisons, themes, open questions
-  index.md    catalog of every page
-  log.md      chronological record of what you did
-output/       reports, drafts, anything generated for use outside the vault
+  sources/    mỗi mục đã nạp (ingest) là một trang
+  entities/   con người, tổ chức, sản phẩm, công cụ
+  concepts/   ý tưởng, phương pháp, khung tư duy, lập luận
+  synthesis/  so sánh, chủ đề xuyên suốt, câu hỏi mở
+  index.md    danh mục toàn bộ các trang
+  log.md      nhật ký theo trình tự thời gian về những gì bạn đã làm
+output/       báo cáo, bản nháp, bất kỳ thứ gì được tạo ra để dùng bên ngoài vault
 ```
 
-Never write to `raw/`. Never delete a wiki page without recording it in
-`log.md` first, because a deletion you cannot trace is the one failure the
-owner cannot recover from by reading a diff.
+Không bao giờ ghi vào `raw/`. Không bao giờ xóa một trang wiki mà không ghi lại vào `log.md` trước, bởi vì một thao tác xóa không để lại dấu vết là lỗi duy nhất mà chủ sở hữu không thể khôi phục bằng cách đọc bản diff.
 
-## Page contracts
+## Quy ước trang (Page contracts)
 
-Every page starts with frontmatter:
+Mỗi trang đều bắt đầu bằng frontmatter:
 
 ```yaml
 ---
-title: Canonical name
+title: Tên chuẩn tắc (Canonical name)
 type: source | entity | concept | synthesis
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-aliases: [other names this is known by]
-tags: [two or three, from the existing vocabulary]
+aliases: [các tên gọi khác của mục này]
+tags: [hai hoặc ba thẻ, lấy từ bộ từ vựng hiện có]
 ---
 ```
 
-**Source pages** record what one item said. Include the URL or file path, the
-author, the date, and what it claims. Keep the claims attributable: this
-source says X, not X is true. End with links to every concept and entity it
-touches.
+**Trang nguồn (`source`)** ghi lại những gì một tài liệu đã nói. Bao gồm URL hoặc đường dẫn file, tác giả, ngày tháng, và các luận điểm của nó. Hãy giữ cho các luận điểm gắn liền với nguồn gốc: nguồn này nói X, chứ không phải X là sự thật. Kết thúc bằng liên kết đến mọi khái niệm (`concept`) và thực thể (`entity`) mà nó đề cập.
 
-**Entity pages** describe a person, company, product or tool: what it is, why
-it appears in this vault, and every source page that mentions it.
+**Trang thực thể (`entity`)** mô tả một người, công ty, sản phẩm hoặc công cụ: nó là gì, tại sao nó xuất hiện trong vault này, và mọi trang nguồn có nhắc đến nó.
 
-**Concept pages** are the ones that compound. One idea per page, explained in
-plain language, with where it came from, what supports it, what argues against
-it, and what is still unclear. A concept page written well is readable by
-someone who has never seen the sources.
+**Trang khái niệm (`concept`)** là nơi tri thức tích lũy theo cấp số nhân. Mỗi trang một ý tưởng, giải thích bằng ngôn ngữ dễ hiểu, kèm theo nguồn gốc xuất xứ, bằng chứng ủng hộ, lập luận phản biện, và những gì vẫn còn bỏ ngỏ. Một trang khái niệm được viết tốt là trang mà người chưa từng xem tài liệu nguồn vẫn đọc hiểu được.
 
-**Synthesis pages** exist only when they say something no single source did:
-two sources disagree, three sources describe the same pattern, a question keeps
-recurring. Do not write a synthesis page just to have one.
+**Trang tổng hợp (`synthesis`)** chỉ tồn tại khi chúng nói lên điều mà không một nguồn đơn lẻ nào nói được: hai nguồn mâu thuẫn nhau, ba nguồn cùng mô tả một khuôn mẫu, một câu hỏi cứ lặp đi lặp lại. Đừng viết trang tổng hợp chỉ để cho có.
 
-## Linking rules
+## Quy tắc liên kết
 
-Link the first mention of any concept or entity on every page, using
-`[[wikilinks]]`. A page with no outbound links is a dead end and a page with no
-inbound links is invisible, so at ingest time connect the new page to what is
-already here before you finish.
+Liên kết ngay lần nhắc đầu tiên của bất kỳ khái niệm hoặc thực thể nào trên mỗi trang, sử dụng `[[wikilinks]]`. Một trang không có liên kết đi (outbound links) là một ngõ cụt, và một trang không có liên kết đến (inbound links) là một trang vô hình; vì vậy ngay khi nạp tài liệu, hãy kết nối trang mới với những gì đã có sẵn trước khi bạn kết thúc.
 
-If the target page does not exist yet, still write the link, then create the
-page in the same run or add it to the gaps list in `index.md`. Links to pages
-that will never exist are worse than no links.
+Nếu trang đích chưa tồn tại, vẫn cứ viết liên kết đó, sau đó tạo trang ngay trong cùng lượt chạy hoặc thêm nó vào danh sách khoảng trống (`Gaps`) trong `index.md`. Liên kết đến những trang sẽ không bao giờ tồn tại còn tệ hơn là không có liên kết.
 
-Prefer a link over a restatement. If you find yourself explaining a concept
-that already has a page, link it and move on.
+Ưu tiên đặt liên kết hơn là diễn giải lại. Nếu bạn thấy mình đang giải thích một khái niệm đã có trang riêng, hãy đặt liên kết tới nó rồi đi tiếp.
 
-## Handling disagreement
+## Xử lý bất đồng và mâu thuẫn
 
-When a new source contradicts an existing page, do not overwrite. Record both
-positions on the page, note which source says what and when, and mark the older
-claim as superseded if the new source is clearly better evidence. Silent
-overwrites destroy the one thing this vault has that a search engine does not:
-the history of what the owner believed and why.
+Khi một nguồn mới mâu thuẫn với một trang hiện có, không được ghi đè. Hãy ghi nhận cả hai quan điểm trên trang, chú thích rõ nguồn nào nói gì và vào thời điểm nào, đồng thời đánh dấu nhận định cũ là đã được thay thế (superseded) nếu nguồn mới rõ ràng là bằng chứng tốt hơn. Việc âm thầm ghi đè sẽ phá hủy thứ duy nhất mà vault này có nhưng công cụ tìm kiếm không có: lịch sử về những gì chủ sở hữu từng tin tưởng và lý do tại sao.
 
-Never invent a fact to fill a gap. An explicit "not covered by any source here"
-is useful. A plausible sentence with no source behind it poisons everything
-downstream.
+Không bao giờ tự bịa ra thông tin để lấp đầy khoảng trống. Một câu ghi chú rõ ràng rằng "chưa được đề cập bởi bất kỳ nguồn nào tại đây" là rất hữu ích. Một câu văn nghe có vẻ hợp lý nhưng không có nguồn đứng sau sẽ đầu độc mọi suy luận phía sau.
 
-## Voice
+## Giọng văn
 
-Plain sentences. No marketing language, no hedging filler, no bullet lists
-where a paragraph is clearer. Write for the owner in six months, who will not
-remember the source at all.
+Câu văn giản dị, trực diện. Không dùng ngôn ngữ tiếp thị, không rào trước đón sau rườm rà, không dùng danh sách gạch đầu dòng ở nơi mà một đoạn văn sẽ rõ nghĩa hơn. Hãy viết cho chủ sở hữu đọc lại sau sáu tháng nữa — khi họ chẳng còn nhớ chút gì về tài liệu nguồn ban đầu.
 
-## Logging
+## Ghi nhật ký (Logging)
 
-Append one line per operation to `log.md`:
+Ghi nối tiếp (append) một dòng cho mỗi thao tác vào `log.md`:
 
 ```
 2026-09-07 ingest raw/some-article.md -> 1 source, 3 concepts, 2 entities, 7 links
 ```
 
-Keep `index.md` current in the same run. An index that lags behind is the
-first sign the system is drifting.
+Cập nhật `index.md` ngay trong cùng lượt chạy. Một trang chỉ mục bị tụt hậu là dấu hiệu đầu tiên cho thấy hệ thống đang bị trôi (drift).

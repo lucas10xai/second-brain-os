@@ -1,61 +1,45 @@
-# Backups and portability
+# Sao lưu và tính khả chuyển
 
-## Sync is not backup
+## Đồng bộ (Sync) không phải là sao lưu (Backup)
 
-This is the whole page, and it is the mistake almost everyone makes.
+Đây là thông điệp cốt lõi của cả trang này, và cũng là sai lầm mà hầu như ai cũng mắc phải.
 
-Sync propagates. If an automation rewrites two hundred pages badly, sync
-faithfully copies the damage to every device within seconds. If a file is
-deleted, it is deleted everywhere.
+Đồng bộ có tính chất lan truyền. Nếu một tác vụ tự động hóa viết lại hai trăm trang một cách tệ hại, cơ chế đồng bộ sẽ trung thành sao chép sự phá hoại đó sang mọi thiết bị chỉ trong vài giây. Nếu một file bị xóa, nó sẽ bị xóa ở khắp mọi nơi.
 
-Backup means a copy that does not follow. At least one, disconnected from the
-sync path.
+Sao lưu nghĩa là một bản sao độc lập không tự động chạy theo những thay đổi đó. Bạn cần ít nhất một bản như vậy, tách rời hoàn toàn khỏi luồng đồng bộ.
 
-## A workable arrangement
+## Một cách bố trí thực tế và hiệu quả
 
-**Git remote,** private, pushed after every run. Versioned, so it covers the
-"what did it look like three weeks ago" case that a file backup does not.
+**Git remote,** đặt ở chế độ riêng tư, được đẩy lên (push) sau mỗi lượt chạy. Vì có lưu lịch sử phiên bản, nó giải quyết được câu hỏi "cách đây ba tuần trông nó thế nào" — điều mà một bản sao lưu file thông thường không làm được.
 
-**Sync** for working across machines, whichever kind you already use.
+**Đồng bộ (Sync)** để làm việc xuyên suốt giữa các máy tính, dùng bất kỳ dịch vụ nào bạn đang quen dùng.
 
-**A periodic archive** to external or separate cloud storage, not connected to
-either of the above. Monthly is enough.
+**Một bản lưu trữ định kỳ (periodic archive)** đẩy lên ổ cứng ngoài hoặc một dịch vụ đám mây khác, không kết nối với hai cơ chế trên. Mỗi tháng một lần là đủ.
 
-Three copies, one of which is dumb and slow, is the arrangement that survives the
-failure modes that actually happen.
+Ba bản sao, trong đó có một bản "ngây ngô" và cập nhật chậm, là cách bố trí sống sót được qua những sự cố thực sự xảy ra ngoài đời thực.
 
-## Test a restore
+## Thử khôi phục một lần
 
-Once. Take the archive, restore it somewhere else, open it in Obsidian, and check
-the links work.
+Chỉ cần làm một lần thôi. Hãy lấy bản lưu trữ định kỳ đó, khôi phục nó ra một thư mục khác, mở bằng Obsidian và kiểm tra xem các liên kết có hoạt động bình thường không.
 
-Untested backups fail at a reliably bad moment, and the common failure is not
-corruption. It is discovering that the archive excluded a folder, or captured the
-vault mid-sync in a half-written state.
+Những bản sao lưu chưa từng được kiểm tra luôn hỏng vào đúng thời điểm tồi tệ nhất, và lỗi phổ biến nhất không phải là hỏng dữ liệu (corruption). Lỗi thường gặp là lúc khôi phục mới phát hiện ra bản lưu trữ đã bỏ sót một thư mục, hoặc chụp lại Vault ngay giữa lúc đang đồng bộ dở dang khiến các file ở trạng thái ghi nửa chừng.
 
-## What you are protecting against
+## Thứ bạn thực sự cần phòng vệ
 
-Not disk failure, which is rare and which sync handles.
+Không phải lỗi hỏng ổ cứng — chuyện đó hiếm khi xảy ra và cơ chế đồng bộ đã xử lý được rồi.
 
-The real risk is an automation that quietly did something wrong three weeks ago,
-which you notice now. That needs history, which is why git carries more of the
-load here than file backups.
+Rủi ro thực sự là một tác vụ tự động hóa đã âm thầm làm sai điều gì đó từ ba tuần trước, mà mãi đến hôm nay bạn mới phát hiện ra. Tình huống đó đòi hỏi phải có lịch sử thay đổi, và đó là lý do Git gánh phần lớn trọng trách ở đây chứ không phải các bản sao lưu file đơn thuần.
 
-## Portability
+## Tính khả chuyển (Portability)
 
-The vault is markdown and wikilinks, so leaving any particular tool costs
-nothing structural. What is worth checking occasionally:
+Vault thực chất chỉ là các file markdown và Wikilink, nên việc rời bỏ bất kỳ công cụ cụ thể nào cũng không làm mất đi cấu trúc cốt lõi. Tuy nhiên, thỉnh thoảng bạn nên kiểm tra lại vài điểm sau:
 
-**Nothing important lives outside the files.** Plugin-specific metadata, canvas
-files, database exports. All fine as extras, none of it should carry knowledge
-that exists nowhere else.
+**Không có thông tin quan trọng nào nằm bên ngoài các file văn bản.** Dữ liệu đặc thù của plugin, các file canvas, hay các bản xuất cơ sở dữ liệu — tất cả đều tốt khi đóng vai trò bổ trợ, nhưng không thứ nào trong số đó được phép nắm giữ những tri thức không tồn tại ở bất kỳ nơi nào khác.
 
-**Links resolve without Obsidian.** `scripts/link_check.py` verifies this, since
-it parses wikilinks itself.
+**Các liên kết vẫn phân giải được khi không có Obsidian.** Script `scripts/link_check.py` giúp xác minh điều này, vì bản thân nó tự phân tích cú pháp Wikilink một cách độc lập.
 
-**The agent instructions are in the vault,** not in a chat history or an app
-setting. `CLAUDE.md`, skills and commands travel with the folder.
+**Chỉ dẫn dành cho Agent phải nằm ngay trong Vault,** chứ không nằm trong lịch sử trò chuyện hay phần cài đặt của một ứng dụng nào đó. `CLAUDE.md`, các Skills và các lệnh đều phải đi kèm theo thư mục Vault.
 
-## Next
+## Tiếp theo
 
-[Privacy](privacy-and-secrets.md)
+[Quyền riêng tư và thông tin nhạy cảm](privacy-and-secrets.md)

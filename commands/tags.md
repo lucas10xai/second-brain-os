@@ -1,7 +1,7 @@
 ---
-description: Audit the tag vocabulary
+description: Kiểm toán bộ từ vựng thẻ (tag)
 ---
 
-List every tag in use with its count. Flag tags used once, near-synonyms, and anything not in the vocabulary in CLAUDE.md. Propose a consolidation.
+Liệt kê mọi thẻ (tag) đang được sử dụng kèm số lần xuất hiện. Đánh dấu các thẻ chỉ dùng đúng một lần, các thẻ gần đồng nghĩa, và bất kỳ thẻ nào không nằm trong bộ từ vựng quy định tại CLAUDE.md. Đề xuất phương án hợp nhất.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

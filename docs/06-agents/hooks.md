@@ -1,50 +1,35 @@
 # Hooks
 
-Hooks fire on events rather than on a schedule. They are the right tool for
-things that must happen every time, which is exactly the set of things a prompt
-instruction will eventually miss.
+`Hooks` kích hoạt dựa trên sự kiện (events) thay vì dựa trên lịch trình thời gian. Chúng là công cụ hoàn hảo cho những việc bắt buộc phải diễn ra trong mọi lần thực thi — cũng chính xác là nhóm những việc mà nếu chỉ dặn bằng lời trong prompt thì sớm muộn gì `Agent` cũng sẽ có lúc quên.
 
-## Worth hooking
+## Những việc đáng gắn vào Hooks
 
-**Validation before a write.** Check frontmatter parses and required fields are
-present. A malformed page caught at write time is a non-event; caught a month
-later it is a page that has been invisible to every query since.
+**Kiểm tra tính hợp lệ trước khi ghi file (Validation before a write).** Kiểm tra xem `Frontmatter` có phân tích cú pháp (parse) thành công không và các trường bắt buộc đã có đủ chưa. Một trang sai định dạng bị bắt lại ngay thời điểm ghi file chỉ là một chuyện nhỏ như con thỏ; nhưng nếu để một tháng sau mới phát hiện ra thì nghĩa là suốt tháng đó trang ấy đã hoàn toàn vô hình trước mọi câu truy vấn.
 
-**Lint after a run.** Broken links appear at the moment they are created, which
-is the moment there is enough context to fix them properly.
+**Chạy `Lint` sau mỗi lượt thực thi.** Các liên kết đứt gãy (broken links) được phát hiện ngay tại khoảnh khắc chúng vừa sinh ra — cũng chính là lúc vẫn còn đầy đủ ngữ cảnh trong phiên làm việc để sửa chúng một cách chuẩn xác.
 
-**Commit after a scheduled run.** Removes the possibility of a run that changed
-forty files and left no commit.
+**Tạo commit sau một lượt chạy theo lịch.** Loại bỏ hoàn toàn khả năng một lượt chạy đã sửa đổi tới bốn mươi file nhưng lại rời đi mà không để lại một bản commit `Git` nào.
 
-**Notify on deletion.** Any delete, any time, surfaces. Deletions are rare enough
-that a notification costs nothing and matters when it fires.
+**Thông báo khi có thao tác xóa (Notify on deletion).** Bất kỳ lệnh xóa nào, vào bất cứ lúc nào, đều phải được đẩy thông báo nổi lên. Việc xóa trang hiếm khi xảy ra đến mức một thông báo như vậy hầu như không gây phiền nhiễu gì, nhưng lại cực kỳ quan trọng vào đúng khoảnh khắc nó phát tín hiệu.
 
-## Not worth hooking
+## Những việc KHÔNG đáng gắn vào Hooks
 
-Anything slow. A hook that runs on every file write and takes two seconds turns a
-forty-page ingest into a ninety-second pause, and you will disable it.
+Bất cứ tác vụ nào chạy chậm. Một hook kích hoạt trên mỗi lần ghi file và mất hai giây để chạy sẽ biến một lượt `Ingest` bốn mươi trang thành một khoảng chờ đợi dài chín mươi giây — và sớm muộn gì bạn cũng sẽ tắt bỏ nó.
 
-Anything that needs judgement. Hooks are mechanical checks. A hook trying to
-decide whether a page is good enough will be wrong in both directions.
+Bất cứ việc gì đòi hỏi sự phán đoán ngữ nghĩa. `Hooks` chỉ dành cho các bước kiểm tra cơ học. Một hook cố gắng phán đoán xem nội dung một trang đã "đủ hay" chưa sẽ mắc sai lầm ở cả hai chiều (chặn nhầm trang tốt và bỏ lọt trang tệ).
 
-## Keep them fast and quiet
+## Giữ cho Hooks luôn nhanh và im lặng
 
-A hook should complete in well under a second and print nothing when it passes.
-Hooks that log on success train you to ignore hook output, which is the same as
-having no hooks the day one fails.
+Một hook nên hoàn tất trong thời gian chưa đầy một giây và không in ra bất kỳ thông báo nào khi mọi thứ đều hợp lệ (pass). Những hook cứ chạy thành công cũng in log ra màn hình sẽ tập cho bạn thói quen phớt lờ kết quả đầu ra của hook — và điều đó chẳng khác nào việc không có hook nào cả vào đúng ngày có một bước kiểm tra bị lỗi thực sự.
 
-## Failure behaviour
+## Hành vi khi xảy ra lỗi (Failure behaviour)
 
-Decide explicitly whether a failing hook blocks the operation.
+Hãy quyết định thật dứt khoát xem liệu một hook bị lỗi có chặn đứng (block) thao tác đang thực hiện hay không.
 
-Validation hooks should block: a page that fails schema validation should not be
-written. Notification hooks should not: a failed notification is not a reason to
-lose the work.
+Các hook kiểm tra tính hợp lệ (validation hooks) bắt buộc phải chặn: một trang không vượt qua được bước kiểm tra lược đồ (schema validation) thì không được phép ghi xuống đĩa. Ngược lại, các hook gửi thông báo (notification hooks) thì không nên chặn: một thông báo gửi thất bại không phải là lý do chính đáng để vứt bỏ toàn bộ kết quả công việc vừa làm.
 
-The bad case is a blocking hook that fails for an unrelated reason and silently
-stops your scheduled ingest for a week. Whatever blocks must be simple enough
-that it only fails for the reason it exists.
+Tình huống tệ nhất là một hook có quyền chặn nhưng lại bị lỗi vì một nguyên nhân ngoại cảnh không liên quan và âm thầm làm tê liệt lịch chạy `Ingest` tự động của bạn suốt cả tuần trời. Bất cứ thứ gì được trao quyền chặn thao tác đều phải đơn giản đến mức nó chỉ có thể báo lỗi vì đúng lý do mà nó được sinh ra.
 
-## Next
+## Tiếp theo
 
-[Skills and slash commands](skills-and-commands.md)
+[Skills và Slash commands](skills-and-commands.md)

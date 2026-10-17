@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Export a vault's wikilink graph as CSV edges or GraphML.
+"""Xuất đồ thị wikilink của một vault dưới dạng danh sách cạnh CSV hoặc GraphML.
 
-Usage:
+Cách dùng:
     python3 graph_export.py /path/to/vault edges.csv
     python3 graph_export.py /path/to/vault graph.graphml --format graphml
 
-CSV loads into NetworkX, Kuzu, Neo4j or a spreadsheet. GraphML opens in Gephi.
-No dependencies.
+File CSV có thể nạp vào NetworkX, Kuzu, Neo4j hoặc bảng tính. File GraphML mở được
+bằng Gephi. Không yêu cầu thư viện phụ thuộc bên ngoài.
 """
 import argparse
 import csv
@@ -16,9 +16,10 @@ from xml.sax.saxutils import escape
 
 LINK = re.compile(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]")
 TYPE = re.compile(r"^type:\s*(\S+)", re.M)
-# Hidden folders (.claude, .obsidian, .git, .trash), the page templates and
-# the scripts folder hold instructions and tooling, not knowledge, so they are
-# never counted as pages. Same for CLAUDE.md and README.md wherever they sit.
+# Các thư mục ẩn (.claude, .obsidian, .git, .trash), thư mục mẫu trang (templates)
+# và thư mục scripts chỉ chứa chỉ dẫn cùng công cụ chứ không phải tri thức, nên
+# không bao giờ được tính là các trang wiki. Tương tự đối với CLAUDE.md và README.md
+# ở bất kỳ vị trí nào.
 SKIP_DIRS = {"node_modules", "raw", "templates", "scripts"}
 SKIP_FILES = {"CLAUDE.md", "README.md"}
 

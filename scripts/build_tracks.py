@@ -24,46 +24,46 @@ ROOT = os.path.dirname(HERE)
 # Built on Google's agent whitepapers and the five-layer frame.
 COURSE = {
     "course-0-map": {
-        "title": "0 · The map",
-        "blurb": "What an agent is, the five layers around the model, and "
-                 "when a workflow beats a loop.",
+        "title": "0 · Bản đồ tổng quan",
+        "blurb": "Agent là gì, năm tầng kiến trúc bao quanh mô hình, và "
+                 "khi nào một quy trình cố định (workflow) vượt trội hơn vòng lặp (loop).",
         "order": ["what-an-agent-is", "five-layers", "agents-or-workflows"],
     },
     "course-1-context": {
-        "title": "1 · Context",
-        "blurb": "What the model sees: attention, caching, the four places, "
-                 "sessions and memory.",
+        "title": "1 · Ngữ cảnh (Context)",
+        "blurb": "Những gì mô hình nhìn thấy: cơ chế chú ý (attention), bộ nhớ đệm (caching), "
+                 "bốn vị trí đặt ngữ cảnh, phiên làm việc và bộ nhớ dài hạn.",
         "order": ["how-models-read", "the-four-places", "context-practice"],
     },
     "course-2-loop": {
-        "title": "2 · Loop",
-        "blurb": "Who decides the next step: goal, checker, stop rule, "
-                 "budget - and the hybrid that survives production.",
+        "title": "2 · Vòng lặp (Loop)",
+        "blurb": "Ai quyết định bước tiếp theo: mục tiêu, bộ kiểm tra (checker), quy tắc dừng, "
+                 "ngân sách — và mô hình lai (hybrid) sống sót trong môi trường thực tế.",
         "order": ["loops-vs-workflows", "the-four-parts", "loop-practice"],
     },
     "course-3-gate": {
-        "title": "3 · The gate",
-        "blurb": "Cheap decisions in front of expensive models: classifiers "
-                 "first, System One models where they earn it.",
+        "title": "3 · Cổng phân luồng (The Gate)",
+        "blurb": "Những quyết định chi phí thấp đặt trước các mô hình đắt tiền: ưu tiên bộ phân loại "
+                 "trước, chỉ dùng mô hình System One ở nơi thực sự xứng đáng.",
         "order": ["cheap-decisions", "gates-in-practice", "gate-practice"],
     },
     "course-4-harness": {
-        "title": "4 · Harness",
-        "blurb": "The office around the model: containment, guides, sensors, "
-                 "permissions - built from the outside in.",
+        "title": "4 · Khung vận hành (Harness)",
+        "blurb": "Không gian làm việc bao quanh mô hình: vùng cô lập, hướng dẫn, cảm biến, "
+                 "quyền hạn — được xây dựng từ ngoài vào trong.",
         "order": ["the-office", "the-four-rings", "harness-practice"],
     },
     "course-5-evals": {
-        "title": "5 · Evals",
-        "blurb": "The same test every month: behavioural checks on traces, "
-                 "judged judges, golden sets that include failures.",
+        "title": "5 · Đánh giá (Evals)",
+        "blurb": "Cùng một bài kiểm tra chạy định kỳ mỗi tháng: kiểm tra hành vi trên vết thực thi (traces), "
+                 "kiểm chứng giám khảo AI, và bộ dữ liệu chuẩn (golden set) bao gồm cả các ca lỗi.",
         "order": ["two-kinds-of-checks", "judges-and-golden-sets",
                   "evals-practice"],
     },
     "course-6-production": {
-        "title": "6 · Production",
-        "blurb": "From demo to deployed: gateways, tracing, cost, security - "
-                 "and the day-one plan across all five layers.",
+        "title": "6 · Vận hành thực tế (Production)",
+        "blurb": "Từ bản thử nghiệm đến triển khai thực tế: gateway, truy vết (tracing), chi phí, bảo mật — "
+                 "và kế hoạch ngày đầu tiên xuyên suốt cả năm tầng kiến trúc.",
         "order": ["from-prototype", "operating-agents", "day-one-plan"],
     },
 }
@@ -71,31 +71,31 @@ COURSE = {
 # page order inside each track is editorial, not alphabetical
 TRACKS = {
     "track-graph": {
-        "title": "Knowledge graphs",
-        "blurb": "Graphs as agent memory: GraphRAG, extraction pipelines, "
-                 "stores — then an evening build of a graph layer over "
-                 "your own vault.",
+        "title": "Đồ thị tri thức (Knowledge graphs)",
+        "blurb": "Đồ thị trong vai trò bộ nhớ của Agent: GraphRAG, quy trình trích xuất, "
+                 "kho lưu trữ đồ thị — cùng bài thực hành một buổi tối xây dựng tầng đồ thị "
+                 "trên chính vault của bạn.",
         "order": ["why-graphs", "graphrag", "building-graphs-with-llms",
                   "graph-stores", "tools",
                   "build-extract", "build-query", "build-use", "resources"],
     },
     "track-jev": {
-        "title": "Jev engineering",
+        "title": "Kỹ thuật Jev (Jev engineering)",
         "module": ("3", "course-3-gate"),
-        "blurb": "The gate is the layer; Jev is one way to build it. Typed "
-                 "decisions with confidence scores instead of generated text "
-                 "— and a build you can run before your Jev access lands.",
+        "blurb": "Cổng phân luồng (Gate) là tầng kiến trúc; Jev là một cách để xây dựng nó. "
+                 "Trả về quyết định định kiểu kèm điểm tự tin thay vì sinh văn bản tự do "
+                 "— cùng bài thực hành bạn có thể chạy ngay cả trước khi có quyền truy cập Jev.",
         "order": ["system-one-models", "what-jev-is-good-for",
                   "jev-in-an-agent-stack", "getting-started",
                   "build-decision-endpoint", "build-router",
                   "build-swap-in-jev", "resources"],
     },
     "track-harness": {
-        "title": "Agent harnesses",
+        "title": "Khung vận hành Agent (Agent harnesses)",
         "module": ("4", "course-4-harness"),
-        "blurb": "The machinery around the model: loops, tools, context "
-                 "engineering, the landscape — and a working harness in "
-                 "an evening, about 150 lines.",
+        "blurb": "Cỗ máy bao quanh mô hình: vòng lặp, công cụ, kỹ thuật ngữ cảnh, "
+                 "bức tranh toàn cảnh — và tự tay viết một khung vận hành hoàn chỉnh "
+                 "chỉ trong một buổi tối với khoảng 150 dòng code.",
         "order": ["what-a-harness-is", "claude-code-as-harness",
                   "context-engineering", "tools-and-mcp",
                   "harness-landscape",
@@ -103,22 +103,22 @@ TRACKS = {
                   "resources"],
     },
     "track-loop": {
-        "title": "Loop engineering",
+        "title": "Kỹ thuật vòng lặp (Loop engineering)",
         "module": ("2", "course-2-loop"),
-        "blurb": "The control system around the agent: stop conditions, "
-                 "critics, context hygiene — and an overnight loop you can "
-                 "trust by morning.",
+        "blurb": "Hệ thống điều khiển bao quanh Agent: điều kiện dừng, bộ phản biện (critics), "
+                 "vệ sinh ngữ cảnh — và một vòng lặp chạy qua đêm bạn có thể hoàn toàn yên tâm "
+                 "khi thức dậy vào sáng hôm sau.",
         "order": ["what-loop-engineering-is", "stop-conditions",
                   "critics-and-verification", "context-hygiene", "patterns",
                   "build-goal-test", "build-critic", "build-overnight",
                   "resources"],
     },
     "track-evals": {
-        "title": "Eval engineering",
+        "title": "Kỹ thuật đánh giá (Eval engineering)",
         "module": ("5", "course-5-evals"),
-        "blurb": "Measurement as the discipline of AI products: golden sets, "
-                 "judges that do not lie, agent trajectories — and your "
-                 "first suite built in an afternoon.",
+        "blurb": "Đo lường là kỷ luật cốt lõi của sản phẩm AI: bộ dữ liệu chuẩn (golden sets), "
+                 "giám khảo không nói dối, quỹ đạo thực thi của Agent — và tự xây dựng "
+                 "bộ đánh giá đầu tiên chỉ trong một buổi chiều.",
         "order": ["why-evals", "designing-evals", "llm-as-judge",
                   "agent-evals", "tooling",
                   "build-traces", "build-suite", "build-ci", "resources"],
@@ -186,22 +186,22 @@ def build_group(D, group, kind):
         cards.append(
             f'<article><h3><a href="#{pages[0]["id"]}">{meta["title"]}</a></h3>'
             f'<p>{meta["blurb"]}</p>'
-            f'<div class="pg">{len(pages)} pages</div></article>')
+            f'<div class="pg">{len(pages)} trang</div></article>')
         # a browsable README per folder, kept in sync with the order
         toc = "\n".join(f"{n}. [{p['title']}]({os.path.basename(p['path'])})"
                         for n, p in enumerate(pages, 1))
         if kind == "course":
-            label = ("A course module beside [the main guide](../../README.md)"
-                     " — read it on the site or in order below.")
+            label = ("Một học phần thuộc khóa học bên cạnh [cẩm nang chính](../../README.md)"
+                     " — đọc trực tiếp trên trang web hoặc theo thứ tự dưới đây.")
         elif meta.get("module"):
             n, mdir = meta["module"]
-            label = (f"The handbook for [module {n}](../{mdir}/README.md) of "
-                     "the agents course: the module teaches the idea once; "
-                     "this holds the full menu — techniques, tools and "
-                     "builds. Read it on the site or dip in below.")
+            label = (f"Sổ tay chuyên sâu cho [học phần {n}](../{mdir}/README.md) của "
+                     "khóa học AI Agent: học phần dạy khái niệm cốt lõi một lần; "
+                     "sổ tay này lưu giữ toàn bộ danh mục kỹ thuật, công cụ và "
+                     "bài thực hành. Đọc trên trang web hoặc tra cứu bất kỳ bài nào dưới đây.")
         else:
-            label = ("A handbook beside [the main guide](../../README.md) — "
-                     "the full menu for one layer; dip in anywhere.")
+            label = ("Sổ tay chuyên sâu bên cạnh [cẩm nang chính](../../README.md) — "
+                     "toàn bộ danh mục kỹ thuật cho một tầng kiến trúc; tra cứu bất kỳ phần nào bạn cần.")
         io.open(os.path.join(ROOT, "docs", sec, "README.md"), "w",
                 encoding="utf-8", newline="\n").write(
             f"# {meta['title']}\n\n{meta['blurb']}\n\n{label}\n\n{toc}\n")

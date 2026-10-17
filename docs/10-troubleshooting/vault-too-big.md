@@ -1,62 +1,47 @@
-# The vault got too big
+# Vault phình ra quá lớn
 
-## Symptoms
+## Triệu chứng
 
-Answers get slower and vaguer. The agent reads twenty pages and returns something
-general. The graph view is a hairball. You cannot remember whether a topic is
-covered, and checking takes longer than searching the web.
+Các câu trả lời ngày càng chậm chạp và mơ hồ hơn. Agent đọc tới hai mươi trang nhưng chỉ trả về những nhận xét chung chung. Chế độ xem đồ thị trông như một cuộn len rối bù. Bạn không còn nhớ nổi một chủ đề đã được ghi chép hay chưa, và việc lục tìm trong Vault còn mất nhiều thời gian hơn cả việc lên mạng tìm kiếm lại từ đầu.
 
-## What it usually is not
+## Những thứ thường không phải là nguyên nhân
 
-Disk, search speed, or Obsidian. Those all scale fine.
+Dung lượng ổ đĩa, tốc độ tìm kiếm, hay bản thân phần mềm Obsidian. Tất cả những thứ đó đều mở rộng quy mô rất tốt.
 
-What it actually is: retrieval economy. The index is long enough that reading it
-costs real context, so the agent either skips it or spends its budget there
-instead of on pages.
+Nguyên nhân thực sự nằm ở kinh tế học truy xuất (retrieval economy). Trang chỉ mục đã dài đến mức chỉ riêng việc đọc nó thôi cũng tiêu tốn một lượng ngữ cảnh đáng kể, khiến Agent hoặc là bỏ qua luôn trang chỉ mục, hoặc là đốt hết ngân sách ngữ cảnh ngay tại đó thay vì dành cho việc đọc các trang nội dung.
 
-## First, check it is size and not rot
+## Trước hết, hãy kiểm tra xem vấn đề là do quy mô hay do sự mục ruỗng cấu trúc
 
-Run the [metrics](../05-graphs/metrics.md). A vault with a twenty percent orphan
-rate does not have a size problem, it has a linking problem, and splitting it
-will not help.
+Hãy chạy công cụ đo lường [các chỉ số](../05-graphs/metrics.md). Một Vault có tỷ lệ trang mồ côi lên tới hai mươi phần trăm không hề gặp vấn đề về quy mô, mà đang gặp vấn đề về gắn kết liên kết — và việc tách nhỏ Vault sẽ chẳng giúp ích được gì.
 
-Genuinely large and healthy looks like: low orphan rate, one dominant component,
-average degree in range, and an index over a few hundred entries.
+Một Vault thực sự lớn nhưng khỏe mạnh sẽ có các đặc điểm sau: tỷ lệ trang mồ côi thấp, có một thành phần liên thông chính chiếm ưu thế, bậc liên kết trung bình (average degree) nằm trong ngưỡng chuẩn, và trang chỉ mục có hơn vài trăm mục.
 
-## Summary layers
+## Các tầng tóm tắt (Summary layers)
 
-The first fix and usually enough. One index per topic area between the master
-index and the pages, so the agent makes three cheap reads instead of one
-expensive one. See [scaling](../09-maintenance/scaling.md).
+Giải pháp đầu tiên và thường là đã đủ để giải quyết vấn đề. Hãy thêm một trang chỉ mục cho từng mảng chủ đề nằm giữa chỉ mục tổng (master index) và các trang chi tiết, để Agent thực hiện ba lần đọc nhẹ nhàng thay vì một lần đọc quá tải. Xem thêm [mở rộng quy mô](../09-maintenance/scaling.md).
 
-## Splitting
+## Tách nhỏ Vault
 
-By domain, never by date. Two vaults that genuinely do not inform each other.
+Hãy tách theo lĩnh vực chuyên môn (domain), tuyệt đối không tách theo mốc thời gian. Tạo thành hai Vault thực sự không bổ trợ thông tin qua lại cho nhau.
 
-Accept that cross-domain connections stop happening. Those are often the
-interesting ones, which is why splitting is a late move rather than a first
-response.
+Hãy chấp nhận rằng các kết nối xuyên lĩnh vực sẽ không còn diễn ra nữa. Đó thường lại là những liên kết thú vị nhất, và vì thế việc tách nhỏ Vault chỉ nên là nước đi cuối cùng thay vì là phản ứng đầu tiên.
 
-## Archiving
+## Lưu trữ lạnh (Archiving)
 
-Cold material to `archive/`, outside `wiki/`. Still searchable, out of the index
-and the graph, reversible.
+Đưa các tư liệu ít dùng ("lạnh") sang thư mục `archive/`, nằm bên ngoài `wiki/`. Chúng vẫn có thể tìm kiếm được, nhưng rút khỏi trang chỉ mục cũng như Knowledge graph, và hoàn toàn có thể khôi phục lại khi cần.
 
-Better than deleting, because "cold" is a guess and archived material can come
-back.
+Cách này tốt hơn việc xóa bỏ hoàn toàn, bởi đánh giá một nội dung là "lạnh" chỉ mang tính phỏng đoán và những tư liệu đã lưu trữ hoàn toàn có thể trở nên hữu ích trở lại.
 
-## Rebuild the index
+## Dựng lại trang chỉ mục
 
-Sometimes the index has simply drifted: entries for pages that moved, missing
-entries for pages added by runs that failed halfway.
+Đôi khi vấn đề đơn giản chỉ là trang chỉ mục đã bị trôi dạt lệch khỏi thực tế: vẫn còn giữ các mục trỏ tới những trang đã di chuyển đi nơi khác, hoặc thiếu mất các mục cho những trang được thêm vào từ các lượt chạy bị đứt gánh giữa đường.
 
 ```
-Rebuild index.md from the actual contents of wiki/. Group by type and theme, one
-line of description per entry, and list gaps at the bottom.
+Hãy dựng lại index.md từ nội dung thực tế hiện có trong thư mục wiki/. Nhóm theo loại trang và chủ đề, mỗi mục kèm một dòng mô tả ngắn gọn, và liệt kê các khoảng trống kiến thức (gaps) ở dưới cùng.
 ```
 
-Cheap, and it fixes a surprising share of "the vault feels broken" complaints.
+Thao tác này rất nhẹ nhàng, nhưng lại khắc phục được một tỷ lệ đáng kinh ngạc những lời phàn nàn kiểu "cảm giác như Vault đang bị hỏng".
 
-## Next
+## Tiếp theo
 
-[FAQ](faq.md)
+[Câu hỏi thường gặp (FAQ)](faq.md)

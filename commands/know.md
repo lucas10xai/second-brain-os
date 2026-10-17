@@ -1,7 +1,7 @@
 ---
-description: What do I know about a topic
+description: Tôi đang biết những gì về một chủ đề
 ---
 
-Everything the vault holds on $ARGUMENTS: the concepts, the sources behind them, and where the sources disagree.
+Tổng hợp mọi thứ kho tri thức đang lưu giữ về $ARGUMENTS: các khái niệm, những nguồn tài liệu đứng sau chúng, và những điểm mà các nguồn đang bất đồng quan điểm.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

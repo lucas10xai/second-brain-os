@@ -1,61 +1,45 @@
-# The failures everyone hits
+# Những lỗi ai cũng gặp phải
 
-## The vault stalls after two weeks
+## Vault bị đình trệ sau hai tuần
 
-Almost always capture, not the system. Clipping takes three clicks instead of
-one, or the phone has no path into the vault, so material stops arriving and
-there is nothing to process.
+Nguyên nhân gần như luôn nằm ở khâu thu thập (capture), chứ không phải do bản thân hệ thống. Việc lưu một bài viết mất tới ba cú nhấp chuột thay vì một, hoặc điện thoại của bạn không có đường truyền dữ liệu vào Vault, thế là tài liệu mới ngừng chảy về và chẳng còn gì để xử lý nữa.
 
-Fix the capture path, not the vault. See
-[Ingestion](../03-ingestion/README.md).
+Hãy sửa lại luồng thu thập dữ liệu, đừng sửa Vault. Xem thêm chương [Thu thập và nạp dữ liệu (Ingestion)](../03-ingestion/README.md).
 
-The other cause is expecting the payoff too early. At thirty pages there is
-nothing to connect. See [what good looks
-like](../01-concepts/what-good-looks-like.md) for the real timeline.
+Nguyên nhân còn lại là kỳ vọng thu về thành quả quá sớm. Khi mới chỉ có ba mươi trang thì chưa có gì nhiều để mà kết nối cả. Xem thêm [hình mẫu một Vault tốt](../01-concepts/what-good-looks-like.md) để nắm được lộ trình thời gian thực tế.
 
-## Pages are summaries of summaries
+## Các trang chỉ là bản tóm tắt của các bản tóm tắt
 
-Source pages that summarise the article, concept pages that summarise the source
-pages. Each layer loses information and the bottom layer is what gets read.
+Các trang nguồn tóm tắt lại bài viết gốc, rồi các trang khái niệm lại tóm tắt các trang nguồn đó. Qua mỗi tầng như vậy thông tin lại rơi rụng bớt, trong khi tầng dưới cùng mới là thứ được đọc.
 
-The cause is a page contract that says "summarise" anywhere in it. Concept pages
-explain an idea in plain language, in your words, standing on their own. Rewrite
-the contract in `CLAUDE.md` and re-ingest a few sources to check.
+Nguyên nhân là do quy ước trang (page contract) có chứa từ "tóm tắt" (summarise) ở đâu đó. Các trang khái niệm phải giải thích một ý tưởng bằng ngôn từ rõ ràng, theo cách hiểu của bạn, và có khả năng đứng độc lập. Hãy viết lại quy ước trong `CLAUDE.md` rồi chạy Ingest lại một vài tài liệu nguồn để kiểm tra.
 
-## The agent rewrites work you did by hand
+## Agent viết đè lên những nội dung bạn tự viết tay
 
-Infuriating and preventable. Mark hand-written pages in frontmatter:
+Điều này cực kỳ gây ức chế nhưng hoàn toàn có thể phòng tránh được. Hãy đánh dấu các trang do bạn tự viết tay trong phần Frontmatter:
 
 ```yaml
 maintained_by: human
 ```
 
-And in `CLAUDE.md`: never rewrite a page marked `maintained_by: human`, only
-append links and flag issues for the owner.
+Và bổ sung quy tắc vào `CLAUDE.md`: tuyệt đối không bao giờ viết lại một trang có gắn nhãn `maintained_by: human`, chỉ được phép nối thêm các liên kết ở cuối trang và gắn cờ báo cáo các vấn đề cho chủ sở hữu.
 
-## Ingest quality drops as the vault grows
+## Chất lượng Ingest giảm dần khi Vault lớn lên
 
-Real, and the cause is usually context. Ingesting into a vault of three hundred
-pages means the agent should be checking what exists first, and if it is not, it
-creates new pages instead of updating.
+Đây là hiện tượng có thật, và nguyên nhân thường nằm ở ngữ cảnh. Khi Ingest vào một Vault đã có ba trăm trang, lẽ ra Agent phải kiểm tra xem những trang nào đã tồn tại trước, và nếu nó bỏ qua bước đó, nó sẽ cứ thế tạo ra các trang mới tinh thay vì cập nhật vào các trang sẵn có.
 
-Check that ingestion reads `index.md` before writing. That one step is what keeps
-quality flat as the vault grows.
+Hãy kiểm tra để đảm bảo quy trình Ingest luôn đọc `index.md` trước khi đặt bút viết. Chỉ riêng một bước đó thôi là đủ để giữ cho chất lượng ổn định khi Vault ngày một phình to.
 
-## Everything connects to everything
+## Mọi thứ đều liên kết với mọi thứ
 
-A few hub pages have accumulated every link, so the graph says nothing. Split
-the hubs into the specific ideas people are actually linking to. See [linking
-rules](../04-structuring/linking-rules.md).
+Một vài trang trung tâm (hub pages) tích tụ mọi liên kết đổ về, khiến cho Knowledge graph mất hết khả năng biểu đạt thông tin. Hãy tách nhỏ các trang trung tâm đó thành những ý tưởng cụ thể mà các trang khác thực sự muốn nhắm tới. Xem thêm [quy tắc liên kết](../04-structuring/linking-rules.md).
 
-## You stopped opening it
+## Bạn ngừng mở Vault ra xem
 
-The honest failure. Usually capture broke months ago and the vault has been
-static, or the review is too long to read.
+Sự thất bại thực tế nhất. Thường là do luồng thu thập đã gãy từ nhiều tháng trước khiến Vault rơi vào trạng thái đóng băng, hoặc do bản báo cáo rà soát định kỳ quá dài dòng khiến bạn ngại đọc.
 
-Both are fixable. Neither is a reason to start over with a different tool, which
-is the instinct and always costs another month.
+Cả hai vấn đề này đều sửa được. Không vấn đề nào là lý do chính đáng để đập đi xây lại từ đầu bằng một công cụ khác — đó là phản xạ bản năng nhưng lúc nào cũng chỉ làm bạn tốn thêm một tháng trời vô ích.
 
-## Next
+## Tiếp theo
 
-[The agent writes garbage](agent-writes-garbage.md)
+[Agent viết ra nội dung rác](agent-writes-garbage.md)

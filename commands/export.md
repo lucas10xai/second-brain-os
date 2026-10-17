@@ -1,7 +1,7 @@
 ---
-description: Export a page or set of pages
+description: Xuất một trang hoặc một tập hợp trang
 ---
 
-Export $ARGUMENTS to `output/` in the requested format, rewriting links to unpublished pages as plain text.
+Xuất $ARGUMENTS ra thư mục `output/` theo định dạng được yêu cầu, đồng thời chuyển các liên kết trỏ tới những trang chưa xuất bản thành văn bản thuần.
 
-Follow the `second-brain-publish` skill.
+Thực hiện theo skill `second-brain-publish`.

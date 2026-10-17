@@ -33,16 +33,16 @@ const COLOR = {
 };
 const PAPER = new THREE.Color(tok('--paper'));
 const LAYERS = [
-  { key: 'guide', label: 'Guide' },
-  { key: 'course', label: 'Course' },
-  { key: 'handbook', label: 'Handbooks' },
-  { key: 'term', label: 'Glossary' },
-  { key: 'tool', label: 'Toolkit' },
-  { key: 'res', label: 'Resources', off: true },
+  { key: 'guide', label: 'Cẩm nang' },
+  { key: 'course', label: 'Khóa học' },
+  { key: 'handbook', label: 'Sổ tay' },
+  { key: 'term', label: 'Thuật ngữ' },
+  { key: 'tool', label: 'Bộ công cụ' },
+  { key: 'res', label: 'Tài nguyên', off: true },
 ];
 const TYPE = {
-  root: 'home', collection: 'collection', section: 'section', page: 'page', term: 'term', hub: 'group',
-  skill: 'skill', command: 'command', agent: 'subagent', script: 'script', resource: 'resource',
+  root: 'trang chủ', collection: 'bộ sưu tập', section: 'chương', page: 'trang', term: 'thuật ngữ', hub: 'nhóm',
+  skill: 'skill', command: 'lệnh', agent: 'subagent', script: 'script', resource: 'tài nguyên',
 };
 
 // ------------------------------------------------------------------ data
@@ -627,7 +627,7 @@ function route() {
   if (r.mode === 'overview') {
     select(null);
     fly(homeCenter, homeDistance, { ms: prevMode === 'boot' ? 3200 : 1900, spin: prevMode === 'boot' ? 1.7 : .9, phi: 1.2 });
-    document.title = 'Second Brain OS - the map';
+    document.title = 'Second Brain OS - Bản đồ tri thức';
     return;
   }
   if (n !== prev) select(n);
@@ -651,16 +651,16 @@ const listOf = (ids, meta, max = 14) => {
   if (!ids.length) return '';
   const head = ids.slice(0, max).map(id => li(id, meta ? meta(id) : '')).join('');
   const rest = ids.slice(max);
-  return head + (rest.length ? `<div class="restwrap" hidden>${rest.map(id => li(id, meta ? meta(id) : '')).join('')}</div><button class="more" data-more>+ ${rest.length} more</button>` : '');
+  return head + (rest.length ? `<div class="restwrap" hidden>${rest.map(id => li(id, meta ? meta(id) : '')).join('')}</div><button class="more" data-more>+ ${rest.length} mục khác</button>` : '');
 };
 const edgeIds = (n, kind, dir) => linksOf.get(n.id).filter(l => l.kind === kind && (dir === 'out' ? l.s === n.id : dir === 'in' ? l.t === n.id : true)).map(l => l.s === n.id ? l.t : l.s);
-const words = n => n.words ? `${n.words.toLocaleString('en')} words` : '';
+const words = n => n.words ? `${n.words.toLocaleString('vi-VN')} từ` : '';
 const mins = w => Math.max(1, Math.round(w / 230));
 const kicker = (n, ctx) => `<div class="ik" style="--dot:${dotOf(n)}"><span class="sw"></span>${TYPE[n.type]}${ctx ? `<i>· ${ctx}</i>` : ''}</div>`;
 const ghBtn = (url, label = 'GitHub') => url ? `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${label} &#8599;</a>` : '';
 
 function renderInfo(n) {
-  let h = `<button class="x" data-close aria-label="Back to the whole map">&times;</button>`;
+  let h = `<button class="x" data-close aria-label="Quay lại toàn bộ bản đồ">&times;</button>`;
   const T = n.type;
   if (T === 'page') {
     const sec = byId.get(n.sec), P = PAGES[n.id];
@@ -669,14 +669,14 @@ function renderInfo(n) {
     const i = sec.pages.indexOf(n.id), prev = sec.pages[i - 1], next = sec.pages[i + 1];
     h += kicker(n, `${esc(sec.badge)} ${esc(sec.label)} · ${n.pos}/${n.of}`) +
       `<h2>${esc(n.label)}</h2><p class="desc">${esc(n.desc)}</p>` +
-      `<div class="meta"><span><b>${n.words?.toLocaleString('en')}</b> words</span><span>~${mins(n.words)} min</span><span><b>${out.length}</b> links out</span><span><b>${inn.length}</b> linked from</span></div>` +
-      `<div class="acts"><button class="btn primary" data-read="${esc(n.id)}">Read the page &rarr;</button>${ghBtn('https://github.com/undefined-ui/second-brain-os/blob/main/' + n.path, 'Source')}</div>` +
-      group('On this page', P && P.heads.length ? P.heads.map((x, k) => `<button class="li" data-read="${esc(n.id)}" data-anchor="${esc(x.id)}" style="--dot:var(--rule)"><span class="n">${String(k + 1).padStart(2, '0')}</span><span>${esc(x.t)}</span></button>`).join('') : '') +
-      group('Links to', listOf(out, id => byId.get(id).sec ? esc(byId.get(byId.get(id).sec).badge) : ''), out.length) +
-      group('Linked from', listOf(inn, id => byId.get(id).sec ? esc(byId.get(byId.get(id).sec).badge) : ''), inn.length) +
-      group('Terms on this page', (n.terms || []).length ? `<div class="chips">${n.terms.slice(0, 16).map(chip).join('')}</div>` : '', (n.terms || []).length) +
-      group('Toolkit and sources', listOf(tools), tools.length) +
-      `<div class="sibs">${prev ? `<button data-go="${esc(prev)}"><span>&larr; previous</span>${esc(byId.get(prev).label)}</button>` : '<span></span>'}${next ? `<button data-go="${esc(next)}"><span>next &rarr;</span>${esc(byId.get(next).label)}</button>` : '<span></span>'}</div>`;
+      `<div class="meta"><span><b>${n.words?.toLocaleString('vi-VN')}</b> từ</span><span>~${mins(n.words)} phút</span><span><b>${out.length}</b> liên kết đi</span><span><b>${inn.length}</b> liên kết đến</span></div>` +
+      `<div class="acts"><button class="btn primary" data-read="${esc(n.id)}">Đọc trang này &rarr;</button>${ghBtn('https://github.com/lucas10xai/second-brain-os/blob/main/' + n.path, 'Mã nguồn')}</div>` +
+      group('Trên trang này', P && P.heads.length ? P.heads.map((x, k) => `<button class="li" data-read="${esc(n.id)}" data-anchor="${esc(x.id)}" style="--dot:var(--rule)"><span class="n">${String(k + 1).padStart(2, '0')}</span><span>${esc(x.t)}</span></button>`).join('') : '') +
+      group('Liên kết tới', listOf(out, id => byId.get(id).sec ? esc(byId.get(byId.get(id).sec).badge) : ''), out.length) +
+      group('Được liên kết từ', listOf(inn, id => byId.get(id).sec ? esc(byId.get(byId.get(id).sec).badge) : ''), inn.length) +
+      group('Thuật ngữ trong trang', (n.terms || []).length ? `<div class="chips">${n.terms.slice(0, 16).map(chip).join('')}</div>` : '', (n.terms || []).length) +
+      group('Bộ công cụ và nguồn dẫn', listOf(tools), tools.length) +
+      `<div class="sibs">${prev ? `<button data-go="${esc(prev)}"><span>&larr; trước</span>${esc(byId.get(prev).label)}</button>` : '<span></span>'}${next ? `<button data-go="${esc(next)}"><span>tiếp &rarr;</span>${esc(byId.get(next).label)}</button>` : '<span></span>'}</div>`;
   } else if (T === 'section') {
     const col = byId.get('col:' + n.group);
     const w = n.pages.reduce((a, id) => a + (byId.get(id).words || 0), 0);
@@ -691,28 +691,28 @@ function renderInfo(n) {
     const bars = o => { const t = top(o), mx = t[0]?.[1] || 1; return t.map(([id, c]) => li(id, `${c}`, '')).join(''); };
     const hb = edgeIds(n, 'handbook');
     h += kicker(n, `${esc(col.label)} · ${esc(n.badge)}`) + `<h2>${esc(n.label)}</h2><p class="desc">${esc(n.desc)}</p>` +
-      `<div class="meta"><span><b>${n.pages.length}</b> pages</span><span><b>${w.toLocaleString('en')}</b> words</span><span>~${mins(w)} min</span></div>` +
-      `<div class="acts"><button class="btn primary" data-read="${esc(n.pages[0])}">Start reading &rarr;</button></div>` +
-      group('Pages', n.pages.map((id, k) => `<button class="li" data-go="${esc(id)}" style="--dot:${dotOf(n)}"><span class="n">${k + 1}</span><span>${esc(byId.get(id).label)}</span><span class="m">${mins(byId.get(id).words || 0)}m</span></button>`).join(''), n.pages.length) +
-      group(n.group === 'handbook' ? 'The module it deepens' : 'Its handbook', hb.map(id => li(id, esc(byId.get(id).badge))).join('')) +
-      group('Leans on', bars(lean)) + group('Leaned on by', bars(leanedBy));
+      `<div class="meta"><span><b>${n.pages.length}</b> trang</span><span><b>${w.toLocaleString('vi-VN')}</b> từ</span><span>~${mins(w)} phút</span></div>` +
+      `<div class="acts"><button class="btn primary" data-read="${esc(n.pages[0])}">Bắt đầu đọc &rarr;</button></div>` +
+      group('Danh sách trang', n.pages.map((id, k) => `<button class="li" data-go="${esc(id)}" style="--dot:${dotOf(n)}"><span class="n">${k + 1}</span><span>${esc(byId.get(id).label)}</span><span class="m">${mins(byId.get(id).words || 0)}p</span></button>`).join(''), n.pages.length) +
+      group(n.group === 'handbook' ? 'Học phần được đào sâu' : 'Sổ tay chuyên sâu', hb.map(id => li(id, esc(byId.get(id).badge))).join('')) +
+      group('Dựa trên', bars(lean)) + group('Được tham chiếu bởi', bars(leanedBy));
   } else if (T === 'collection') {
     const members = edgeIds(n, 'contains', 'out');
     const cid = n.id.slice(4);
     let body = '';
     if (['guide', 'course', 'handbook'].includes(cid)) {
       const secs = sectionsOf(cid);
-      body = group('Sections', secs.map(id => li(id, `${byId.get(id).pages.length} pages`)).join(''), secs.length);
+      body = group('Các chương', secs.map(id => li(id, `${byId.get(id).pages.length} trang`)).join(''), secs.length);
       h += kicker(n) + `<h2>${esc(n.label)}</h2><p class="desc">${esc(n.desc)}</p>` +
-        `<div class="meta"><span><b>${secs.reduce((a, s) => a + byId.get(s).pages.length, 0)}</b> pages</span><span><b>${secs.length}</b> sections</span></div>` +
-        `<div class="acts"><button class="btn primary" data-read="${esc(byId.get(secs[0]).pages[0])}">Start at the beginning &rarr;</button></div>` + body;
+        `<div class="meta"><span><b>${secs.reduce((a, s) => a + byId.get(s).pages.length, 0)}</b> trang</span><span><b>${secs.length}</b> chương</span></div>` +
+        `<div class="acts"><button class="btn primary" data-read="${esc(byId.get(secs[0]).pages[0])}">Bắt đầu từ đầu &rarr;</button></div>` + body;
     } else if (cid === 'glossary') {
       const terms = members.sort((a, b) => byId.get(b).inpages.length - byId.get(a).inpages.length);
       h += kicker(n) + `<h2>${esc(n.label)}</h2><p class="desc">${esc(n.desc)}</p>` +
-        group('Terms, by reach', listOf(terms, id => `${byId.get(id).inpages.length} pages`, 60), terms.length);
+        group('Thuật ngữ theo độ phủ', listOf(terms, id => `${byId.get(id).inpages.length} trang`, 60), terms.length);
     } else {
       h += kicker(n) + `<h2>${esc(n.label)}</h2><p class="desc">${esc(n.desc)}</p>` +
-        group('Inside', members.map(id => li(id, `${edgeIds(byId.get(id), 'contains', 'out').length}`)).join(''), members.length);
+        group('Bên trong', members.map(id => li(id, `${edgeIds(byId.get(id), 'contains', 'out').length}`)).join(''), members.length);
     }
   } else if (T === 'term') {
     const byCount = [...n.inpages].sort((a, b) => b[1] - a[1]);
@@ -729,19 +729,19 @@ function renderInfo(n) {
       return `<button class="li" data-go="${esc(id)}" style="--dot:${dotOf(p)}"><span class="d"></span><span>${esc(p.label)}</span><span class="bar" style="width:${Math.max(6, c / mx * 54)}px"></span><span class="m">${c}</span></button>`;
     }).join('');
     const rest = byCount.slice(14).map(x => x[0]);
-    h += kicker(n, 'glossary') + `<h2>${esc(n.label)}</h2><p class="desc">${esc(n.desc)}</p>` +
-      `<div class="meta"><span>on <b>${n.inpages.length}</b> pages</span><span><b>${n.total}</b> mentions</span></div>` +
-      `<div class="acts"><button class="btn primary" data-read="${esc(n.inpages[0][0])}">Read where it is defined &rarr;</button></div>` +
-      group('Leans on it hardest', pagesHtml + (rest.length ? `<div class="restwrap" hidden>${rest.map(id => li(id)).join('')}</div><button class="more" data-more>+ ${rest.length} more</button>` : ''), n.inpages.length) +
-      group('Often alongside', rel.length ? `<div class="chips">${rel.map(chip).join('')}</div>` : '');
+    h += kicker(n, 'bảng thuật ngữ') + `<h2>${esc(n.label)}</h2><p class="desc">${esc(n.desc)}</p>` +
+      `<div class="meta"><span>trên <b>${n.inpages.length}</b> trang</span><span><b>${n.total}</b> lần nhắc</span></div>` +
+      `<div class="acts"><button class="btn primary" data-read="${esc(n.inpages[0][0])}">Đọc nơi định nghĩa &rarr;</button></div>` +
+      group('Trang nhắc đến nhiều nhất', pagesHtml + (rest.length ? `<div class="restwrap" hidden>${rest.map(id => li(id)).join('')}</div><button class="more" data-more>+ ${rest.length} mục khác</button>` : ''), n.inpages.length) +
+      group('Thường đi kèm với', rel.length ? `<div class="chips">${rel.map(chip).join('')}</div>` : '');
   } else if (T === 'resource') {
     const cat = byId.get(edgeIds(n, 'contains', 'in')[0]);
     const cited = (n.inpages || []).map(x => x[0]);
     let host = ''; try { host = new URL(n.url).hostname.replace(/^www\./, ''); } catch { }
     h += kicker(n, `${esc(cat?.label || '')}${n.sub ? ' · ' + esc(n.sub) : ''}`) + `<h2>${esc(n.label)}</h2><p class="desc">${esc(n.desc)}</p>` +
       (n.metric ? `<div class="meta"><span><b>${esc(n.metric)}</b></span></div>` : '') +
-      `<div class="acts"><a class="btn primary" href="${esc(n.url)}" target="_blank" rel="noopener">Open ${esc(host)} &#8599;</a></div>` +
-      group('Cited in', listOf(cited), cited.length) + group('Related terms', edgeIds(n, 'related').map(chip).join('') ? `<div class="chips">${edgeIds(n, 'related').map(chip).join('')}</div>` : '');
+      `<div class="acts"><a class="btn primary" href="${esc(n.url)}" target="_blank" rel="noopener">Mở ${esc(host)} &#8599;</a></div>` +
+      group('Được trích dẫn tại', listOf(cited), cited.length) + group('Thuật ngữ liên quan', edgeIds(n, 'related').map(chip).join('') ? `<div class="chips">${edgeIds(n, 'related').map(chip).join('')}</div>` : '');
   } else {
     // toolkit: skills, commands, subagents, scripts, hubs
     const members = edgeIds(n, 'contains', 'out');
@@ -749,13 +749,13 @@ function renderInfo(n) {
     const via = n.via ? [n.via] : [];
     const mentioned = (n.inpages || []).map(x => x[0]);
     const mono = T !== 'hub';
-    h += kicker(n, n.group === 'res' ? 'resources' : n.sub ? esc(n.sub) : 'toolkit') + `<h2 class="${mono ? 'mono' : ''}">${esc(n.label)}</h2><p class="desc">${esc(n.desc)}</p>` +
-      (n.tools ? `<div class="meta"><span>tools: <b>${esc(n.tools)}</b></span></div>` : '') +
-      `<div class="acts">${ghBtn(n.url, 'View on GitHub')}</div>` +
-      group('Follows the skill', via.map(id => li(id)).join('')) +
-      group('Called by', listOf(calledBy, null, 20), calledBy.length) +
-      group('Inside', listOf(members, null, 30), members.length) +
-      group('Mentioned in', listOf(mentioned), mentioned.length);
+    h += kicker(n, n.group === 'res' ? 'tài nguyên' : n.sub ? esc(n.sub) : 'bộ công cụ') + `<h2 class="${mono ? 'mono' : ''}">${esc(n.label)}</h2><p class="desc">${esc(n.desc)}</p>` +
+      (n.tools ? `<div class="meta"><span>công cụ: <b>${esc(n.tools)}</b></span></div>` : '') +
+      `<div class="acts">${ghBtn(n.url, 'Xem trên GitHub')}</div>` +
+      group('Thực hiện theo skill', via.map(id => li(id)).join('')) +
+      group('Được gọi bởi', listOf(calledBy, null, 20), calledBy.length) +
+      group('Bên trong', listOf(members, null, 30), members.length) +
+      group('Được nhắc đến tại', listOf(mentioned), mentioned.length);
   }
   info.innerHTML = h;
   info.scrollTop = 0;
@@ -779,13 +779,13 @@ let pendingAnchor = null;
 function renderReader(n) {
   const P = PAGES[n.id], sec = byId.get(n.sec);
   const i = FLAT.indexOf(n.id), prev = FLAT[i - 1], next = FLAT[i + 1];
-  rCrumb.innerHTML = `<b style="color:${dotOf(n)}">${esc(sec.badge)}</b><button data-go="${esc(sec.id)}">${esc(sec.label)}</button> · page ${n.pos} of ${n.of}`;
-  rBody.innerHTML = !P ? '<p>This page did not load. Try reloading.</p>' :
+  rCrumb.innerHTML = `<b style="color:${dotOf(n)}">${esc(sec.badge)}</b><button data-go="${esc(sec.id)}">${esc(sec.label)}</button> · trang ${n.pos} / ${n.of}`;
+  rBody.innerHTML = !P ? '<p>Không tải được trang này. Vui lòng thử tải lại.</p>' :
     `<h1>${esc(n.label)}</h1>${P.html}` +
-    ((n.terms || []).length ? `<div class="rterms"><h4>terms on this page</h4><div class="chips">${n.terms.slice(0, 18).map(chip).join('')}</div></div>` : '') +
-    `<nav class="pager">${prev ? `<a href="#/read/${esc(prev)}" data-node="${esc(prev)}"><span class="lbl">&larr; previous</span>${esc(byId.get(prev).label)}</a>` : '<span></span>'}` +
-    `${next ? `<a href="#/read/${esc(next)}" data-node="${esc(next)}" style="text-align:right"><span class="lbl">next &rarr;</span>${esc(byId.get(next).label)}</a>` : '<span></span>'}</nav>` +
-    `<div class="src">source: <a class="ext" href="https://github.com/undefined-ui/second-brain-os/blob/main/${esc(n.path)}" target="_blank" rel="noopener">${esc(n.path)}</a></div>`;
+    ((n.terms || []).length ? `<div class="rterms"><h4>thuật ngữ trong trang</h4><div class="chips">${n.terms.slice(0, 18).map(chip).join('')}</div></div>` : '') +
+    `<nav class="pager">${prev ? `<a href="#/read/${esc(prev)}" data-node="${esc(prev)}"><span class="lbl">&larr; trước</span>${esc(byId.get(prev).label)}</a>` : '<span></span>'}` +
+    `${next ? `<a href="#/read/${esc(next)}" data-node="${esc(next)}" style="text-align:right"><span class="lbl">tiếp &rarr;</span>${esc(byId.get(next).label)}</a>` : '<span></span>'}</nav>` +
+    `<div class="src">nguồn: <a class="ext" href="https://github.com/lucas10xai/second-brain-os/blob/main/${esc(n.path)}" target="_blank" rel="noopener">${esc(n.path)}</a></div>`;
   rScroll.style.scrollBehavior = 'auto';
   rScroll.scrollTop = 0;
   if (pendingAnchor) { const el = rBody.querySelector('#' + CSS.escape(pendingAnchor)); if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 450); pendingAnchor = null; }
@@ -802,16 +802,16 @@ $('#r-graph').onclick = () => go(S.sel ? S.sel.id : 'root');
 
 // ------------------------------------------------------------------ hero
 $('#paths').innerHTML = [
-  ['guide', '01–10', 'The second-brain guide', 'A path you follow once: from the concept to a vault that maintains itself.'],
-  ['course', 'C0–C6', 'The agents course', 'Seven modules from a single prompt to a production agent.'],
-  ['handbook', 'T1–T5', 'Handbooks', 'References for one layer at a time. Dip in anywhere.'],
+  ['guide', '01–10', 'Cẩm nang Second Brain', 'Lộ trình đọc một lần theo thứ tự: từ khái niệm đến một vault tự duy trì.'],
+  ['course', 'C0–C6', 'Khóa học AI Agent', 'Bảy học phần từ một prompt đơn lẻ đến hệ thống Agent vận hành thực tế.'],
+  ['handbook', 'T1–T5', 'Sổ tay chuyên sâu', 'Tài liệu tra cứu chuyên sâu cho từng tầng kiến trúc. Đọc bất kỳ phần nào bạn cần.'],
 ].map(([k, badge, label, p]) => {
   const pages = sectionsOf(k).reduce((a, s) => a + byId.get(s).pages.length, 0);
-  return `<button class="path" data-go="col:${k}" style="--dot:${COLOR[k]}"><span class="pk">${badge}</span><b>${label}</b><span class="pn">${pages} pages</span><p>${p}</p></button>`;
+  return `<button class="path" data-go="col:${k}" style="--dot:${COLOR[k]}"><span class="pk">${badge}</span><b>${label}</b><span class="pn">${pages} trang</span><p>${p}</p></button>`;
 }).join('');
 $('#paths').addEventListener('click', e => { const t = e.target.closest('[data-go]'); if (t) go(t.dataset.go); });
 const st = G.stats;
-$('#stats').innerHTML = [[st.pages, 'pages'], [Math.round(st.words / 1000) + 'k', 'words'], [st.terms, 'terms'], [st.tools, 'tools'], [st.edges.toLocaleString('en'), 'connections']]
+$('#stats').innerHTML = [[st.pages, 'trang'], [Math.round(st.words / 1000) + 'k', 'từ'], [st.terms, 'thuật ngữ'], [st.tools, 'công cụ'], [st.edges.toLocaleString('vi-VN'), 'liên kết']]
   .map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`).join('');
 
 // ------------------------------------------------------------------ layers
@@ -819,7 +819,7 @@ const layersBox = $('#layers');
 function renderLayers() {
   layersBox.innerHTML = LAYERS.map(L => {
     const c = nodes.filter(n => n.group === L.key && n.type !== 'collection' && n.type !== 'hub' && n.type !== 'section').length;
-    return `<button class="lyr" data-layer="${L.key}" aria-pressed="${!!layerOn[L.key]}" style="--dot:${COLOR[L.key]}" title="Show or hide: ${L.label}"><span class="d"></span>${L.label}<span class="n">${c}</span></button>`;
+    return `<button class="lyr" data-layer="${L.key}" aria-pressed="${!!layerOn[L.key]}" style="--dot:${COLOR[L.key]}" title="Hiện hoặc ẩn: ${L.label}"><span class="d"></span>${L.label}<span class="n">${c}</span></button>`;
   }).join('');
 }
 renderLayers();
@@ -839,7 +839,7 @@ layersBox.addEventListener('mouseover', e => {
 layersBox.addEventListener('mouseout', () => setPreview(null, 'list'));
 
 const spinBtn = $('#btn-spin');
-const paintSpin = () => { spinBtn.setAttribute('aria-pressed', S.spin); spinBtn.title = S.spin ? 'Pause the rotation' : 'Resume the rotation'; };
+const paintSpin = () => { spinBtn.setAttribute('aria-pressed', S.spin); spinBtn.title = S.spin ? 'Tạm dừng xoay' : 'Tiếp tục xoay'; };
 paintSpin();
 spinBtn.onclick = () => { S.spin = !S.spin; store.set('spin', S.spin); paintSpin(); resumeSpin(); };
 $('#btn-home').onclick = () => go('root');
@@ -854,7 +854,7 @@ function renderContents() {
       return `<div class="cs${open ? ' open' : ''}" style="--dot:${COLOR[col]}"><button data-sec="${esc(sid)}"><span class="k">${esc(s.badge)}</span>${esc(s.label)}<span class="n">${s.pages.length}</span></button><ol>` +
         s.pages.map(pid => `<li><button data-page="${esc(pid)}" data-node="${esc(pid)}" class="${pid === cur ? 'cur' : ''}">${esc(byId.get(pid).label)}</button></li>`).join('') + '</ol></div>';
     }).join('') + '</div>';
-  $('#c-body').innerHTML = block('guide', 'the second-brain guide') + block('course', 'the agents course') + block('handbook', 'handbooks');
+  $('#c-body').innerHTML = block('guide', 'cẩm nang second-brain') + block('course', 'khóa học ai agent') + block('handbook', 'sổ tay chuyên sâu');
 }
 function openContents() { renderContents(); document.body.classList.add('c-open'); cBtn.setAttribute('aria-expanded', 'true'); }
 function closeContents() { document.body.classList.remove('c-open'); cBtn.setAttribute('aria-expanded', 'false'); }
@@ -895,7 +895,7 @@ function paintHits() {
     const n = h.n, sec = n.sec ? byId.get(n.sec) : null;
     const ctx = sec ? `${sec.badge} ${sec.label}` : n.sub || '';
     return `<button class="hit${i === hitIdx ? ' on' : ''}" data-i="${i}" style="--dot:${dotOf(n)}"><span class="d"></span><span><b>${esc(n.label)}</b><i>${TYPE[n.type]}${ctx ? ' · ' + esc(ctx) : ''}</i>${h.snip ? `<em>${h.snip}</em>` : ''}</span></button>`;
-  }).join('') : '<div class="none">nothing on the site matches that</div>';
+  }).join('') : '<div class="none">không tìm thấy kết quả phù hợp trên trang</div>';
   hits.classList.add('open');
 }
 function pickHit(i) {
@@ -957,7 +957,7 @@ function failed(err) {
   document.body.classList.remove('booting');
   const d = document.createElement('div');
   d.className = 'fail';
-  d.innerHTML = '<div><p>The 3D map needs WebGL, which is not available here.</p><p><a href="https://github.com/undefined-ui/second-brain-os/tree/main/docs">Read the guide on GitHub</a></p></div>';
+  d.innerHTML = '<div><p>Bản đồ 3D cần WebGL nhưng trình duyệt hiện tại không hỗ trợ.</p><p><a href="https://github.com/lucas10xai/second-brain-os/tree/main/docs">Đọc cẩm nang trên GitHub</a></p></div>';
   document.body.appendChild(d);
 }
 window.__sbos = { graph, S, byId }; // for poking at the graph from the console

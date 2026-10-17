@@ -21,8 +21,8 @@ import markdown
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets", "site")
-GH_BLOB = "https://github.com/undefined-ui/second-brain-os/blob/main/"
-GH_TREE = "https://github.com/undefined-ui/second-brain-os/tree/main/"
+GH_BLOB = "https://github.com/lucas10xai/second-brain-os/blob/main/"
+GH_TREE = "https://github.com/lucas10xai/second-brain-os/tree/main/"
 
 MD = markdown.Markdown(extensions=["tables", "fenced_code", "toc", "sane_lists"])
 
@@ -103,29 +103,30 @@ def edge(s, t, kind, w=1, hidden=False):
 
 
 node("root", type="root", group="root", label="Second Brain OS",
-     desc="A knowledge base an AI agent builds and maintains for you, in plain "
-          "markdown you own - and everything around it: a course on building "
-          "agents, five handbooks, the toolkit, and the links worth your time.")
+     desc="Kho tri thức do AI Agent xây dựng và duy trì cho bạn bằng Markdown "
+          "thuần túy mà bạn toàn quyền sở hữu — cùng toàn bộ hệ sinh thái xoay "
+          "quanh nó: khóa học xây dựng Agent, 5 sổ tay chuyên sâu, bộ công cụ "
+          "và danh mục tài nguyên chọn lọc.")
 
 COLLECTIONS = {
-    "guide":    ("The second-brain guide", "guide",
-                 "A path you follow once, in order: from the concept to a vault "
-                 "that maintains itself. One evening to set up."),
-    "course":   ("The agents course", "course",
-                 "Seven modules from a single prompt to a production agent: theory "
-                 "from the whitepapers, a build in every module. Read in order."),
-    "handbook": ("Handbooks", "handbook",
-                 "Not a path - references. The full menu of techniques, tools and "
-                 "builds for one layer of the course. Dip in anywhere."),
-    "glossary": ("Glossary", "term",
-                 "The ideas the whole site keeps coming back to. Each one links to "
-                 "the pages that lean on it hardest."),
-    "toolkit":  ("Toolkit", "tool",
-                 "What you install: agent skills, slash commands, subagents, "
-                 "scripts, the course plugin and the starter vault."),
-    "resources": ("Resources", "res",
-                  "Every vetted link: papers, tools, Obsidian plugins, repositories "
-                  "and reading."),
+    "guide":    ("Cẩm nang Second Brain", "guide",
+                 "Lộ trình đọc một lần theo thứ tự: từ khái niệm cốt lõi đến một "
+                 "vault tự vận hành và duy trì. Chỉ mất một buổi tối để thiết lập."),
+    "course":   ("Khóa học AI Agent", "course",
+                 "Bảy học phần từ một prompt đơn lẻ đến hệ thống Agent thực tế: "
+                 "lý thuyết từ các whitepaper kết hợp thực hành trong từng học phần."),
+    "handbook": ("Sổ tay chuyên sâu", "handbook",
+                 "Không bắt buộc đọc tuần tự — đây là tài liệu tra cứu toàn diện "
+                 "các kỹ thuật, công cụ và bài thực hành cho từng tầng kiến trúc."),
+    "glossary": ("Bảng thuật ngữ", "term",
+                 "Những khái niệm cốt lõi xuyên suốt toàn bộ hệ thống. Mỗi thuật ngữ "
+                 "liên kết trực tiếp tới những trang sử dụng nó nhiều nhất."),
+    "toolkit":  ("Bộ công cụ (Toolkit)", "tool",
+                 "Những gì bạn cài đặt: Agent skills, slash commands, subagents, "
+                 "scripts, plugin khóa học và mẫu vault khởi đầu (starter vault)."),
+    "resources": ("Tài nguyên", "res",
+                  "Mọi liên kết đã được kiểm chứng: bài báo khoa học, công cụ, "
+                  "plugin Obsidian, kho mã nguồn và các bài đọc giá trị."),
 }
 for cid, (label, group, desc) in COLLECTIONS.items():
     node(f"col:{cid}", type="collection", group=group, label=label, desc=desc)
@@ -173,9 +174,9 @@ for sec in sec_order:
     node(sid, type="section", group=col, label=title, badge=badge, desc=blurb,
          pages=[f"{sec}/{p}" for p in order])
     edge(f"col:{col}", sid, "contains")
-    hb = re.search(r"handbook for \[module (\d+)\]\(\.\./(course-[a-z0-9-]+)/README\.md\)", readme)
+    hb = re.search(r"\(\.\./(course-[a-z0-9-]+)/README\.md\)", readme)
     if hb:
-        nodes[sid]["module"] = f"sec:{hb.group(2)}"
+        nodes[sid]["module"] = f"sec:{hb.group(1)}"
     for i, p in enumerate(order):
         pid = f"{sec}/{p}"
         raw = read(f"docs/{sec}/{p}.md")
@@ -193,12 +194,12 @@ for nid, n in list(nodes.items()):
 
 # ---------------------------------------------------------------- toolkit
 TOOL_HUBS = {
-    "skills": ("Skills", "One per workflow in the guide. The agent loads a skill only when the task matches it."),
-    "commands": ("Slash commands", "Scoped entry points into the skills, typed as /name."),
-    "agents": ("Subagents", "Six subagents, four of them read-only by design."),
-    "scripts": ("Scripts", "Dependency-free Python for link checking, stats, graph export and chat import."),
-    "plugin": ("agents-course plugin", ""),
-    "vault": ("Starter vault", "vault-template/: the wiki structure, the project pipeline, CLAUDE.md and page templates, ready to copy."),
+    "skills": ("Skills (Kỹ năng)", "Mỗi quy trình trong cẩm nang tương ứng với một skill. Agent chỉ nạp skill khi tác vụ phù hợp."),
+    "commands": ("Slash commands", "Điểm gọi nhanh vào các skill theo phạm vi hẹp, gõ dưới dạng /tên-lệnh."),
+    "agents": ("Subagents (Tác tử con)", "Sáu subagent chuyên biệt, trong đó bốn subagent được thiết kế ở chế độ chỉ đọc (read-only)."),
+    "scripts": ("Scripts", "Các script Python không phụ thuộc thư viện ngoài dùng để kiểm tra liên kết, thống kê, xuất đồ thị và nhập lịch sử chat."),
+    "plugin": ("Plugin agents-course", ""),
+    "vault": ("Vault khởi đầu (Starter vault)", "vault-template/: cấu trúc wiki, quy trình dự án, CLAUDE.md và các mẫu trang sẵn sàng để sao chép."),
 }
 for hid, (label, desc) in TOOL_HUBS.items():
     node(f"hub:{hid}", type="hub", group="tool", label=label, desc=desc)
@@ -232,7 +233,7 @@ for f in sorted(glob.glob(os.path.join(ROOT, "commands", "*.md"))):
     cid = f"cmd:{name}"
     node(cid, type="command", group="tool", label="/" + name, desc=fm.get("description", ""),
          sub=cmd_groups.get(name, ""), url=GH_BLOB + f"commands/{name}.md")
-    sk = re.search(r"Follow the `([a-z0-9-]+)` skill", text)
+    sk = re.search(r"(?:Follow the|Thực hiện theo|Tuân theo)(?: skill)? `([a-z0-9-]+)`(?: skill)?", text, re.I)
     if sk and f"skill:{sk.group(1)}" in nodes:
         nodes[cid]["via"] = f"skill:{sk.group(1)}"
         edge(cid, f"skill:{sk.group(1)}", "follows")
@@ -262,7 +263,7 @@ PLUG = "plugins/agents-course"
 if exists(f"{PLUG}/.claude-plugin/plugin.json"):
     pj = json.loads(read(f"{PLUG}/.claude-plugin/plugin.json"))
     nodes["hub:plugin"].update(desc=pj.get("description", ""), url=GH_TREE + PLUG,
-                               label=f"{pj['name']} plugin")
+                               label=f"Plugin {pj['name']}")
     for f in sorted(glob.glob(os.path.join(ROOT, PLUG, "skills", "*", "SKILL.md"))):
         name = os.path.basename(os.path.dirname(f))
         fm = frontmatter(read(f"{PLUG}/skills/{name}/SKILL.md"))
@@ -277,8 +278,8 @@ if exists(f"{PLUG}/.claude-plugin/plugin.json"):
         edge("hub:plugin", f"plug:{name}", "contains")
 
 # ---------------------------------------------------------------- resources
-RES_CAT = {"papers.md": "Papers", "tools.md": "Tools", "plugins.md": "Obsidian plugins",
-           "repositories.md": "Repositories", "skills.md": "Skills catalogs", "reading.md": "Reading"}
+RES_CAT = {"papers.md": "Bài báo khoa học", "tools.md": "Công cụ", "plugins.md": "Plugin Obsidian",
+           "repositories.md": "Kho mã nguồn", "skills.md": "Danh mục Skills", "reading.md": "Bài đọc"}
 resources = []
 for fn, label in RES_CAT.items():
     if not exists(f"resources/{fn}"):
@@ -302,7 +303,7 @@ for fn, label in RES_CAT.items():
             continue
         metric, desc = "", ""
         for c in cells[1:]:
-            if re.fullmatch(r"[\d,.]+[KkM]?|community plugin|small", c):
+            if re.fullmatch(r"[\d,.]+[KkM]?|community plugin|plugin cộng đồng|small|nhỏ", c, re.I):
                 metric = c
             else:
                 desc = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", c)

@@ -1,7 +1,7 @@
 ---
-description: Where a project stands
+description: Kiểm tra tiến độ hiện tại của dự án
 ---
 
-Read the project in $ARGUMENTS and report: goal, what is done, what is in progress, what is blocked, and what has gone stale.
+Đọc dự án trong $ARGUMENTS và báo cáo: mục tiêu, những việc đã hoàn thành, những việc đang triển khai, những việc đang bị tắc nghẽn, và những nội dung đã trở nên cũ kỹ.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

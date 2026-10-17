@@ -1,70 +1,45 @@
-# FAQ
+# Câu hỏi thường gặp (FAQ)
 
-**Do I need MCP?**
+**Tôi có bắt buộc phải dùng MCP không?**
 
-No. Claude Code started inside the vault folder reads and writes it directly.
-MCP adds the ability to reach the vault from sessions not running in it, which
-matters mainly for scheduled tasks. See [MCP for
-Obsidian](../02-setup/mcp-obsidian.md).
+Không. Khi khởi động Claude Code ngay bên trong thư mục Vault, nó có thể đọc và ghi các file trực tiếp. MCP chỉ bổ sung khả năng chạm tới Vault từ những phiên làm việc không chạy bên trong thư mục đó — điều này chủ yếu hữu ích cho các tác vụ chạy tự động theo lịch trình. Xem thêm [MCP cho Obsidian](../02-setup/mcp-obsidian.md).
 
-**Does this work with agents other than Claude Code?**
+**Hệ thống này có hoạt động với các Agent khác ngoài Claude Code không?**
 
-Yes. The vault is markdown and the skills are `SKILL.md` files, a format several
-agents read. Anything that can read and write files in a folder can maintain the
-vault; the instructions in `CLAUDE.md` may need renaming for other tools.
+Có. Bản chất Vault là các file markdown và các Skills là những file `SKILL.md` — một định dạng mà nhiều Agent hiện nay đều đọc được. Bất kỳ công cụ nào có khả năng đọc và ghi file trong một thư mục đều có thể duy trì Vault; bạn chỉ cần đổi tên file chỉ dẫn `CLAUDE.md` sao cho phù hợp với công cụ đó.
 
-**How much does it cost to run?**
+**Chi phí vận hành hệ thống này là bao nhiêu?**
 
-Depends entirely on volume. A daily ingest of a handful of articles is small. A
-one-time backfill of a thousand sources is not, which is why the
-[backfill](../03-ingestion/bulk-backfill.md) page insists on batches with visible
-costs.
+Phụ thuộc hoàn toàn vào khối lượng tài liệu. Việc Ingest vài bài viết mỗi ngày tốn chi phí rất nhỏ. Nhưng một đợt nạp bù dữ liệu (backfill) một lần cho cả nghìn tài liệu nguồn thì không hề rẻ — đó là lý do trang hướng dẫn [nạp bù hàng loạt](../03-ingestion/bulk-backfill.md) nhấn mạnh việc chia thành từng lô nhỏ với chi phí được hiển thị rõ ràng.
 
-**Can I use a local model?**
+**Tôi có thể dùng mô hình chạy cục bộ (local model) không?**
 
-For ingestion of sensitive material, yes, with lower quality. Local models are
-weaker at the judgement calls that matter here: what deserves its own page, when
-two sources genuinely disagree. A workable split is a local model for private
-material and a frontier model for everything else.
+Để Ingest các tài liệu nhạy cảm thì hoàn toàn được, nhưng chất lượng sẽ thấp hơn. Các mô hình cục bộ thường yếu hơn ở những quyết định đòi hỏi sự phán đoán tinh tế vốn rất quan trọng trong hệ thống này: chẳng hạn như ý tưởng nào xứng đáng có một trang riêng, hay khi nào hai tài liệu nguồn thực sự mâu thuẫn với nhau. Một cách phân chia hợp lý là dùng mô hình cục bộ cho tài liệu riêng tư và dùng mô hình hàng đầu (frontier model) cho mọi thứ còn lại.
 
-**Do I need Obsidian?**
+**Tôi có bắt buộc phải dùng Obsidian không?**
 
-No. The vault is a folder of markdown files. Obsidian is a good viewer for the
-graph and has the Web Clipper, which is the strongest practical reason to use it.
-Logseq, Foam, or a plain editor all work.
+Không. Vault thực chất chỉ là một thư mục chứa các file markdown. Obsidian là một trình xem rất tốt cho Knowledge graph và sở hữu công cụ Web Clipper — đó là lý do thực tế mạnh mẽ nhất để chọn nó. Ngoài ra, Logseq, Foam, hoặc một trình soạn thảo văn bản thuần túy đều làm việc tốt.
 
-**What if I already have a Notion or Evernote full of notes?**
+**Nếu tôi đã có sẵn một kho ghi chú khổng lồ trong Notion hoặc Evernote thì sao?**
 
-Use the official [Importer](https://github.com/obsidianmd/obsidian-importer)
-plugin, which handles Notion, Evernote, Roam, Bear and Apple Notes. Then treat
-the result as raw material: backfill oldest first. Expect the
-export to be messy. Fix extraction before ingesting rather than hoping the agent
-copes.
+Hãy dùng plugin [Importer](https://github.com/obsidianmd/obsidian-importer) chính thức của Obsidian; công cụ này xử lý được dữ liệu từ Notion, Evernote, Roam, Bear và Apple Notes. Sau đó, hãy coi kết quả thu được như những nguyên liệu thô: chạy nạp bù (backfill) từ những ghi chú cũ nhất trước. Hãy chuẩn bị tinh thần là dữ liệu xuất ra sẽ khá lộn xộn. Hãy làm sạch khâu trích xuất trước khi Ingest thay vì hy vọng Agent sẽ tự xoay xở được.
 
-**How is this different from a memory feature?**
+**Hệ thống này khác gì so với tính năng bộ nhớ (Memory) tích hợp sẵn trong các ứng dụng trò chuyện AI?**
 
-Memory features remember facts about you across sessions and belong to the tool.
-This is a body of knowledge you own as files, that outlives the tool, and that
-you can read, edit and publish yourself.
+Tính năng bộ nhớ chỉ ghi nhớ các sự kiện rời rạc về cá nhân bạn qua các phiên trò chuyện và thuộc quyền sở hữu của công cụ đó. Còn đây là một kho tàng tri thức do chính bạn sở hữu dưới dạng các file độc lập, tồn tại lâu hơn bất kỳ công cụ nào, và bạn có thể tự mình đọc, chỉnh sửa cũng như xuất bản tùy ý.
 
-**Will the agent make things up?**
+**Liệu Agent có tự bịa ra thông tin không?**
 
-It can, which is why every rule in [structuring](../04-structuring/README.md) is
-about attribution: claims recorded as claims, sources attached, gaps stated
-rather than filled. A page with no source behind a specific number is the thing
-to watch for.
+Có thể, và đó chính là lý do mọi quy tắc trong chương [Cấu trúc hóa (Structuring)](../04-structuring/README.md) đều xoay quanh việc quy kết nguồn gốc (attribution): các nhận định phải được ghi nhận đúng là nhận định, có đính kèm tài liệu nguồn, và những khoảng trống thông tin phải được nêu rõ thay vì tự suy diễn lấp đầy. Một trang đưa ra con số cụ thể mà không có trang nguồn nào đứng sau chính là dấu hiệu cảnh báo bạn cần để mắt tới.
 
-**Is the graph view actually useful or is it just pretty?**
+**Chế độ xem đồ thị (Graph view) có thực sự hữu ích hay chỉ để ngắm cho đẹp?**
 
-The global view is mostly pretty. The local graph is genuinely useful as a
-five-second quality check on any page. See [reading the graph
-view](../05-graphs/obsidian-graph-view.md).
+Đồ thị tổng thể (global view) chủ yếu là để ngắm cho đẹp. Nhưng đồ thị cục bộ (local graph) lại thực sự hữu ích trong vai trò một bài kiểm tra chất lượng nhanh chỉ mất năm giây cho bất kỳ trang nào. Xem thêm [cách đọc chế độ xem đồ thị](../05-graphs/obsidian-graph-view.md).
 
-**How long before it is worth it?**
+**Mất bao lâu thì hệ thống này bắt đầu mang lại giá trị xứng đáng?**
 
-Weeks two to four for the first real payoff, month six for the state people
-describe as the whole point.
+Từ tuần thứ hai đến tuần thứ tư để thấy những thành quả thực tế đầu tiên, và khoảng tháng thứ sáu để đạt tới trạng thái mà mọi người vẫn mô tả là toàn bộ ý nghĩa của việc xây dựng Second Brain.
 
 ---
 
-Something missing here? Open an issue.
+Còn điều gì chưa được giải đáp ở đây? Hãy mở một issue nhé.

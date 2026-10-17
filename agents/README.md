@@ -1,23 +1,18 @@
 # agents
 
-Six subagent definitions for Claude Code. Copy into `.claude/agents/` in your
-vault.
+Sáu định nghĩa subagent dành cho Claude Code. Hãy sao chép vào thư mục `.claude/agents/` trong vault của bạn.
 
-| Agent | Writes | Runs |
+| Agent | Quyền ghi | Tần suất chạy |
 |---|---|---|
-| `ingestor` | yes | when material lands in `raw/` |
-| `linker` | links only | after imports, or weekly |
-| `reviewer` | no | weekly |
-| `researcher` | no | on demand |
-| `graph-analyst` | no | monthly, or when navigation gets hard |
-| `curator` | no | quarterly |
+| `ingestor` | có | khi có tài liệu mới được đưa vào `raw/` |
+| `linker` | chỉ thêm liên kết | sau khi nhập hàng loạt, hoặc hàng tuần |
+| `reviewer` | không | hàng tuần |
+| `researcher` | không | theo yêu cầu |
+| `graph-analyst` | không | hàng tháng, hoặc khi việc điều hướng trở nên khó khăn |
+| `curator` | không | hàng quý |
 
-Four of the six are read-only by design. Splitting write access this way means a
-bad research or analysis run cannot damage the vault, and it keeps the git
-history readable: every content change traces back to an ingest or a link pass.
+Bốn trong sáu agent được thiết kế chỉ đọc (read-only). Việc tách quyền ghi theo cách này đồng nghĩa với việc một lượt chạy nghiên cứu hay phân tích bị lỗi sẽ không thể làm hỏng vault, đồng thời giữ cho lịch sử git luôn dễ đọc: mọi thay đổi về nội dung đều bắt nguồn từ một lượt nạp tài liệu (`ingest`) hoặc một lượt rà soát liên kết (`link pass`).
 
-The two that write are also the two with the narrowest instructions. That is not
-a coincidence.
+Hai agent có quyền ghi cũng chính là hai agent có chỉ dẫn hẹp và chặt chẽ nhất. Đó không phải là sự trùng hợp ngẫu nhiên.
 
-See [scheduling](../docs/06-agents/scheduled-maintenance.md) for wiring these to
-a cadence.
+Xem [lập lịch bảo trì (scheduling)](../docs/06-agents/scheduled-maintenance.md) để kết nối các agent này vào một lịch chạy định kỳ.

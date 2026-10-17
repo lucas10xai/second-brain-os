@@ -1,7 +1,7 @@
 ---
-description: Audit what should not be in the vault
+description: Kiểm toán những nội dung không nên có trong kho tri thức
 ---
 
-Full privacy audit: credentials, other people's information, confidential material, repo visibility. Report by severity. Delete nothing.
+Kiểm toán quyền riêng tư toàn diện: thông tin xác thực, thông tin cá nhân của người khác, tài liệu mật, và chế độ hiển thị của kho mã nguồn (repo visibility). Báo cáo theo mức độ nghiêm trọng. Không tự ý xóa bất kỳ thứ gì.
 
-Follow the `second-brain-privacy` skill.
+Thực hiện theo skill `second-brain-privacy`.

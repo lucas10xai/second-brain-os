@@ -1,7 +1,7 @@
 ---
-description: Clip and ingest a web page
+description: Lưu và nạp một trang web
 ---
 
-Fetch $ARGUMENTS, save the readable content to `raw/` with frontmatter recording the URL, author and date, then ingest it. If the page is a paywall notice or a fragment, say so instead of ingesting.
+Tải nội dung từ $ARGUMENTS, lưu phần văn bản có thể đọc được vào `raw/` kèm frontmatter ghi nhận URL, tác giả và ngày tháng, sau đó tiến hành nạp vào kho tri thức. Nếu trang web chỉ là thông báo thu phí (paywall) hoặc một mảnh nội dung cụt ngủn, hãy báo lại thay vì nạp.
 
-Follow the `second-brain-ingest` skill.
+Thực hiện theo skill `second-brain-ingest`.

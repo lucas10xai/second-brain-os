@@ -1,12 +1,12 @@
 {
   "name": "agents-course",
   "version": "0.2.0",
-  "description": "Tools from the agents course: audit your context, write done as a script, bootstrap your eval suite, and a loop critic agent.",
+  "description": "Bộ công cụ từ khóa học Agent: kiểm toán ngữ cảnh, viết tiêu chí hoàn thành dưới dạng script, khởi tạo bộ kiểm thử đánh giá (eval suite), và agent phản biện vòng lặp (loop critic).",
   "author": {
     "name": "undefinedKi"
   },
-  "homepage": "https://secondbrainos.dev/#/read/course-0-map/what-an-agent-is",
-  "repository": "https://github.com/undefined-ui/second-brain-os",
+  "homepage": "https://secondbrainos-vn.pages.dev/#/read/course-0-map/what-an-agent-is",
+  "repository": "https://github.com/lucas10xai/second-brain-os",
   "license": "MIT",
   "keywords": ["agents", "evals", "context-engineering", "loops", "course"]
 }

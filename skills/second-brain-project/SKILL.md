@@ -1,53 +1,43 @@
 ---
 name: second-brain-project
 description: >-
-  Set up or update a project in the vault: the four-stage folder pipeline, a
-  project-scoped CLAUDE.md with one goal, and links to the concept pages it
-  depends on. Use this skill when the user starts something new they will work on
-  over time, says "create a project", "set up a folder for X", or asks to define
-  the goal and structure of ongoing work. Do NOT use for one-off tasks, for wiki
-  pages about a topic, or for scoping an existing project down to work in it.
+  Thiết lập hoặc cập nhật một dự án bên trong vault: quy trình thư mục bốn giai đoạn,
+  file CLAUDE.md khoanh vùng riêng cho dự án với một mục tiêu duy nhất, và các liên
+  kết tới những trang khái niệm mà dự án phụ thuộc vào. Sử dụng kỹ năng này khi người
+  dùng bắt đầu một công việc mới kéo dài theo thời gian, nói "tạo một dự án", "thiết lập
+  thư mục cho X", hoặc yêu cầu xác định mục tiêu và cấu trúc cho công việc đang triển khai.
+  KHÔNG dùng cho các tác vụ làm một lần rồi xong, các trang wiki tìm hiểu về một chủ đề,
+  hoặc để thu hẹp phạm vi của một dự án sẵn có khi đang làm việc bên trong nó.
 ---
 
-# Set up a project
+# Thiết lập một dự án (Set up a project)
 
-The knowledge layer answers what you know. The project layer answers what you
-are doing this week. Merging them fills a wiki with dead task lists and buries
-working files under conceptual notes.
+Tầng tri thức (knowledge layer) trả lời câu hỏi bạn biết những gì. Tầng dự án (project layer) trả lời câu hỏi tuần này bạn đang làm gì. Việc trộn lẫn hai tầng này sẽ làm đầy wiki bằng những danh sách công việc đã chết và chôn vùi các file đang làm việc dở dang dưới hàng núi ghi chú khái niệm.
 
-## Core rule
+## Quy tắc cốt lõi
 
-One goal per project, stated in its own `CLAUDE.md`. A project with three goals
-is three projects.
+Mỗi dự án một mục tiêu duy nhất, được phát biểu rõ trong file `CLAUDE.md` của riêng dự án đó. Một dự án có ba mục tiêu thực chất là ba dự án khác nhau.
 
-## Workflow
+## Quy trình thực hiện
 
-1. **Interview if needed.** What this produces, for whom, by when, and what the
-   agent's role is. Vague answers produce a file that makes every future session
-   worse.
-2. **Create the folders:** `Inputs/`, `Process/`, `Outputs/`, `Feedback/`.
-3. **Write the project `CLAUDE.md`:** what this is, the one goal with a date,
-   your role, working rules, current state. Name what the agent should not do
-   here as well.
-4. **Link the knowledge layer.** Find concept pages the project depends on and
-   reference them from the project file. Copy into `Inputs/` only the few that
-   genuinely matter.
-5. **Register it** in the root `CLAUDE.md` project list.
+1. **Phỏng vấn ngắn nếu cần.** Dự án này tạo ra sản phẩm gì, dành cho ai, hạn chót là khi nào, và vai trò của agent là gì. Những câu trả lời mơ hồ sẽ tạo ra một file chỉ dẫn làm hỏng mọi phiên làm việc về sau.
+2. **Tạo bộ thư mục bốn giai đoạn:** `Inputs/`, `Process/`, `Outputs/`, `Feedback/`.
+3. **Viết file `CLAUDE.md` của dự án:** dự án này là gì, mục tiêu duy nhất kèm mốc thời gian, vai trò của bạn, quy tắc làm việc, và trạng thái hiện tại. Hãy nêu rõ cả những việc agent không được làm tại đây.
+4. **Liên kết với tầng tri thức.** Tìm các trang khái niệm (`concept`) mà dự án phụ thuộc vào và tham chiếu chúng từ file dự án. Chỉ sao chép vào `Inputs/` một vài trang thực sự cốt lõi nhất.
+5. **Đăng ký dự án** vào danh sách dự án trong file `CLAUDE.md` ở thư mục gốc của vault.
 
-## Output format
+## Định dạng đầu ra
 
 ```
-Project: <name>
-Goal: <one measurable outcome with a date>
+Project: <tên dự án>
+Goal: <một kết quả đầu ra đo lường được kèm mốc thời gian>
 Folders created: Inputs, Process, Outputs, Feedback
-Concept pages linked: <list>
-Agent role: <one line>
+Concept pages linked: <danh sách>
+Agent role: <một dòng mô tả>
 ```
 
-## Calibration
+## Hiệu chuẩn (Calibration)
 
-`Feedback/` is the folder people skip and the one that makes the system improve.
-If the user has no idea what would go in it, that is worth surfacing: it usually
-means the goal is not measurable yet.
+`Feedback/` là thư mục mọi người thường bỏ qua nhưng lại chính là nơi giúp hệ thống ngày càng tốt lên. Nếu người dùng hoàn toàn không hình dung được sẽ bỏ gì vào thư mục đó, hãy nêu rõ vấn đề này ra: điều đó thường có nghĩa là mục tiêu của dự án vẫn chưa thể đo lường được.
 
-Do not create a project for work that finishes this week. That is a task.
+Đừng tạo một dự án cho công việc chỉ làm trong tuần này là xong. Đó là một tác vụ đơn lẻ (task).

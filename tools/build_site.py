@@ -10,20 +10,22 @@ import json, os, html
 D = json.load(open("site_data.json"))
 OUT = "."
 os.makedirs(OUT, exist_ok=True)
-REPO = "https://github.com/undefined-ui/second-brain-os"
+REPO = "https://github.com/lucas10xai/second-brain-os"
 
 CSS = """
 :root{
   --paper:#EAEEE9; --card:#F7F9F6; --ink:#15201B; --soft:#4B5A52; --faint:#7C8A82;
   --rule:#D2DACF; --accent:#1F6B52; --accent-bg:#E1EDE5; --num:#8A6B23;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",Monaco,"Courier New",Consolas,"DejaVu Sans Mono",monospace;
   --w:68ch;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--paper);color:var(--ink);
-  font:17px/1.62 Charter,Georgia,"Iowan Old Style",serif;
+  font:17px/1.62 var(--serif);
   -webkit-font-smoothing:antialiased}
-.mono{font-family:ui-monospace,SFMono-Regular,Menlo,"DejaVu Sans Mono",monospace}
+.mono{font-family:var(--mono)}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline;text-underline-offset:3px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
@@ -31,12 +33,12 @@ a:hover{text-decoration:underline;text-underline-offset:3px}
 header{position:sticky;top:0;z-index:40;background:rgba(234,238,233,.94);
   backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
 .bar{max-width:1500px;margin:0 auto;padding:13px 22px;display:flex;gap:20px;align-items:center}
-.brand{font:600 15px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);letter-spacing:-.01em}
+.brand{font:600 15px/1 var(--mono);color:var(--ink);letter-spacing:-.01em}
 .brand span{color:var(--accent)}
 nav{display:flex;gap:18px;font-size:14.5px}
 nav a{color:var(--soft)} nav a.on{color:var(--ink);font-weight:600}
 .search{margin-left:auto;position:relative}
-.search input{font:14px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);
+.search input{font:14px/1 var(--mono);color:var(--ink);
   background:var(--card);border:1px solid var(--rule);border-radius:3px;
   padding:8px 11px;width:210px}
 .search input::placeholder{color:var(--faint)}
@@ -48,12 +50,12 @@ nav a{color:var(--soft)} nav a.on{color:var(--ink);font-weight:600}
 .hit:hover{background:var(--accent-bg);text-decoration:none}
 .hit b{font-weight:600;font-size:15px}
 .hit i{display:block;font-style:normal;font-size:12.5px;color:var(--faint);
-  font-family:ui-monospace,Menlo,monospace;margin-top:2px}
+  font-family:var(--mono);margin-top:2px}
 
 .wrap{max-width:1500px;margin:0 auto;padding:0 22px;display:grid;
   grid-template-columns:266px minmax(0,1fr) 210px;gap:44px;align-items:start}
 @media(max-width:1180px){.wrap{grid-template-columns:240px minmax(0,1fr);gap:34px}.rail{display:none}}
-.toc-btn{display:none;font:13px/1 ui-monospace,Menlo,monospace;background:var(--card);
+.toc-btn{display:none;font:13px/1 var(--mono);background:var(--card);
   color:var(--ink);border:1px solid var(--rule);border-radius:3px;padding:8px 12px;cursor:pointer}
 @media(max-width:860px){
   .bar{flex-wrap:wrap;gap:12px;padding:11px 16px}
@@ -76,10 +78,10 @@ aside{position:sticky;top:57px;height:calc(100vh - 57px);overflow:auto;
   padding:26px 18px 60px 0;border-right:1px solid var(--rule)}
 .sec{margin-bottom:3px}
 .sec>button{width:100%;text-align:left;background:none;border:0;cursor:pointer;
-  font:600 14px/1.4 Charter,Georgia,serif;color:var(--ink);padding:6px 6px 6px 0;
+  font:600 14px/1.4 var(--serif);color:var(--ink);padding:6px 6px 6px 0;
   display:flex;gap:8px;align-items:baseline}
-.sec>button .n{font:11px/1 ui-monospace,Menlo,monospace;color:var(--faint);margin-left:auto}
-.sec>button .k{font:11px/1 ui-monospace,Menlo,monospace;color:var(--accent);width:20px}
+.sec>button .n{font:11px/1 var(--mono);color:var(--faint);margin-left:auto}
+.sec>button .k{font:11px/1 var(--mono);color:var(--accent);width:20px}
 .sec ol{list-style:none;padding:0 0 6px 28px;display:none}
 .sec.open ol{display:block}
 .sec ol a{display:block;padding:4px 6px 4px 10px;font-size:14px;color:var(--soft);
@@ -90,48 +92,48 @@ aside{position:sticky;top:57px;height:calc(100vh - 57px);overflow:auto;
 
 main{padding:34px 0 90px;min-width:0}
 .rail{position:sticky;top:80px;padding:38px 0;font-size:13px;color:var(--faint)}
-.rail h4{font:11px/1 ui-monospace,Menlo,monospace;color:var(--faint);
+.rail h4{font:11px/1 var(--mono);color:var(--faint);
   letter-spacing:.08em;margin-bottom:9px;font-weight:600}
 .rail a{display:block;color:var(--soft);padding:3px 0;font-size:13px;line-height:1.35}
 .rail .grp{margin-bottom:24px}
 
 /* hero */
 .hero{max-width:var(--w)}
-.hero h1{font:600 clamp(34px,4.6vw,52px)/1.05 Charter,Georgia,serif;letter-spacing:-.025em;margin-bottom:14px}
+.hero h1{font:600 clamp(34px,4.6vw,52px)/1.05 var(--serif);letter-spacing:-.025em;margin-bottom:14px}
 .hero p{font-size:19px;color:var(--soft);margin-bottom:8px}
 .figure{margin:30px 0 34px;background:var(--card);border:1px solid var(--rule);border-radius:4px;
   padding:10px 10px 4px;max-width:820px}
-.figure figcaption{font:11.5px/1.5 ui-monospace,Menlo,monospace;color:var(--faint);padding:6px 8px 8px}
+.figure figcaption{font:11.5px/1.5 var(--mono);color:var(--faint);padding:6px 8px 8px}
 svg .edge{stroke:var(--accent);fill:none}
 svg .node circle{fill:var(--card);stroke:var(--accent);stroke-width:1.5;cursor:pointer;
   transition:fill .15s}
 svg .node:hover circle{fill:var(--accent-bg)}
-svg .node text{font:12px ui-monospace,Menlo,monospace;fill:var(--ink);cursor:pointer}
+svg .node text{font:12px var(--mono);fill:var(--ink);cursor:pointer}
 svg .node .cnt{font-size:10px;fill:var(--faint)}
 svg .node .idx{font-size:11px;fill:var(--accent);font-weight:600}
 .stats{display:flex;flex-wrap:wrap;gap:26px;margin:26px 0 34px;padding-top:20px;border-top:1px solid var(--rule)}
-.stat b{display:block;font:600 27px/1 Charter,Georgia,serif;color:var(--num)}
-.stat span{font:12px/1.4 ui-monospace,Menlo,monospace;color:var(--faint)}
+.stat b{display:block;font:600 27px/1 var(--serif);color:var(--num)}
+.stat span{font:12px/1.4 var(--mono);color:var(--faint)}
 .seclist{max-width:var(--w)}
 .seclist article{padding:16px 0;border-top:1px solid var(--rule)}
-.seclist h3{font:600 18px/1.3 Charter,Georgia,serif;margin-bottom:3px}
+.seclist h3{font:600 18px/1.3 var(--serif);margin-bottom:3px}
 .seclist p{font-size:15px;color:var(--soft)}
-.seclist .pg{font:12px ui-monospace,Menlo,monospace;color:var(--faint);margin-top:5px}
+.seclist .pg{font:12px var(--mono);color:var(--faint);margin-top:5px}
 
 /* article */
 article.page{max-width:var(--w)}
-.crumb{font:12px ui-monospace,Menlo,monospace;color:var(--faint);margin-bottom:10px}
-article.page h1{font:600 clamp(28px,3.4vw,38px)/1.12 Charter,Georgia,serif;
+.crumb{font:12px var(--mono);color:var(--faint);margin-bottom:10px}
+article.page h1{font:600 clamp(28px,3.4vw,38px)/1.12 var(--serif);
   letter-spacing:-.02em;margin-bottom:22px}
-article.page h2{font:600 21px/1.3 Charter,Georgia,serif;margin:34px 0 11px;
+article.page h2{font:600 21px/1.3 var(--serif);margin:34px 0 11px;
   padding-top:16px;border-top:1px solid var(--rule)}
-article.page h3{font:600 17px/1.3 Charter,Georgia,serif;margin:22px 0 7px}
+article.page h3{font:600 17px/1.3 var(--serif);margin:22px 0 7px}
 article.page p{margin-bottom:15px}
 article.page ul,article.page ol{margin:0 0 16px 22px}
 article.page li{margin-bottom:7px}
 article.page blockquote{border-left:2px solid var(--accent);padding-left:16px;
   color:var(--soft);margin-bottom:16px}
-article.page code{font-family:ui-monospace,Menlo,monospace;font-size:.86em;
+article.page code{font-family:var(--mono);font-size:.86em;
   background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:1px 5px}
 article.page pre{background:var(--card);border:1px solid var(--rule);border-radius:4px;
   padding:14px 16px;overflow:auto;margin-bottom:17px}
@@ -146,48 +148,49 @@ article.page a.wiki::after{content:"]]";color:var(--faint)}
 .pager{display:flex;gap:16px;justify-content:space-between;margin-top:46px;
   padding-top:18px;border-top:1px solid var(--rule);font-size:14px}
 .pager a{max-width:46%}
-.pager .lbl{display:block;font:11px ui-monospace,Menlo,monospace;color:var(--faint)}
-.src{margin-top:34px;font:12px ui-monospace,Menlo,monospace;color:var(--faint)}
+.pager .lbl{display:block;font:11px var(--mono);color:var(--faint)}
+.src{margin-top:34px;font:12px var(--mono);color:var(--faint)}
 
 /* resources */
 .rwrap{max-width:1180px;margin:0 auto;padding:34px 22px 90px}
-.rwrap h1{font:600 clamp(30px,4vw,44px)/1.08 Charter,Georgia,serif;letter-spacing:-.025em}
+.rwrap h1{font:600 clamp(30px,4vw,44px)/1.08 var(--serif);letter-spacing:-.025em}
 .lede{max-width:62ch;color:var(--soft);margin:12px 0 24px;font-size:17px}
 .controls{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-bottom:8px;
   padding-bottom:18px;border-bottom:1px solid var(--rule)}
-.chip{font:13px/1 ui-monospace,Menlo,monospace;background:var(--card);color:var(--soft);
+.chip{font:13px/1 var(--mono);background:var(--card);color:var(--soft);
   border:1px solid var(--rule);border-radius:20px;padding:7px 13px;cursor:pointer}
 .chip.on{background:var(--accent);border-color:var(--accent);color:#F7F9F6}
-.controls input{margin-left:auto;font:14px ui-monospace,Menlo,monospace;
+.controls input{margin-left:auto;font:14px var(--mono);
   background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:8px 11px;width:230px}
-.count{font:12px ui-monospace,Menlo,monospace;color:var(--faint);padding:14px 0 4px}
-.grp-h{font:600 15px/1 ui-monospace,Menlo,monospace;color:var(--faint);
+.count{font:12px var(--mono);color:var(--faint);padding:14px 0 4px}
+.grp-h{font:600 15px/1 var(--mono);color:var(--faint);
   margin:26px 0 6px;padding-top:14px;border-top:1px solid var(--rule)}
 .row{display:grid;grid-template-columns:minmax(180px,260px) 120px 1fr;gap:18px;
   padding:12px 0;border-bottom:1px solid var(--rule);align-items:baseline}
 @media(max-width:760px){.row{grid-template-columns:1fr;gap:3px}}
 .row .nm{font-weight:600;font-size:16px}
-.row .mt{font:13px ui-monospace,Menlo,monospace;color:var(--num)}
+.row .mt{font:13px var(--mono);color:var(--num)}
 .row .ds{color:var(--soft);font-size:15px}
-.row .kd{font:11px ui-monospace,Menlo,monospace;color:var(--faint);display:block;margin-top:2px}
+.row .kd{font:11px var(--mono);color:var(--faint);display:block;margin-top:2px}
 footer{border-top:1px solid var(--rule);padding:22px;text-align:center;
-  font:12px ui-monospace,Menlo,monospace;color:var(--faint)}
+  font:12px var(--mono);color:var(--faint)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 """
 
 SEARCHBOX = ('<div class="search"><input id="q" type="search" '
-             'placeholder="search the guide" autocomplete="off">'
+             'placeholder="tìm trong cẩm nang" autocomplete="off">'
              '<div class="hits" id="hits"></div></div>')
 
 def header(active):
     return f"""<header><div class="bar">
   <a class="brand" href="index.html">[[ second<span>brain</span>os ]]</a>
   <nav>
-    <a href="index.html" class="{'on' if active=='guide' else ''}">Guide</a>
-    <a href="resources.html" class="{'on' if active=='res' else ''}">Resources</a>
-    <a href="{REPO}">Repo</a>
+    <a href="index.html" class="{'on' if active=='guide' else ''}">Bản đồ</a>
+    <a href="resources.html" class="{'on' if active=='res' else ''}">Tài nguyên</a>
+    <a href="tree.html">Cây thư mục</a>
+    <a href="{REPO}">Mã nguồn</a>
   </nav>
-  {'<button class="toc-btn" id="toc">Index</button>' if active=='guide' else ''}
+  {'<button class="toc-btn" id="toc">Mục lục</button>' if active=='guide' else ''}
   {SEARCHBOX if active=='guide' else ''}
 </div></header>"""
 
@@ -268,7 +271,7 @@ GUIDE = f"""<!DOCTYPE html><html lang="en"><head>
   <main id="main"></main>
   <div class="rail" id="rail"></div>
 </div>
-<footer>Generated from the repository. <a href="{REPO}">github.com/undefined-ui/second-brain-os</a></footer>
+<footer>Generated from the repository. <a href="{REPO}">github.com/lucas10xai/second-brain-os</a></footer>
 <script id="data" type="application/json">{json.dumps({k:D[k] for k in ['pages','sections','order']})}</script>
 <script>
 const D=JSON.parse(document.getElementById('data').textContent);
@@ -384,24 +387,27 @@ kinds = []
 for r in R:
     if r["kind"] not in kinds: kinds.append(r["kind"])
 
-RES = f"""<!DOCTYPE html><html lang="en"><head>
+RES = f"""<!DOCTYPE html><html lang="vi"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Second Brain OS - resources</title>
-<meta name="description" content="{len(R)} checked links: Obsidian plugins by installs, repositories by stars, papers, tools and reading.">
+<title>Second Brain OS - Tài nguyên chọn lọc</title>
+<meta name="description" content="{len(R)} liên kết đã kiểm chứng: plugin Obsidian theo lượt cài đặt, kho mã nguồn theo số sao, bài báo khoa học, công cụ và bài đọc.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
 <style>{CSS}</style></head><body>
 {header('res')}
 <div class="rwrap">
-  <h1>Everything worth opening</h1>
-  <p class="lede">{len(R)} links, each one checked. Plugins are ranked by installs from Obsidian's own community stats rather than by stars, because in this ecosystem the two disagree by an order of magnitude. Figures are from September 2026 and will drift.</p>
+  <h1>Mọi tài nguyên đáng tham khảo</h1>
+  <p class="lede">{len(R)} liên kết, từng mục đều đã được kiểm chứng. Các plugin Obsidian được xếp hạng theo lượt cài đặt thực tế từ thống kê cộng đồng của Obsidian thay vì số sao trên GitHub, bởi trong hệ sinh thái này hai con số đó chênh lệch nhau cả bậc độ lớn.</p>
   <div class="controls" id="ctl">
-    <button class="chip on" data-k="all">All</button>
+    <button class="chip on" data-k="all">Tất cả</button>
     {"".join(f'<button class="chip" data-k="{html.escape(k)}">{html.escape(k)}</button>' for k in kinds)}
-    <input id="rq" type="search" placeholder="filter" autocomplete="off">
+    <input id="rq" type="search" placeholder="lọc nhanh..." autocomplete="off">
   </div>
   <div class="count" id="count"></div>
   <div id="rows"></div>
 </div>
-<footer>Generated from the repository. <a href="{REPO}">github.com/undefined-ui/second-brain-os</a></footer>
+<footer>Được tạo tự động từ kho mã nguồn. <a href="{REPO}">github.com/lucas10xai/second-brain-os</a> · made by Lê Quốc Nghĩa</footer>
 <script id="rdata" type="application/json">{json.dumps(R)}</script>
 <script>
 const R=JSON.parse(document.getElementById('rdata').textContent);
@@ -409,7 +415,7 @@ let kind='all', term='';
 function draw(){{
   const f=R.filter(r=>(kind==='all'||r.kind===kind) &&
     (!term || (r.name+' '+r.desc+' '+r.group).toLowerCase().includes(term)));
-  document.getElementById('count').textContent=f.length+' of '+R.length+' shown';
+  document.getElementById('count').textContent='Hiển thị '+f.length+' / '+R.length+' mục';
   let h='', g=null;
   f.forEach(r=>{{
     const key=r.kind+' / '+r.group;
@@ -419,7 +425,7 @@ function draw(){{
       <div class="mt">${{r.metric||''}}</div>
       <div class="ds">${{r.desc||''}}</div></div>`;
   }});
-  document.getElementById('rows').innerHTML=h||'<div class="count">nothing matches that filter</div>';
+  document.getElementById('rows').innerHTML=h||'<div class="count">không có mục nào khớp với bộ lọc</div>';
 }}
 document.getElementById('ctl').addEventListener('click',e=>{{
   const b=e.target.closest('.chip'); if(!b)return;

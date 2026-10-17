@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Convert an exported chat history JSON into one markdown file per conversation.
+"""Chuyển đổi file JSON xuất lịch sử trò chuyện thành mỗi cuộc hội thoại một file Markdown.
 
-Usage:
+Cách dùng:
     python3 chat_export_to_md.py conversations.json ./raw --min-words 150
 
-Works with the common export shape used by Claude and ChatGPT: a JSON array of
-conversations, each with a name/title and a list of messages. Unknown shapes are
-skipped with a warning rather than guessed at.
+Hoạt động với cấu trúc xuất dữ liệu phổ biến của Claude và ChatGPT: một mảng JSON
+chứa các cuộc hội thoại, mỗi cuộc hội thoại có tên/tiêu đề (name/title) và danh sách
+tin nhắn. Các cấu trúc lạ sẽ được bỏ qua kèm cảnh báo thay vì đoán mò.
 
-Read the privacy page before running this on a real export. Chat history is the
-single most sensitive thing most people would put in a vault.
+Hãy đọc trang hướng dẫn về quyền riêng tư trước khi chạy công cụ này trên bản xuất
+dữ liệu thật. Lịch sử trò chuyện là thứ nhạy cảm nhất mà hầu hết mọi người có thể
+đưa vào một chiếc vault.
 """
 import argparse
 import json

@@ -1,7 +1,7 @@
 ---
-description: Find what is safe to remove
+description: Tìm những nội dung có thể xóa an toàn
 ---
 
-Find concept pages with one source and no inbound links after a year, and stubs that never got filled. Propose removals with reasoning. Delete nothing.
+Tìm các trang khái niệm chỉ có một nguồn duy nhất và không có liên kết nào trỏ tới sau một năm, cùng các trang sơ khai (stubs) chưa bao giờ được viết thêm. Đề xuất danh sách cần xóa kèm lý do. Không tự ý xóa bất kỳ thứ gì.
 
-Follow the `second-brain-lint` skill.
+Thực hiện theo skill `second-brain-lint`.

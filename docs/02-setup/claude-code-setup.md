@@ -1,88 +1,64 @@
-# Claude Code in the vault
+# Chạy Claude Code bên trong Vault
 
-Claude Code is the half that reads and writes. Two ways to run it, and the
-choice only affects where you type, not what happens.
+Claude Code đóng vai trò là nửa đọc và ghi dữ liệu của hệ thống. Có hai cách chính để chạy nó, và sự lựa chọn chỉ ảnh hưởng đến nơi bạn gõ lệnh chứ không làm thay đổi kết quả thực thi.
 
-## Option A: the desktop app
+## Phương án A: Dùng ứng dụng máy tính (Desktop app)
 
-Download Claude Desktop from [claude.com/download](https://claude.com/download)
-and sign in. The app has a **Code** tab, which is Claude Code without a
-terminal. If you have never used a command line, start here.
+Tải ứng dụng Claude Desktop từ địa chỉ [claude.com/download](https://claude.com/download) và đăng nhập. Bên trong ứng dụng có thẻ **Code**, thực chất chính là Claude Code nhưng có giao diện đồ họa không cần dùng đến terminal. Nếu bạn chưa từng làm việc với giao diện dòng lệnh, hãy bắt đầu từ đây.
 
-## Option B: the terminal
+## Phương án B: Dùng cửa sổ dòng lệnh (Terminal)
 
-Install Claude Code and run `claude` from inside the vault folder:
+Cài đặt Claude Code và chạy lệnh `claude` ngay bên trong thư mục Vault của bạn:
 
 ```bash
 cd ~/brain
 claude
 ```
 
-Started this way, the agent reads and writes the vault directly through the
-filesystem, with no plugin and no MCP server involved. This is the simplest
-possible setup and it is enough for everything in the ingestion, structuring
-and retrieval sections of this guide.
+Khi được khởi động theo cách này, Agent sẽ đọc và ghi trực tiếp vào Vault thông qua hệ thống tệp tin (filesystem) của máy tính mà không cần đến bất kỳ plugin hay máy chủ MCP nào. Đây là cách thiết lập đơn giản nhất có thể và đã hoàn toàn đủ dùng cho mọi tác vụ trong các chương thu thập dữ liệu (Ingestion), cấu trúc hóa và truy xuất của cẩm nang này.
 
-Installation instructions for each platform are in the [official setup
-docs](https://code.claude.com/docs/en/setup).
+Hướng dẫn cài đặt chi tiết cho từng hệ điều hành nằm trong [tài liệu thiết lập chính thức](https://code.claude.com/docs/en/setup).
 
-## Option C: inside Obsidian
+## Phương án C: Nhúng trực tiếp bên trong Obsidian
 
-Community plugins now embed the agent in the editor, and they are heavily used:
-[Claudian](https://github.com/yishentu/claudian) sits above two million installs
-and [Copilot](https://github.com/logancyang/obsidian-copilot) is close behind.
-Both run Claude Code, Codex or a local agent in a pane next to your notes.
+Các plugin cộng đồng hiện nay đã cho phép nhúng thẳng Agent vào bên trong trình soạn thảo, và được sử dụng rất rộng rãi: [Claudian](https://github.com/yishentu/claudian) đã vượt mốc hai triệu lượt cài đặt và [Copilot](https://github.com/logancyang/obsidian-copilot) cũng bám sát ngay phía sau. Cả hai đều cho phép chạy Claude Code, Codex hoặc một Agent cục bộ ngay trong một khung cửa sổ nằm cạnh ghi chú của bạn.
 
-Worth knowing about because it removes the window switching entirely. Worth
-being careful with for the same reason this guide keeps ingestion on a
-schedule: an agent in the editor invites ad-hoc edits that never make it into
-`log.md`, and an unlogged vault is one you cannot audit.
+Bạn nên biết đến tùy chọn này vì nó loại bỏ hoàn toàn việc phải chuyển đổi qua lại giữa các cửa sổ ứng dụng. Tuy nhiên, cũng cần hết sức cẩn trọng với nó vì cùng một lý do mà cẩm nang này khuyên bạn nên chạy quy trình Ingest theo lịch định kỳ: việc có sẵn một Agent ngay trong trình soạn thảo rất dễ khiến bạn tiện tay yêu cầu những chỉnh sửa ngẫu hứng không bao giờ được ghi nhận vào `log.md` — và một Vault không có nhật ký đầy đủ là một Vault bạn không thể kiểm toán được.
 
-A reasonable split is the plugin for conversation and drafting, the terminal or
-a scheduled task for anything that writes wiki pages.
+Cách phân chia hợp lý nhất là dùng plugin trong Obsidian để trò chuyện và nháp văn bản, còn mọi thao tác ghi các trang wiki chính thức thì thực hiện qua terminal hoặc tác vụ tự động theo lịch.
 
-## Plan requirement
+## Yêu cầu về gói tài khoản
 
-Claude Code needs a paid account: Pro, Max, Team, Enterprise, or a Console
-account billed per token. The free Claude.ai plan does not include Claude Code
-access, per Anthropic's own setup documentation. If the Code tab prompts you to
-upgrade, that is why.
+Claude Code yêu cầu tài khoản trả phí: gói Pro, Max, Team, Enterprise, hoặc tài khoản Console tính phí theo lượng token sử dụng. Theo tài liệu thiết lập của chính Anthropic, gói Claude.ai miễn phí không bao gồm quyền truy cập Claude Code. Nếu thẻ Code yêu cầu bạn nâng cấp tài khoản thì đó chính là lý do.
 
-## Filesystem or MCP
+## Thao tác file trực tiếp (Filesystem) hay qua MCP
 
-Both work. The difference is narrow and worth knowing before you pick:
+Cả hai cách đều hoạt động tốt. Sự khác biệt khá hẹp nhưng rất đáng nắm rõ trước khi bạn lựa chọn:
 
-| | Filesystem | MCP |
+| Tiêu chí | Hệ thống tệp tin (Filesystem) | Giao thức MCP |
 |---|---|---|
-| Setup | none, just `cd` into the vault | plugin plus a config command |
-| Obsidian open | not required | required, the plugin serves the API |
-| Scope | whatever folder you started in | the whole vault, from anywhere |
-| Failure mode | none to speak of | plugin off, app closed, wrong port |
+| Thiết lập | không cần gì thêm, chỉ cần `cd` vào thư mục Vault | cần cài đặt plugin cộng thêm một câu lệnh cấu hình |
+| Yêu cầu mở sẵn Obsidian | không bắt buộc | bắt buộc, vì plugin phải chạy để cung cấp API |
+| Phạm vi truy cập | gói gọn trong thư mục nơi bạn khởi chạy lệnh | toàn bộ Vault, truy cập được từ bất kỳ phiên làm việc nào |
+| Khả năng gặp lỗi | hầu như không có | plugin bị tắt, ứng dụng đang đóng, hoặc lệch cổng (port) kết nối |
 
-Start on the filesystem. Move to [MCP](mcp-obsidian.md) when you want the agent
-to reach the vault from sessions that are not running inside it, which mostly
-matters once you add scheduled tasks.
+Hãy bắt đầu bằng cách thao tác trực tiếp trên hệ thống tệp tin. Chỉ chuyển sang dùng [MCP](mcp-obsidian.md) khi bạn muốn Agent chạm được vào Vault từ những phiên làm việc không khởi chạy bên trong thư mục đó — điều chủ yếu phát sinh khi bạn bắt đầu thiết lập các tác vụ chạy tự động theo lịch.
 
-## First run
+## Lần chạy đầu tiên
 
-Point it at the structure before asking for anything else:
+Hãy yêu cầu Agent đọc hiểu cấu trúc trước khi giao cho nó bất kỳ nhiệm vụ nào khác:
 
 ```
 Read CLAUDE.md and wiki/index.md, then tell me what this vault currently
 contains and what is missing.
 ```
 
-The answer tells you immediately whether the agent understood its instructions.
-If it starts inventing a structure you did not ask for, your `CLAUDE.md` is too
-vague. See [writing your CLAUDE.md](claude-md.md).
+Câu trả lời nhận được sẽ cho bạn biết ngay lập tức liệu Agent đã hiểu đúng các chỉ dẫn hay chưa. Nếu nó bắt đầu tự bịa ra một cấu trúc thư mục mà bạn không hề yêu cầu, nghĩa là file `CLAUDE.md` của bạn đang quá mơ hồ. Hãy xem bài [Viết file CLAUDE.md của bạn](claude-md.md).
 
-## Permissions
+## Quyền hạn truy cập (Permissions)
 
-The agent will ask before editing files. Grant it write access to the vault and
-nothing else. Do not grant blanket shell access on a folder that holds anything
-you cannot lose, and read [guardrails](../06-agents/safety-and-guardrails.md)
-before you automate anything on a schedule.
+Agent sẽ hỏi xin phép trước khi chỉnh sửa các file. Hãy cấp cho nó quyền ghi vào bên trong thư mục Vault và không cấp thêm bất kỳ quyền nào khác ở ngoài. Tuyệt đối không cấp quyền chạy lệnh hệ thống (shell access) tràn lan trên một thư mục chứa những dữ liệu quan trọng không thể để mất, và hãy đọc kỹ bài [Hàng rào bảo vệ (Guardrails)](../06-agents/safety-and-guardrails.md) trước khi bạn thiết lập bất kỳ quy trình tự động hóa chạy theo lịch nào.
 
-## Next
+## Tiếp theo
 
-[MCP for Obsidian](mcp-obsidian.md)
+[Giao thức MCP cho Obsidian](mcp-obsidian.md)

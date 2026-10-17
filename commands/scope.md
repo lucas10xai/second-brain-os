@@ -1,7 +1,7 @@
 ---
-description: Pull knowledge into a project
+description: Kéo tri thức liên quan vào một dự án
 ---
 
-Find the concept pages relevant to the project in $ARGUMENTS and save a briefing into its `Inputs/`, so work can continue with the vault scoped down.
+Tìm các trang khái niệm liên quan tới dự án trong $ARGUMENTS và lưu một bản tóm tắt tổng hợp vào thư mục `Inputs/` của dự án đó, giúp công việc có thể tiếp tục với phạm vi kho tri thức đã được thu gọn.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

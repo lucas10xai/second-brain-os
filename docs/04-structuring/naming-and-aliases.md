@@ -1,69 +1,52 @@
-# Naming and aliases
+# Đặt tên và Aliases
 
-Wikilinks resolve by name, so the name is not cosmetic. It is the key the whole
-graph is built on.
+Các `Wikilink` phân giải theo tên, vì vậy tên trang không chỉ mang tính thẩm mỹ. Nó chính là khóa chính (key) mà toàn bộ đồ thị được xây dựng dựa trên đó.
 
-## Canonical titles
+## Tiêu đề chuẩn tắc (Canonical titles)
 
-One page, one canonical title, and it is the name you would use talking to
-someone in the field.
+Mỗi trang có một tiêu đề chuẩn tắc duy nhất, và đó là cái tên bạn sẽ dùng khi trò chuyện với một người trong ngành.
 
-Practical rules that avoid most of the pain:
+Những quy tắc thực tế giúp tránh được hầu hết các rắc rối:
 
-- **Singular, not plural.** `Vector database`, not `Vector databases`.
-- **Spell out acronyms in the title, put the acronym in aliases.** The title is
-  for the reader, the alias is for the link.
-- **No dates, no versions in the title** unless the thing genuinely is a
-  version. A page called `MCP spec 2026-07` becomes wrong in a month; a page
-  called `MCP` with a version history does not.
-- **No your-vault-specific prefixes.** `Concept - RAG` fights the link syntax
-  for no benefit.
+- **Dùng số ít, không dùng số nhiều.** `Vector database`, không phải `Vector databases`.
+- **Viết đầy đủ từ viết tắt trong tiêu đề, đưa từ viết tắt vào `Aliases`.** Tiêu đề dành cho người đọc, còn alias dành cho liên kết.
+- **Không đưa ngày tháng, không đưa phiên bản vào tiêu đề** trừ khi bản thân đối tượng đó thực sự là một phiên bản cụ thể. Một trang có tên `MCP spec 2026-07` sẽ trở nên sai lệch sau một tháng; còn một trang tên là `MCP` có mục lịch sử phiên bản bên trong thì không.
+- **Không dùng tiền tố riêng lẻ kiểu tự chế trong `Vault`.** Kiểu đặt tên như `Concept - RAG` chỉ gây xung đột với cú pháp liên kết mà không mang lại lợi ích gì.
 
-## Aliases
+## Aliases (Tên gọi thay thế)
 
-Everything the same subject gets called, listed in frontmatter:
+Mọi tên gọi khác của cùng một chủ đề sẽ được liệt kê trong `Frontmatter`:
 
 ```yaml
 title: Retrieval augmented generation
 aliases: [RAG, retrieval-augmented generation]
 ```
 
-Aliases are what stop the vault from quietly growing three pages for one thing.
-Without the alias, a source that says RAG creates `RAG`, and a source that
-spells it out creates a second page, and neither knows about the other.
+`Aliases` chính là thứ ngăn không cho `Vault` âm thầm mọc ra ba trang khác nhau cho cùng một thứ. Nếu không có alias, một tài liệu nguồn viết là RAG sẽ tạo ra trang `RAG`, còn một tài liệu nguồn viết đầy đủ sẽ tạo ra trang thứ hai, và chẳng trang nào biết đến sự tồn tại của trang kia.
 
-Add aliases at creation, not later. By the time you notice the duplicate, both
-pages have inbound links.
+Hãy thêm `Aliases` ngay lúc tạo trang, chứ không phải để sau này. Đến khi bạn nhận ra sự trùng lặp thì cả hai trang đều đã có các liên kết trỏ tới (inbound links) mất rồi.
 
-## Two things with the same name
+## Hai thứ trùng tên nhau
 
-Disambiguate in the title, not with a suffix nobody would type:
+Hãy phân biệt rõ ngay trong tiêu đề, thay vì dùng những hậu tố ký hiệu mà chẳng ai gõ:
 
 ```
 Mercury (planet)
 Mercury (element)
 ```
 
-Then alias the bare word to whichever one is dominant in your vault, or to
-neither if both matter, which forces the agent to pick explicitly rather than
-guessing.
+Sau đó gán alias từ gốc cho trang nào chiếm ưu thế hơn trong `Vault` của bạn, hoặc không gán cho trang nào cả nếu cả hai đều quan trọng như nhau — cách này buộc `Agent` phải chọn rõ ràng thay vì đoán mò.
 
-Same applies to people who share a name and to your own projects that collide
-with a well-known product.
+Quy tắc tương tự cũng áp dụng cho những người trùng tên nhau và cho các dự án cá nhân của bạn bị trùng tên với một sản phẩm nổi tiếng.
 
-## Renaming
+## Đổi tên trang (Renaming)
 
-Obsidian updates links when you rename inside the app. The agent renaming a file
-directly does not, and that is the single most common source of broken links in
-an agent-maintained vault.
+`Obsidian` sẽ tự động cập nhật các liên kết khi bạn đổi tên bên trong ứng dụng. Nhưng khi `Agent` đổi tên file trực tiếp trên hệ thống tệp thì không, và đó là nguyên nhân phổ biến số một gây ra lỗi đứt gãy liên kết (broken links) trong một `Vault` do `Agent` duy trì.
 
-Rule for `CLAUDE.md`: renames go through a documented procedure. Update the
-file, update every inbound link, add the old name as an alias, and record it in
-`log.md`. The alias matters because it keeps external references and your own
-memory working.
+Quy tắc cần đưa vào `CLAUDE.md`: việc đổi tên phải tuân theo một quy trình được ghi chép rõ ràng. Cập nhật file, cập nhật mọi liên kết trỏ tới nó (inbound links), thêm tên cũ vào `Aliases`, và ghi lại vào `log.md`. Việc giữ tên cũ làm alias rất quan trọng vì nó giúp các tham chiếu bên ngoài cũng như trí nhớ của chính bạn tiếp tục hoạt động bình thường.
 
-Then run `scripts/link_check.py` to confirm nothing dangled.
+Sau đó hãy chạy `scripts/link_check.py` để xác nhận không có liên kết nào bị treo.
 
-## Next
+## Tiếp theo
 
-[Deduplication and merging](dedupe-and-merge.md)
+[Khử trùng lặp và gộp trang](dedupe-and-merge.md)

@@ -1,7 +1,7 @@
 ---
-description: Show what the vault is actually about
+description: Cho biết kho tri thức thực sự xoay quanh những cụm chủ đề nào
 ---
 
-Identify clusters and name them. Compare against what the user thinks their interests are, if that is recorded.
+Xác định các cụm chủ đề (clusters) và đặt tên cho chúng. So sánh với những mối quan tâm mà người dùng tự nghĩ về mình, nếu thông tin đó đã được ghi nhận.
 
-Follow the `second-brain-graph` skill.
+Thực hiện theo skill `second-brain-graph`.

@@ -1,12 +1,12 @@
-# Build: the Goal Test
+# Thực hành: Bài kiểm tra mục tiêu (Build: the Goal Test)
 
-Three build pages assemble a working loop around a headless coding agent. This one delivers the skeleton: define done as a script, run the agent, run the goal test, feed failures back, cap the attempts. The examples drive Claude Code's non-interactive mode (`claude -p`), the reference harness from [the harness handbook](../track-harness/claude-code-as-harness.md), but any CLI agent that takes a prompt and edits files will slot in.
+Ba trang thực hành sẽ lắp ráp một `Loop` hoàn chỉnh bao quanh một coding `Agent` chạy ngầm (headless). Trang đầu tiên này cung cấp bộ khung xương: định nghĩa trạng thái hoàn thành dưới dạng một script, chạy `Agent`, chạy bài kiểm tra mục tiêu (goal test), đưa các lỗi ngược trở lại và giới hạn số lần thử. Các ví dụ dưới đây điều khiển chế độ không tương tác của `Claude Code` (`claude -p`) — `Harness` tham chiếu từ [sổ tay `Harness`](../track-harness/claude-code-as-harness.md) — nhưng bất kỳ CLI `Agent` nào nhận prompt và sửa tệp tin đều có thể lắp vào tương tự.
 
-You need `claude` and `jq` on your path, and a repo with a test suite. The flags below are current as of September 2026: `-p` runs one non-interactive session, `--allowedTools` pre-approves tools using permission rule syntax (the trailing ` *` is prefix matching), `--permission-mode acceptEdits` lets it write files without prompting, and `--output-format json` returns the result with metadata including `total_cost_usd`.
+Bạn cần cài sẵn `claude` và `jq` trong `PATH`, cùng một kho mã nguồn có sẵn bộ test. Các cờ (flags) dưới đây được cập nhật tính đến tháng 9 năm 2026: `-p` chạy một phiên không tương tác, `--allowedTools` phê duyệt trước các công cụ bằng cú pháp quy tắc phân quyền (dấu ` *` ở cuối là khớp tiền tố), `--permission-mode acceptEdits` cho phép ghi tệp tin mà không hỏi lại, và `--output-format json` trả về kết quả kèm dữ liệu đặc tả (metadata) bao gồm cả `total_cost_usd`.
 
-## Done as a script
+## Định nghĩa hoàn thành dưới dạng một script
 
-The goal test is the whole design. It must be executable, binary, and outside the agent's control — here, tests plus lint:
+Bài kiểm tra mục tiêu chính là toàn bộ bản thiết kế. Nó phải thực thi được, cho kết quả nhị phân (đạt/trượt) và nằm ngoài tầm kiểm soát của `Agent` — ở đây là chạy test cộng với lint:
 
 ```bash
 #!/usr/bin/env bash
@@ -52,16 +52,16 @@ echo "STOP: $MAX_ATTEMPTS attempts spent; handing back to the human"
 exit 1
 ```
 
-Save it, `chmod +x goal-loop.sh`, run it in a repo with failing tests, and watch it converge or stop.
+Hãy lưu tệp lại, chạy `chmod +x goal-loop.sh`, thực thi nó trong một kho mã nguồn đang có test lỗi, và quan sát nó hội tụ hoặc dừng lại.
 
-## Why each piece is there
+## Lý do tồn tại của từng mảnh ghép
 
-**The goal test runs in the wrapper, not the agent.** The agent also runs pytest while working — that is fine, that is how it navigates. But the verdict that ends the loop comes from your shell, in a process the model never touches. This is the "checks, never asks" rule from [critics and verification](critics-and-verification.md) in its smallest form.
+**Bài kiểm tra mục tiêu chạy trong script bọc ngoài, không phải trong `Agent`.** Bản thân `Agent` cũng chạy pytest trong lúc làm việc — điều đó hoàn toàn ổn, đó là cách nó định hướng. Nhưng phán quyết kết thúc `Loop` phải đến từ shell của bạn, trong một tiến trình mà mô hình không bao giờ chạm tới. Đây chính là quy tắc "tự kiểm tra, không bao giờ hỏi" từ bài [bộ phản biện và xác minh](critics-and-verification.md) ở hình thái nhỏ gọn nhất.
 
-**Failure output is the only thing carried forward.** Each attempt is a fresh `claude -p` session: clean context, the task, and the distilled evidence of what is still wrong. No transcript of the previous attempt's confusion travels with it — the fresh-context-per-attempt argument from [context hygiene](context-hygiene.md).
+**Đầu ra lỗi là thứ duy nhất được mang sang vòng sau.** Mỗi lần thử là một phiên `claude -p` mới tinh: ngữ cảnh sạch, tác vụ gốc và bằng chứng chưng cất về những gì vẫn đang sai. Không có bản ghi hội thoại nào về sự bối rối của lần thử trước đi theo nó — đúng với lập luận ngữ cảnh mới cho mỗi lần thử trong bài [vệ sinh ngữ cảnh (`Context hygiene`)](context-hygiene.md).
 
-**The cap is small and the exit codes are honest.** Five attempts, then exit 1 with a plain statement. That makes the script composable: CI can gate on it, cron can alert on it, and the next two build pages can wrap it.
+**Giới hạn nhỏ và mã thoát trung thực.** Năm lần thử, sau đó thoát với mã `exit 1` cùng một thông báo rõ ràng. Điều này giúp script có tính khả ghép (composable): CI có thể đặt `Gate` dựa trên nó, cron có thể gửi cảnh báo từ nó, và hai trang thực hành tiếp theo có thể bọc lấy nó.
 
-## What it is not, yet
+## Những gì vòng lặp này chưa làm được
 
-This loop accepts anything green. An agent that passes the tests by ugly means — dead code, swallowed errors, a sneaky change just outside the tests' reach — sails through. Part two adds a judge for exactly that: [Build: the critic](build-critic.md).
+`Loop` này chấp nhận bất cứ thứ gì làm cho bộ test chuyển xanh. Một `Agent` vượt qua bài test bằng những thủ đoạn xấu xí — code chết, nuốt lỗi im lặng, hoặc một thay đổi lén lút nằm ngay ngoài tầm phủ của bộ test — vẫn sẽ lọt qua trót lọt. Phần hai sẽ bổ sung một vị thẩm phán cho chính vấn đề đó: [Thực hành: Bộ phản biện (`Critic`)](build-critic.md).

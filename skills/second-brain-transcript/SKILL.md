@@ -1,55 +1,46 @@
 ---
 name: second-brain-transcript
 description: >-
-  Clean a raw transcript before ingestion: punctuate, paragraph, label speakers,
-  fix mistranscribed technical terms, and split long recordings by topic. Use
-  this skill when the user drops an auto-generated transcript, subtitle file,
-  podcast or lecture transcript, meeting recording text, or asks to process a
-  video or audio source. Do NOT use for text that is already prose, for
-  summarising a transcript, or for the ingestion itself.
+  Làm sạch một bản gỡ băng thô (raw transcript) trước khi nạp vào vault: đặt dấu
+  câu, chia đoạn văn, gắn nhãn người nói, sửa các thuật ngữ chuyên ngành bị nhận
+  diện sai, và tách các bản ghi âm dài theo từng chủ đề. Sử dụng kỹ năng này khi
+  người dùng thả một bản phụ đề tự động, file subtitle, bản gỡ băng podcast hoặc
+  bài giảng, văn bản ghi âm cuộc họp, hoặc yêu cầu xử lý nguồn video hay âm thanh.
+  KHÔNG dùng cho văn bản vốn đã là văn xuôi hoàn chỉnh, để tóm tắt bản gỡ băng,
+  hoặc để thực hiện luôn bước nạp (ingest) vào wiki.
 ---
 
-# Clean a transcript
+# Làm sạch bản gỡ băng (Clean a transcript)
 
-Concept pages built from unpunctuated caption dumps are noticeably worse,
-because the model spends its attention reconstructing sentence boundaries
-instead of understanding claims.
+Các trang khái niệm được xây dựng trực tiếp từ những đống phụ đề tự động không chấm câu luôn có chất lượng tệ hơn hẳn, bởi vì mô hình phải tiêu tốn sự chú ý vào việc đoán ranh giới câu thay vì tập trung hiểu các luận điểm.
 
-## Core rule
+## Quy tắc cốt lõi
 
-Clean, never summarise. Nothing is cut. This is a formatting pass on the record,
-and the record has to stay faithful.
+Chỉ làm sạch, không bao giờ tóm tắt. Không cắt bỏ bất kỳ nội dung nào. Đây là một lượt chuẩn hóa định dạng trên bản lưu gốc, và bản lưu đó phải giữ nguyên tính trung thực.
 
-## Workflow
+## Quy trình thực hiện
 
-1. **Punctuate and paragraph.** Sentence boundaries first, then paragraphs at
-   topic shifts.
-2. **Label speakers** where they change. In an interview this is most of the
-   value.
-3. **Fix technical terms.** Auto-captions mangle proper nouns and jargon
-   consistently. Flag anything you could not resolve rather than guessing.
-4. **Keep coarse timestamps** every few minutes, so a claim on a wiki page can
-   be verified in ten seconds instead of a rewatch.
-5. **Propose split points** if the recording covers separate topics. A
-   three-hour podcast is not one source.
-6. **Write frontmatter:** title, channel or speaker, URL, date.
+1. **Đặt dấu câu và chia đoạn văn.** Xác định ranh giới câu trước, sau đó ngắt đoạn tại những điểm chuyển chủ đề.
+2. **Gắn nhãn người nói** ở những chỗ đổi lượt lời. Trong một cuộc phỏng vấn, bước này mang lại phần lớn giá trị của bản gỡ băng.
+3. **Sửa các thuật ngữ chuyên ngành.** Phụ đề tự động thường xuyên làm biến dạng tên riêng và thuật ngữ kỹ thuật. Hãy gắn cờ bất kỳ từ nào bạn không thể xác định chắc chắn thay vì đoán mò.
+4. **Giữ lại các mốc thời gian thô (coarse timestamps)** cách nhau mỗi vài phút, để một luận điểm trên trang wiki có thể được kiểm chứng lại trong mười giây thay vì phải nghe lại từ đầu.
+5. **Đề xuất các điểm cắt nhỏ** nếu bản ghi âm đi qua nhiều chủ đề tách biệt. Một tập podcast dài ba tiếng đồng hồ không phải là một tài liệu nguồn đơn nhất.
+6. **Viết phần frontmatter:** tiêu đề (`title`), kênh hoặc người nói (`author`), `url`, ngày xuất bản (`published`).
 
-## Output format
+## Định dạng đầu ra
 
-The cleaned transcript, then:
+Toàn bộ văn bản gỡ băng đã được làm sạch, tiếp theo là:
 
 ```
-Cleaned: <source>
+Cleaned: <tên nguồn>
 Speakers labelled: <n>
-Terms corrected: <list>
-Uncertain: <list of what could not be resolved>
-Suggested splits: <topics with timestamps, or none>
+Terms corrected: <danh sách thuật ngữ đã sửa>
+Uncertain: <danh sách những chỗ chưa thể xác định chắc chắn>
+Suggested splits: <các chủ đề kèm mốc thời gian, hoặc none>
 ```
 
-## Calibration
+## Hiệu chuẩn (Calibration)
 
-Never drop filler that carries meaning, such as hedging or a speaker correcting
-themselves. Those are exactly what distinguish a claim from an aside.
+Không bao giờ lược bỏ những từ đệm nhưng mang hàm ý quan trọng, chẳng hạn như lời nói rào đón (hedging) hoặc khi người nói tự đính chính lại câu vừa phát biểu. Chính những chi tiết đó giúp phân biệt một khẳng định chắc chắn với một lời bình luận buột miệng.
 
-If the transcript is too garbled to clean reliably, say so and recommend
-re-pulling it rather than producing a plausible reconstruction.
+Nếu bản gỡ băng bị lỗi quá nặng không thể làm sạch một cách đáng tin cậy, hãy nói rõ điều đó và khuyến nghị trích xuất lại bản mới thay vì tự dựng nên một văn bản nghe có vẻ hợp lý.

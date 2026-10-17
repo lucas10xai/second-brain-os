@@ -1,14 +1,13 @@
-# scripts
+# Các script tiện ích (scripts)
 
-Small, dependency-free Python scripts. Everything here reads the vault as
-plain files, so nothing breaks if you switch editors or agents.
+Tập hợp các script Python nhỏ gọn, không phụ thuộc vào thư viện bên ngoài. Mọi công cụ tại đây đều đọc Vault dưới dạng các file văn bản thuần túy, vì vậy sẽ không có gì bị hỏng nếu bạn đổi trình soạn thảo hay đổi Agent.
 
-| Script | What it does |
+| Script | Chức năng |
 |---|---|
-| `link_check.py` | Broken wikilinks, orphan pages, stubs |
-| `vault_stats.py` | Page counts, link density, orphan rate, most-linked pages |
-| `graph_export.py` | Wikilink graph as CSV edges or GraphML for Gephi |
-| `chat_export_to_md.py` | Chat history export into per-conversation markdown |
+| `link_check.py` | Kiểm tra các Wikilink bị gãy, các trang mồ côi (orphan pages) và các trang sơ khai bỏ trống (stubs) |
+| `vault_stats.py` | Thống kê số lượng trang, mật độ liên kết, tỷ lệ trang mồ côi và danh sách các trang được liên kết nhiều nhất |
+| `graph_export.py` | Xuất đồ thị Wikilink ra định dạng danh sách cạnh CSV hoặc GraphML để dùng trong Gephi |
+| `chat_export_to_md.py` | Chuyển đổi file xuất lịch sử trò chuyện thành từng file Markdown riêng cho mỗi cuộc hội thoại |
 
 ```bash
 python3 scripts/vault_stats.py ~/brain
@@ -16,13 +15,6 @@ python3 scripts/link_check.py ~/brain
 python3 scripts/graph_export.py ~/brain graph.graphml --format graphml
 ```
 
-Copy the folder into the vault (`cp -r scripts ~/brain/scripts`, the Quickstart
-does this) so the `/metrics`, `/health` and `/graph-export` commands can find
-them. Hidden folders such as `.claude/` and `.obsidian/`, `templates/`,
-`scripts/`, `raw/`, and any `CLAUDE.md` or `README.md` are skipped, so the
-counts describe your wiki, not the tooling around it. On Windows, `python3` is
-usually the Microsoft Store stub; run these with `python` instead.
+Hãy sao chép thư mục này vào bên trong Vault (`cp -r scripts ~/brain/scripts`, bước Quickstart đã thực hiện sẵn việc này) để các lệnh `/metrics`, `/health` và `/graph-export` có thể tìm thấy chúng. Các thư mục ẩn như `.claude/` và `.obsidian/`, cùng với `templates/`, `scripts/`, `raw/` và bất kỳ file `CLAUDE.md` hay `README.md` nào đều được tự động bỏ qua, nhờ đó các con số thống kê phản ánh chính xác tầng wiki của bạn chứ không tính gộp cả bộ công cụ đi kèm. Trên Windows, lệnh `python3` thường trỏ tới bản stub của Microsoft Store; hãy chạy các script này bằng lệnh `python`.
 
-The agent can do all of this in natural language, but a script gives the same
-answer every time and costs nothing to run, which is what you want for anything
-you check weekly.
+Agent hoàn toàn có thể thực hiện tất cả những việc này bằng ngôn ngữ tự nhiên, nhưng một script chuyên dụng sẽ luôn trả về kết quả đồng nhất trong mọi lần chạy và không tốn chi phí token nào — điều cực kỳ lý tưởng cho những chỉ số bạn cần kiểm tra định kỳ hàng tuần.

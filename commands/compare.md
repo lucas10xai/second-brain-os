@@ -1,7 +1,7 @@
 ---
-description: Compare two things from your own sources
+description: So sánh hai đối tượng dựa trên các nguồn của chính bạn
 ---
 
-Compare the two things in $ARGUMENTS using only what the vault records. Say which comparison points are unsupported.
+So sánh hai đối tượng trong $ARGUMENTS chỉ sử dụng những gì được ghi nhận trong kho tri thức. Nêu rõ những điểm so sánh nào chưa có dữ liệu chứng minh.
 
-Follow the `second-brain-query` skill.
+Thực hiện theo skill `second-brain-query`.

@@ -1,39 +1,27 @@
-# PDFs, papers and books
+# PDF, bài báo khoa học và sách
 
-PDFs are the format most likely to arrive in your vault as garbage. Two columns
-become interleaved lines, tables collapse, footnotes land mid-sentence, and the
-agent quietly builds pages on top of the mess.
+PDF là định dạng dễ biến thành đống rác văn bản nhất khi đưa vào Vault của bạn. Bố cục hai cột bị trộn lẫn dòng nọ xọ dòng kia, bảng biểu vỡ vụn, chú thích chân trang nhảy vào giữa câu văn, và thế là Agent cứ thế âm thầm xây dựng các trang wiki bên trên mớ hỗn độn đó.
 
-Check extraction quality before ingesting. It takes ten seconds and saves
-rewriting pages later.
+Hãy luôn kiểm tra chất lượng văn bản trích xuất trước khi chạy Ingest. Việc này chỉ mất đúng mười giây nhưng giúp bạn tránh phải ngồi viết lại hàng loạt trang wiki về sau.
 
-## Extraction
+## Trích xuất văn bản từ PDF
 
 ```bash
 # text, layout preserved reasonably well
 pdftotext -layout paper.pdf raw/paper.md
 ```
 
-For anything structured, `pymupdf` gives better control and can pull images and
-tables separately. Whatever you use, open the output and read a paragraph from
-the middle. If the sentences do not flow, fix extraction rather than hoping the
-agent copes.
+Đối với những tài liệu có cấu trúc phức tạp, thư viện `pymupdf` mang lại khả năng kiểm soát tốt hơn và có thể tách riêng hình ảnh cũng như bảng biểu. Dù sử dụng công cụ nào, bạn cũng hãy mở file kết quả lên và đọc thử một đoạn văn nằm ở giữa tài liệu. Nếu câu chữ bị đứt gãy không liền mạch, hãy sửa lại khâu trích xuất ngay thay vì hy vọng Agent sẽ tự xoay xở được.
 
-## Scanned documents
+## Tài liệu bản quét (Scanned documents)
 
-A scan is an image, and text extraction returns nothing or near-nothing. Run OCR
-first with `ocrmypdf`, which adds a text layer without changing the visible
-document. Expect errors in proper nouns and numbers, and treat any figure from
-an OCR'd source as needing verification before it goes into a wiki page as
-fact.
+Một tài liệu quét thực chất chỉ là một tệp hình ảnh, nên các công cụ trích xuất văn bản thông thường sẽ trả về kết quả trống rỗng. Hãy chạy nhận diện ký tự quang học (OCR) trước bằng công cụ `ocrmypdf` để gắn thêm một lớp văn bản vào file mà không làm thay đổi hình ảnh hiển thị gốc. Hãy lường trước việc OCR sẽ nhận diện sai một số tên riêng và con số, đồng thời coi mọi số liệu lấy từ nguồn tài liệu quét là thông tin cần kiểm chứng lại trước khi đưa vào trang wiki như một sự thật hiển nhiên.
 
-## Papers
+## Bài báo khoa học (Papers)
 
-Papers deserve different handling than articles, because the parts you will
-want later are not spread evenly. Abstract, method, results and limitations
-carry almost everything.
+Các bài báo khoa học cần được xử lý theo cách khác với những bài viết thông thường trên mạng, bởi những thông tin bạn cần tra cứu lại về sau không phân bổ đều khắp bài. Phần tóm tắt (abstract), phương pháp nghiên cứu (method), kết quả (results) và giới hạn nghiên cứu (limitations) là nơi chứa đựng gần như toàn bộ giá trị cốt lõi.
 
-A useful ingest instruction:
+Một câu lệnh chỉ dẫn Ingest hiệu quả cho bài báo khoa học:
 
 ```
 This is an academic paper. Build the source page around: the question it asks,
@@ -42,31 +30,22 @@ state themselves. Record sample sizes. Do not report a finding without the
 condition it holds under.
 ```
 
-That last rule is what keeps a wiki honest. Findings stripped of their
-conditions become confident nonsense two years later.
+Quy tắc cuối cùng trong đoạn lệnh trên chính là chốt chặn giữ cho hệ thống wiki luôn trung thực. Những kết luận khoa học bị tước bỏ mất điều kiện áp dụng sẽ biến thành những lời khẳng định sai lệch đầy tự tin sau hai năm lưu trữ.
 
-Zotero is worth using if you read papers regularly. It handles metadata and
-exports markdown, which lands in `raw/` cleanly.
+Nếu bạn đọc bài báo khoa học thường xuyên, Zotero là công cụ rất đáng sử dụng. Nó quản lý siêu dữ liệu (metadata) cực tốt và hỗ trợ xuất ra file Markdown gọn gàng để đưa thẳng vào `raw/`.
 
-## Books
+## Sách
 
-A full book is too large to ingest as one source and mostly not worth it. What
-is worth it is your highlights.
+Một cuốn sách nguyên vẹn là quá lớn để Ingest như một nguồn tài liệu đơn lẻ và phần lớn trường hợp cũng không đáng làm vậy. Thứ thực sự đáng đưa vào hệ thống chính là các đoạn tô sáng (highlights) của bạn.
 
-Kindle highlights export from the Kindle app or through Readwise, which syncs
-into Obsidian directly. Highlights arrive as a list of quoted passages, so
-ingest them as one source page per book, and let the agent build concept pages
-from the ideas rather than from the quotes.
+Các đoạn highlight trên Kindle có thể xuất ra từ ứng dụng Kindle hoặc thông qua Readwise — dịch vụ hỗ trợ đồng bộ trực tiếp vào thẳng Obsidian. Dữ liệu highlight sẽ được đưa về dưới dạng danh sách các đoạn trích dẫn, vì vậy hãy Ingest mỗi cuốn sách thành một trang nguồn duy nhất, và để Agent xây dựng các trang khái niệm dựa trên những ý tưởng cốt lõi thay vì chỉ bám vào câu chữ trích dẫn.
 
-Keep the quotes short in the wiki and keep the citation. A page that reproduces
-half a chapter is a copyright problem and a retrieval problem at the same time.
+Hãy giữ cho các đoạn trích dẫn nguyên văn trên trang wiki thật ngắn gọn và luôn ghi kèm nguồn trích dẫn. Một trang wiki chép lại nguyên xi nửa chương sách vừa vi phạm bản quyền, vừa gây cản trở cho việc truy xuất thông tin sau này.
 
-## Figures and tables
+## Biểu đồ và bảng biểu
 
-Text extraction drops both. When a figure carries the argument, screenshot it
-into `raw/assets/` and reference it from the source page, so the claim on the
-page has something behind it.
+Quá trình trích xuất văn bản thuần túy sẽ làm mất cả biểu đồ lẫn bảng biểu. Khi một biểu đồ nắm giữ luận điểm quan trọng của bài viết, hãy chụp ảnh màn hình biểu đồ đó lưu vào `raw/assets/` và đặt liên kết tham chiếu tới nó từ trang nguồn, để nhận định ghi trên trang wiki luôn có bằng chứng trực quan đi kèm.
 
-## Next
+## Tiếp theo
 
-[Chat exports](chat-exports.md)
+[Lịch sử trò chuyện AI (Chat exports)](chat-exports.md)

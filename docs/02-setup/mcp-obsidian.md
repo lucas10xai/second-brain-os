@@ -1,42 +1,26 @@
-# MCP for Obsidian
+# Giao thức MCP cho Obsidian
 
-MCP is the standard way Claude talks to other applications. For a vault, it
-adds a door into Obsidian itself rather than into the folder underneath, which
-means the agent can work with the vault from any session, not only one started
-inside that directory.
+MCP là giao thức chuẩn giúp Claude giao tiếp với các ứng dụng khác. Đối với một Vault, MCP mở ra một cánh cửa kết nối thẳng vào ứng dụng Obsidian thay vì chỉ thao tác trên thư mục bên dưới ổ cứng — nghĩa là Agent có thể làm việc với Vault từ bất kỳ phiên trò chuyện nào, chứ không chỉ giới hạn ở những phiên được khởi chạy bên trong thư mục đó.
 
-You do not need this to start. Add it when you want scheduled tasks, or when
-you are working from the desktop app rather than a terminal in the vault.
+Bạn không cần thiết lập phần này ngay từ đầu. Chỉ bổ sung nó khi bạn muốn chạy các tác vụ tự động theo lịch, hoặc khi bạn làm việc từ ứng dụng Claude Desktop thay vì mở terminal bên trong thư mục Vault.
 
-## Two routes
+## Hai lộ trình kết nối
 
-The [Local REST API
-plugin](https://github.com/coddingtonbear/obsidian-local-rest-api) now ships a
-built-in MCP server at `/mcp/`, so a separate server is no longer required.
-Check its README first: if the built-in server covers what you need, skip
-straight to registering it with your client and ignore step 2 below.
+Plugin [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) hiện đã tích hợp sẵn một máy chủ MCP tại đường dẫn `/mcp/`, vì vậy việc cài thêm một máy chủ trung gian riêng biệt không còn là điều bắt buộc nữa. Hãy kiểm tra file README của plugin đó trước tiên: nếu máy chủ tích hợp sẵn đã đáp ứng đủ nhu cầu của bạn, hãy chuyển thẳng sang bước đăng ký nó với ứng dụng khách (client) và bỏ qua bước 2 bên dưới.
 
-The third-party route described here, `mcp-obsidian` over the plugin's REST API,
-is still the most widely documented and is what most guides describe. Both end
-up in the same place.
+Lộ trình sử dụng công cụ bên thứ ba được mô tả tại đây — chạy `mcp-obsidian` thông qua REST API của plugin — vẫn là phương án có tài liệu hướng dẫn phổ biến nhất hiện nay. Cả hai lộ trình đều mang lại kết quả cuối cùng như nhau.
 
-## Step 1: enable the plugin
+## Bước 1: Bật plugin trong Obsidian
 
-In Obsidian: **Settings** (gear, bottom left) → **Community plugins** → **Turn
-on community plugins** → **Browse** → search `Local REST API` → **Install** →
-**Enable**.
+Trong Obsidian: mở **Settings** (biểu tượng bánh răng ở góc dưới bên trái) → **Community plugins** → **Turn on community plugins** → **Browse** → tìm kiếm từ khóa `Local REST API` → bấm **Install** → bấm **Enable**.
 
-Open the plugin's settings. There is an **API Key**, a long string of letters
-and numbers. Copy it.
+Mở phần cài đặt của plugin vừa cài. Tại đây bạn sẽ thấy mục **API Key**, là một chuỗi dài gồm các chữ cái và chữ số. Hãy sao chép chuỗi đó.
 
-Obsidian displays the key with the word `Bearer` in front of it. That word is
-not part of the key. Copy only the string after it. This is the single most
-common reason the connection fails on the first try.
+Obsidian hiển thị khóa này kèm theo từ `Bearer` ở phía trước. Từ `Bearer` đó không phải là một phần của khóa. Hãy chỉ sao chép phần chuỗi ký tự nằm phía sau nó. Đây chính là nguyên nhân phổ biến số một khiến kết nối thất bại ngay trong lần thử đầu tiên.
 
-## Step 2: register the server
+## Bước 2: Đăng ký máy chủ MCP
 
-In the Claude Code tab or terminal, with your key pasted in place of
-`PASTE-YOUR-KEY-HERE`:
+Trong thẻ Code hoặc cửa sổ terminal, hãy chạy câu lệnh sau với khóa API của bạn thay thế vào vị trí `PASTE-YOUR-KEY-HERE`:
 
 ```bash
 claude mcp add-json obsidian-vault '{
@@ -51,42 +35,31 @@ claude mcp add-json obsidian-vault '{
 }'
 ```
 
-`uvx` runs the server without a permanent install. If the command is not found,
-install `uv` first.
+Lệnh `uvx` giúp tải và chạy máy chủ ngay mà không cần cài đặt cố định vào hệ thống. Nếu máy báo không tìm thấy lệnh này, hãy cài đặt bộ công cụ `uv` trước.
 
-## Step 3: test it
+## Bước 3: Kiểm tra kết nối
 
 ```
 List every file in my Obsidian vault.
 ```
 
-If the agent reads your notes back, the connection works.
+Nếu Agent đọc và liệt kê đúng các ghi chú của bạn, kết nối đã hoạt động thành công.
 
-## When it does not work
+## Khi kết nối không hoạt động
 
-- **Obsidian is closed.** The plugin serves the API from inside the app, so the
-  connection only exists while Obsidian is running.
-- **`Bearer` in the key.** Strip it.
-- **Wrong port.** Check the port shown in the plugin settings against the value
-  in your config. The default is 27124.
-- **Plugin disabled.** Community plugins get turned off when restricted mode is
-  re-enabled after an update.
+- **Obsidian đang đóng.** Plugin cung cấp API từ bên trong ứng dụng, vì vậy kết nối chỉ tồn tại khi Obsidian đang được mở.
+- **Dính chữ `Bearer` trong khóa API.** Hãy xóa bỏ từ đó đi.
+- **Sai cổng kết nối (port).** Hãy đối chiếu số cổng hiển thị trong phần cài đặt plugin với giá trị khai báo trong cấu hình của bạn. Giá trị mặc định là `27124`.
+- **Plugin bị vô hiệu hóa.** Các plugin cộng đồng đôi khi bị tự động tắt đi khi chế độ hạn chế (Restricted mode) được bật lại sau một đợt cập nhật ứng dụng.
 
-## Do you need this at all
+## Bạn có thực sự cần đến MCP không
 
-One maintained fork of `mcp-obsidian` was archived with the reasoning that
-routing through a REST plugin adds complexity when a vault is just markdown
-files on disk. That is the same argument this guide makes for starting on the
-filesystem, and it is worth taking seriously: MCP earns its place when you need
-the vault reachable from sessions not running inside it, and not before.
+Một nhánh phát triển (fork) được duy trì khá tích cực của `mcp-obsidian` từng được đưa vào trạng thái lưu trữ (archived) với lý do rất thẳng thắn: việc định tuyến vòng qua một plugin REST làm tăng thêm độ phức tạp không cần thiết trong khi bản chất Vault chỉ là các file Markdown nằm sẵn trên ổ đĩa. Đó cũng chính là lập luận mà cẩm nang này đưa ra khi khuyên bạn bắt đầu bằng cách thao tác trực tiếp trên hệ thống tệp tin — và điều này rất đáng để cân nhắc nghiêm túc: MCP chỉ thực sự phát huy giá trị khi bạn cần truy cập vào Vault từ những phiên làm việc không chạy bên trong thư mục đó, chứ không phải sớm hơn.
 
-## Security
+## Lưu ý bảo mật
 
-This opens a local HTTP server with a key that grants full read and write access
-to your notes. Keep it on `127.0.0.1`, never expose the port, and treat the key
-like a password. If you paste it anywhere public, rotate it in the plugin
-settings.
+Thiết lập này mở ra một máy chủ HTTP cục bộ cùng một khóa truy cập cho phép toàn quyền đọc và ghi đối với toàn bộ ghi chú của bạn. Hãy luôn giữ địa chỉ máy chủ ở `127.0.0.1`, tuyệt đối không mở cổng này ra mạng ngoài, và hãy bảo mật khóa API cẩn thận như một mật khẩu quan trọng. Nếu bạn vô tình dán lộ khóa này ở bất kỳ nơi công cộng nào, hãy lập tức tạo lại khóa mới (rotate) trong phần cài đặt của plugin.
 
-## Next
+## Tiếp theo
 
-[Writing your CLAUDE.md](claude-md.md)
+[Viết file CLAUDE.md của bạn](claude-md.md)
